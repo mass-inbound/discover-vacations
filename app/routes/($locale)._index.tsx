@@ -376,7 +376,7 @@ export default function Homepage() {
           </button>
         </div>
         {/* Indicator Dots */}
-        <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
+        <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex space-x-2 z-8">
           {slides.map((_, idx) => (
             <button
               key={idx}

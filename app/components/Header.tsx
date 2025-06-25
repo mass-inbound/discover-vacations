@@ -100,7 +100,7 @@ export function Header({
           />
         </NavLink>
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-6 ml-8 relative">
+        <nav className="hidden md:flex items-center gap-8 ml-8 relative">
           {/* Destinations Dropdown */}
           <div
             className="relative"
