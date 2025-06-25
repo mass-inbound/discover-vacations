@@ -15,6 +15,7 @@ import {IoMdPricetags} from 'react-icons/io';
 import {GiPalmTree} from 'react-icons/gi';
 import {HiOutlineChevronLeft, HiOutlineChevronRight} from 'react-icons/hi';
 import {useState} from 'react';
+import FAQ from '~/components/FAQ';
 
 export const meta: MetaFunction = () => {
   return [{title: 'Hydrogen | Home'}];
@@ -414,6 +415,12 @@ export default function Homepage() {
             </button>
           </div>
         </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="w-full bg-gray-50 py-12">
+        <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">Frequently Asked Questions</h2>
+        <FAQ />
       </section>
     </div>
   );
