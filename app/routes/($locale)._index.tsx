@@ -15,6 +15,7 @@ import {IoMdPricetags} from 'react-icons/io';
 import {GiPalmTree} from 'react-icons/gi';
 import {HiOutlineChevronLeft, HiOutlineChevronRight} from 'react-icons/hi';
 import {useState} from 'react';
+import FAQ from '~/components/FAQ';
 
 export const meta: MetaFunction = () => {
   return [{title: 'Hydrogen | Home'}];
