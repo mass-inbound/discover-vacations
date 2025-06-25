@@ -416,12 +416,6 @@ export default function Homepage() {
           </div>
         </div>
       </section>
-
-      {/* FAQ Section */}
-      <section className="w-full bg-gray-50 py-12">
-        <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">Frequently Asked Questions</h2>
-        <FAQ />
-      </section>
     </div>
   );
 }
