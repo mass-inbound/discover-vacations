@@ -1,4 +1,4 @@
-import {Suspense} from 'react';
+import {Suspense, useState, useRef, useEffect} from 'react';
 import {Await, NavLink, useAsyncValue} from 'react-router';
 import {
   type CartViewPayload,
@@ -7,6 +7,8 @@ import {
 } from '@shopify/hydrogen';
 import type {HeaderQuery, CartApiQueryFragment} from 'storefrontapi.generated';
 import {useAside} from '~/components/Aside';
+import {FaLocationDot} from 'react-icons/fa6';
+import {HiChevronDown, HiMenu, HiX} from 'react-icons/hi';
 
 interface HeaderProps {
   header: HeaderQuery;
@@ -23,116 +25,260 @@ export function Header({
   cart,
   publicStoreDomain,
 }: HeaderProps) {
-  const {shop, menu} = header;
-  return (
-    <header className="header">
-      <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
-        <strong>{shop.name}</strong>
-      </NavLink>
-      <HeaderMenu
-        menu={menu}
-        viewport="desktop"
-        primaryDomainUrl={header.shop.primaryDomain.url}
-        publicStoreDomain={publicStoreDomain}
-      />
-      <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
-    </header>
-  );
-}
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [showDestinationsDropdown, setShowDestinationsDropdown] =
+    useState(false);
+  const [showHelpDropdown, setShowHelpDropdown] = useState(false);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
 
-export function HeaderMenu({
-  menu,
-  primaryDomainUrl,
-  viewport,
-  publicStoreDomain,
-}: {
-  menu: HeaderProps['header']['menu'];
-  primaryDomainUrl: HeaderProps['header']['shop']['primaryDomain']['url'];
-  viewport: Viewport;
-  publicStoreDomain: HeaderProps['publicStoreDomain'];
-}) {
-  const className = `header-menu-${viewport}`;
-  const {close} = useAside();
+  // Close dropdowns on outside click
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (
+        showDestinationsDropdown &&
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(e.target as Node)
+      ) {
+        setShowDestinationsDropdown(false);
+      }
+      if (
+        showHelpDropdown &&
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(e.target as Node)
+      ) {
+        setShowHelpDropdown(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [showDestinationsDropdown, showHelpDropdown]);
+
+  // Prevent scroll when mobile menu is open
+  useEffect(() => {
+    if (showMobileMenu) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [showMobileMenu]);
+
+  // Nav items
+  const navLinks = [
+    {
+      label: 'Destinations',
+      dropdown: true,
+      button: true,
+      items: [
+        {label: 'Orlando, FL', href: '/destinations/orlando'},
+        {label: 'Poconos, PA', href: '/destinations/poconos'},
+      ],
+    },
+    {label: 'How it Works', href: '/how-it-works'},
+    {
+      label: 'Help',
+      dropdown: true,
+      items: [
+        {label: 'FAQ', href: '/faq'},
+        {label: 'Contact Us', href: '/contact'},
+      ],
+    },
+    {label: 'Log in', href: '/account'},
+  ];
 
   return (
-    <nav className={className} role="navigation">
-      {viewport === 'mobile' && (
-        <NavLink
-          end
-          onClick={close}
-          prefetch="intent"
-          style={activeLinkStyle}
-          to="/"
-        >
-          Home
+    <header className="w-full bg-white shadow-sm sticky top-0 z-9 h-[100px]">
+      <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-full">
+        {/* Logo */}
+        <NavLink to="/" className="flex items-center gap-2" end>
+          <img
+            src="/assets/navLogo.png"
+            alt="Discover Vacations"
+            className="w-[170px]"
+          />
         </NavLink>
-      )}
-      {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
-        if (!item.url) return null;
-
-        // if the url is internal, we strip the domain
-        const url =
-          item.url.includes('myshopify.com') ||
-          item.url.includes(publicStoreDomain) ||
-          item.url.includes(primaryDomainUrl)
-            ? new URL(item.url).pathname
-            : item.url;
-        return (
-          <NavLink
-            className="header-menu-item"
-            end
-            key={item.id}
-            onClick={close}
-            prefetch="intent"
-            style={activeLinkStyle}
-            to={url}
+        {/* Desktop Nav */}
+        <nav className="hidden md:flex items-center gap-8 ml-8 relative">
+          {/* Destinations Dropdown */}
+          <div
+            className="relative"
+            onMouseEnter={() => setShowDestinationsDropdown(true)}
+            onMouseLeave={() => setShowDestinationsDropdown(false)}
           >
-            {item.title}
+            <button
+              className="flex items-center gap-2 bg-[#F2B233] hover:bg-[#e0a800] text-black font-medium px-4 py-2 rounded-[10px] text-[16px] shadow transition"
+              onClick={() => setShowDestinationsDropdown((v) => !v)}
+              type="button"
+            >
+              <FaLocationDot className="text-lg" />
+              Destinations
+              <HiChevronDown className="ml-1 text-base" />
+            </button>
+            {showDestinationsDropdown && (
+              <div className="absolute left-0 bg-white rounded shadow-lg py-2 min-w-[180px] z-30">
+                {navLinks[0]?.items?.map((item) => (
+                  <NavLink
+                    key={item.href}
+                    to={item.href}
+                    className="block px-4 py-2 text-[#151515] hover:bg-[#F2B233]/20 text-[16px]"
+                  >
+                    {item.label}
+                  </NavLink>
+                ))}
+              </div>
+            )}
+          </div>
+          {/* Other Nav Links */}
+          <NavLink
+            to="/how-it-works"
+            className="text-[#151515] text-[16px] font-[400] hover:underline"
+          >
+            How it Works
           </NavLink>
-        );
-      })}
-    </nav>
-  );
-}
-
-function HeaderCtas({
-  isLoggedIn,
-  cart,
-}: Pick<HeaderProps, 'isLoggedIn' | 'cart'>) {
-  return (
-    <nav className="header-ctas" role="navigation">
-      <HeaderMenuMobileToggle />
-      <NavLink prefetch="intent" to="/account" style={activeLinkStyle}>
-        <Suspense fallback="Sign in">
-          <Await resolve={isLoggedIn} errorElement="Sign in">
-            {(isLoggedIn) => (isLoggedIn ? 'Account' : 'Sign in')}
-          </Await>
-        </Suspense>
-      </NavLink>
-      <SearchToggle />
-      <CartToggle cart={cart} />
-    </nav>
-  );
-}
-
-function HeaderMenuMobileToggle() {
-  const {open} = useAside();
-  return (
-    <button
-      className="header-menu-mobile-toggle reset"
-      onClick={() => open('mobile')}
-    >
-      <h3>☰</h3>
-    </button>
-  );
-}
-
-function SearchToggle() {
-  const {open} = useAside();
-  return (
-    <button className="reset" onClick={() => open('search')}>
-      Search
-    </button>
+          {/* Help Dropdown */}
+          <div
+            className="relative"
+            onMouseEnter={() => setShowHelpDropdown(true)}
+            onMouseLeave={() => setShowHelpDropdown(false)}
+          >
+            <button
+              className="flex items-center gap-1 text-[#151515] text-[16px] font-[400] hover:underline"
+              onClick={() => setShowHelpDropdown((v) => !v)}
+              type="button"
+            >
+              Help
+              <HiChevronDown className="ml-1 text-base" />
+            </button>
+            {showHelpDropdown && (
+              <div className="absolute left-0 bg-white rounded shadow-lg py-2 min-w-[150px] z-30">
+                {navLinks[2]?.items?.map((item) => (
+                  <NavLink
+                    key={item.href}
+                    to={item.href}
+                    className="block px-4 py-2 text-[#151515] hover:bg-[#F2B233]/20 text-[16px]"
+                  >
+                    {item.label}
+                  </NavLink>
+                ))}
+              </div>
+            )}
+          </div>
+          <NavLink
+            to="/account"
+            className="text-[#151515] text-[16px] font-[400] hover:underline"
+          >
+            Log in
+          </NavLink>
+          {/* Cart Button */}
+          <div className="ml-4 bg-[#164C51] px-6 py-2 rounded-[10px]">
+            <CartToggle cart={cart} />
+          </div>
+        </nav>
+        {/* Mobile Hamburger */}
+        <button
+          className="md:hidden p-2"
+          onClick={() => setShowMobileMenu((v) => !v)}
+        >
+          {showMobileMenu ? (
+            <HiX className="w-7 h-7" />
+          ) : (
+            <HiMenu className="w-7 h-7" />
+          )}
+        </button>
+      </div>
+      {/* Mobile Drawer */}
+      {showMobileMenu && (
+        <div ref={mobileMenuRef} className="fixed inset-0 bg-black/40 z-50">
+          <div className="fixed top-0 left-0 w-72 h-full bg-white shadow-lg p-6 flex flex-col gap-6 animate-slideIn">
+            <button
+              className="self-end mb-4"
+              onClick={() => setShowMobileMenu(false)}
+            >
+              <HiX className="w-7 h-7" />
+            </button>
+            {/* Mobile Nav Links */}
+            <div className="flex flex-col gap-4">
+              {/* Destinations Dropdown */}
+              <div>
+                <button
+                  className="flex items-center gap-2 bg-[#F2B233] text-black font-medium px-4 py-2 rounded-full text-[16px] shadow w-full justify-between"
+                  onClick={() => setShowDestinationsDropdown((v) => !v)}
+                  type="button"
+                >
+                  <span className="flex items-center gap-2">
+                    <FaLocationDot className="text-lg" /> Destinations
+                  </span>
+                  <HiChevronDown
+                    className={`ml-1 text-base transition-transform ${showDestinationsDropdown ? 'rotate-180' : ''}`}
+                  />
+                </button>
+                {showDestinationsDropdown && (
+                  <div className="mt-2 bg-white rounded shadow-lg py-2 min-w-[180px] z-30">
+                    {navLinks[0]?.items?.map((item) => (
+                      <NavLink
+                        key={item.href}
+                        to={item.href}
+                        className="block px-4 py-2 text-[#151515] hover:bg-[#F2B233]/20 text-[16px]"
+                        onClick={() => setShowMobileMenu(false)}
+                      >
+                        {item.label}
+                      </NavLink>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <NavLink
+                to="/how-it-works"
+                className="text-[#151515] text-[16px] font-[400] hover:underline"
+                onClick={() => setShowMobileMenu(false)}
+              >
+                How it Works
+              </NavLink>
+              {/* Help Dropdown */}
+              <div>
+                <button
+                  className="flex items-center gap-1 text-[#151515] text-[16px] font-[400] hover:underline w-full justify-between"
+                  onClick={() => setShowHelpDropdown((v) => !v)}
+                  type="button"
+                >
+                  <span>Help</span>
+                  <HiChevronDown
+                    className={`ml-1 text-base transition-transform ${showHelpDropdown ? 'rotate-180' : ''}`}
+                  />
+                </button>
+                {showHelpDropdown && (
+                  <div className="mt-2 bg-white rounded shadow-lg py-2 min-w-[150px] z-30">
+                    {navLinks[2]?.items?.map((item) => (
+                      <NavLink
+                        key={item.href}
+                        to={item.href}
+                        className="block px-4 py-2 text-[#151515] hover:bg-[#F2B233]/20 text-[16px]"
+                        onClick={() => setShowMobileMenu(false)}
+                      >
+                        {item.label}
+                      </NavLink>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <NavLink
+                to="/account"
+                className="text-[#151515] text-[16px] font-[400] hover:underline"
+                onClick={() => setShowMobileMenu(false)}
+              >
+                Log in
+              </NavLink>
+              {/* Cart Button */}
+              <div className="mt-4 ">
+                <CartToggle cart={cart} />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </header>
   );
 }
 
@@ -153,7 +299,21 @@ function CartBadge({count}: {count: number | null}) {
           url: window.location.href || '',
         } as CartViewPayload);
       }}
+      className="relative flex items-center text-white font-[500] text-[14px]"
     >
+      <svg
+        className="w-6 h-6 mr-1"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.35 2.7A2 2 0 0 0 7.48 19h9.04a2 2 0 0 0 1.83-1.3L21 13M7 13V6a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v7"
+        />
+      </svg>
       Cart {count === null ? <span>&nbsp;</span> : count}
     </a>
   );
@@ -174,7 +334,6 @@ function CartBanner() {
   const cart = useOptimisticCart(originalCart);
   return <CartBadge count={cart?.totalQuantity ?? 0} />;
 }
-
 const FALLBACK_HEADER_MENU = {
   id: 'gid://shopify/Menu/199655587896',
   items: [
