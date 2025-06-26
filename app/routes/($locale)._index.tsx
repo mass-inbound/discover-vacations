@@ -99,7 +99,7 @@ export default function Homepage() {
       >
         {/* Overlay */}
         <div className="absolute inset-0 bg-black/40 z-0" />
-        <div className="relative z-10 flex flex-col items-center justify-center text-center gap-4 w-full px-4">
+        <div className="relative z-8 flex flex-col items-center justify-center text-center gap-4 w-full px-4">
           <div className="inline-block px-5 py-2 mb-4 bg-[#EAF8F8] text-[#0E424E] text-[21px] font-[500] rounded-[10px] uppercase tracking-wider">
             CATCH THE WAVE, DISCOVER MORE FOR LESS
           </div>
@@ -147,7 +147,7 @@ export default function Homepage() {
           alt="Tree"
           className="absolute left-1/4 top-1/10 w-40 opacity-60 pointer-events-none select-none"
         />
-        <div className="relative z-10 max-w-5xl mx-auto text-center">
+        <div className="relative z-8 max-w-5xl mx-auto text-center">
           <p className="text-[16px] font-[500] text-[#208989]">
             Plan Less. Enjoy More.
           </p>
@@ -377,7 +377,7 @@ export default function Homepage() {
           </button>
         </div>
         {/* Indicator Dots */}
-        <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
+        <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex space-x-2 z-8">
           {slides.map((_, idx) => (
             <button
               key={idx}
@@ -395,7 +395,7 @@ export default function Homepage() {
         }}
       >
         <div className="flex-1" />
-        <div className="flex-1 flex flex-col justify-center items-start gap-2 px-8 py-16 md:py-0 md:pr-20 z-10">
+        <div className="flex-1 flex flex-col justify-center items-start gap-2 px-8 py-16 md:py-0 md:pr-20 z-8">
           <div className="inline-block px-5 py-2 mb-4 bg-[#EAF8F8] text-[#0E424E] text-[21px] font-[500] rounded-[10px] uppercase tracking-wider">
             CATCH THE WAVE, DISCOVER MORE FOR LESS
           </div>
@@ -415,12 +415,6 @@ export default function Homepage() {
             </button>
           </div>
         </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="w-full bg-gray-50 py-12">
-        <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">Frequently Asked Questions</h2>
-        <FAQ />
       </section>
     </div>
   );
@@ -505,7 +499,7 @@ function Tabs() {
               <img
                 src="/assets/polygonDiscount.svg"
                 alt="Discount"
-                className="absolute top-0 right-0 z-10"
+                className="absolute top-0 right-0 z-8"
               />
 
               {/* Destination image */}
@@ -569,7 +563,7 @@ function Tabs() {
               <img
                 src="/assets/polygonDiscount.svg"
                 alt="Discount"
-                className="absolute top-0 right-0 z-10"
+                className="absolute top-0 right-0 z-8"
               />
 
               {/* Destination image */}
