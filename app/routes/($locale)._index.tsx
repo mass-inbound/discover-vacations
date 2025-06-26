@@ -396,6 +396,7 @@ export default function Homepage() {
           ))}
         </div>
       </section>
+
       {/* Ready to Plan Your Next Getaway Section */}
       <section
         className="relative flex flex-col md:flex-row justify-between bg-cover bg-center h-[760px]"
