@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 const faqs = [
   {
@@ -45,30 +45,55 @@ const faqs = [
 ];
 
 export default function FAQ() {
+  const [openIdx, setOpenIdx] = useState<number | null>(null);
+
+  const toggle = (idx: number) => {
+    setOpenIdx(openIdx === idx ? null : idx);
+  };
+
   return (
     <div className="flex flex-col items-center w-full py-8">
       {faqs.map((faq, idx) => (
         <div
           key={idx}
-          className="w-full max-w-3xl bg-white rounded-lg shadow-md p-4 mb-6 flex items-start justify-between"
+          className="w-full max-w-3xl bg-white rounded-lg shadow-md mb-6 overflow-hidden transition-all duration-300"
         >
-          <div>
-            <h3 className="text-xl font-semibold mb-1 text-gray-800">
-              {faq.question}
-            </h3>
-            <p className="text-gray-600 text-sm">{faq.answer}</p>
-          </div>
-          <div className="ml-4 mt-2 text-teal-500">
-            <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
-              <circle cx="12" cy="12" r="12" fill="#22D3EE" />
-              <path
-                d="M8 12.5l3 3 5-5"
-                stroke="#fff"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+          <button
+            className="w-full flex items-center justify-between p-4 focus:outline-none group"
+            onClick={() => toggle(idx)}
+            aria-expanded={openIdx === idx}
+            aria-controls={`faq-panel-${idx}`}
+          >
+            <div className="text-left">
+              <h3 className="text-xl font-semibold text-gray-800">
+                {faq.question}
+              </h3>
+            </div>
+            <span className={`ml-4 transition-transform duration-300 ${openIdx === idx ? 'rotate-180' : ''}`}>
+              <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="12" fill="#22D3EE" />
+                <path
+                  d="M8 12.5l3 3 5-5"
+                  stroke="#fff"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
+          </button>
+          <div
+            id={`faq-panel-${idx}`}
+            className={`grid transition-all duration-300 ease-in-out ${openIdx === idx ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'} bg-white`}
+            style={{
+              padding: openIdx === idx ? '0 1rem 1rem 1rem' : '0 1rem',
+            }}
+          >
+            <div className="overflow-hidden">
+              <p className="text-gray-600 text-sm">
+                {faq.answer}
+              </p>
+            </div>
           </div>
         </div>
       ))}
