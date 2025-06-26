@@ -1,5 +1,11 @@
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {Await, useLoaderData, Link, type MetaFunction} from 'react-router';
+import {
+  Await,
+  useLoaderData,
+  Link,
+  type MetaFunction,
+  useNavigate,
+} from 'react-router';
 import {Suspense, useRef} from 'react';
 import {Image, Money} from '@shopify/hydrogen';
 import type {
@@ -112,9 +118,12 @@ export default function Homepage() {
             stress-free.
           </p>
           <div className="flex gap-12 justify-center my-8">
-            <button className="bg-[#2AB7B7] text-white px-6 py-2 rounded-[10px] shadow text-[20px] font-[400] hover:bg-[#229a9a] transition">
+            <Link
+              to="/discover-offers"
+              className="bg-[#2AB7B7] text-white px-6 py-2 rounded-[10px] shadow text-[20px] font-[400] hover:bg-[#229a9a] transition"
+            >
               Discover Offers
-            </button>
+            </Link>
             <button className="text-white underline text-[20px] font-[400]">
               See All Offers
             </button>
