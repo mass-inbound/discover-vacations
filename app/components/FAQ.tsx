@@ -3,42 +3,58 @@ import React, {useState} from 'react';
 const faqs = [
   {
     question: 'Lorem Ipsum Neque porro qui dolorem?',
+    summary:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     answer:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation',
   },
   // Repeat 7 times for demo
   {
     question: 'Lorem Ipsum Neque porro qui dolorem?',
+    summary:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     answer:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation',
   },
   {
     question: 'Lorem Ipsum Neque porro qui dolorem?',
+    summary:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     answer:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation',
   },
   {
     question: 'Lorem Ipsum Neque porro qui dolorem?',
+    summary:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     answer:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation',
   },
   {
     question: 'Lorem Ipsum Neque porro qui dolorem?',
+    summary:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     answer:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation',
   },
   {
     question: 'Lorem Ipsum Neque porro qui dolorem?',
+    summary:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     answer:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation',
   },
   {
     question: 'Lorem Ipsum Neque porro qui dolorem?',
+    summary:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     answer:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation',
   },
   {
     question: 'Lorem Ipsum Neque porro qui dolorem?',
+    summary:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     answer:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation',
   },
@@ -68,6 +84,9 @@ export default function FAQ() {
               <h3 className="text-xl font-semibold text-gray-800">
                 {faq.question}
               </h3>
+              <p className="text-gray-600 text-sm mt-1">
+                {openIdx === idx ? faq.answer : faq.summary}
+              </p>
             </div>
             <span className={`ml-4 transition-transform duration-300 ${openIdx === idx ? 'rotate-180' : ''}`}>
               <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
