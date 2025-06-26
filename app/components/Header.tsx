@@ -31,6 +31,18 @@ export function Header({
   const [showHelpDropdown, setShowHelpDropdown] = useState(false);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
 
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // Detect scroll and update state
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50); // Change design after scrolling 50px
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   // Close dropdowns on outside click
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -89,8 +101,14 @@ export function Header({
   ];
 
   return (
-    <header className="w-full bg-white shadow-sm sticky top-0 z-9 h-[100px]">
-      <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-full">
+    <header
+      className={` ${
+        isScrolled
+          ? 'bg-[rgba(255,255,255,0.70)] shadow-lg backdrop-blur-[4px] fixed top-4 left-8 right-8 h-[68px] rounded-[10px]'
+          : 'bg-white shadow-sm w-full sticky top-0 h-[100px]'
+      }  z-9 transition-all duration-300`}
+    >
+      <div className="max-w-8xl mx-auto px-12 flex items-center justify-between h-full">
         {/* Logo */}
         <NavLink to="/" className="flex items-center gap-2" end>
           <img
@@ -334,6 +352,7 @@ function CartBanner() {
   const cart = useOptimisticCart(originalCart);
   return <CartBadge count={cart?.totalQuantity ?? 0} />;
 }
+
 const FALLBACK_HEADER_MENU = {
   id: 'gid://shopify/Menu/199655587896',
   items: [
