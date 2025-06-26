@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import HowItWorksHero from './HowItWorksHero';
 
 const faqs = [
   {
@@ -68,7 +69,13 @@ export default function FAQ() {
   };
 
   return (
-    <div className="flex flex-col items-center w-full py-8">
+    <div className="flex flex-col items-center w-full ">
+      <HowItWorksHero
+        tagline="FAQS"
+        title="Frequently asked questions"
+        description="Find quick answers to the most common questions about booking, payments, cancellations, and more. Still need help? Our support team is always here for you."
+        image="/assets/beach2.png"
+      />
       {faqs.map((faq, idx) => (
         <div
           key={idx}
