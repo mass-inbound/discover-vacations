@@ -165,7 +165,7 @@ export default function DetailsOrlandoView() {
       {/* carousel  */}
       <section className="relative bg-[#EAF8F8] py-[7rem]">
         <div
-          className="relative w-full mx-auto overflow-hidden rounded-lg"
+          className="relative w-full max-w-7xl mx-auto overflow-hidden rounded-lg"
           style={{maxHeight: 360}}
         >
           {/* Slides */}
