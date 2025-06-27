@@ -11,6 +11,7 @@ import {Image, Money} from '@shopify/hydrogen';
 import type {
   FeaturedCollectionFragment,
   RecommendedProductsQuery,
+  CatalogQuery,
 } from 'storefrontapi.generated';
 import {ProductItem} from '~/components/ProductItem';
 import {FaChevronDown} from 'react-icons/fa';
@@ -27,6 +28,55 @@ export const meta: MetaFunction = () => {
   return [{title: 'Hydrogen | Home'}];
 };
 
+const COLLECTION_PRODUCT_FRAGMENT = `#graphql
+  fragment MoneyProductItem on MoneyV2 {
+    amount
+    currencyCode
+  }
+  fragment ProductItem on Product {
+    id
+    handle
+    title
+    description
+    featuredImage {
+      id
+      altText
+      url
+      width
+      height
+    }
+    priceRange {
+      minVariantPrice {
+        ...MoneyProductItem
+      }
+      maxVariantPrice {
+        ...MoneyProductItem
+      }
+    }
+  }
+` as const;
+
+const HOMEPAGE_COLLECTION_QUERY = `#graphql
+  query HomePageCollection(
+    $handle: String!
+    $country: CountryCode
+    $language: LanguageCode
+  ) @inContext(country: $country, language: $language) {
+    collection(handle: $handle) {
+      id
+      handle
+      title
+      description
+      products(first: 12) {
+        nodes {
+          ...ProductItem
+        }
+      }
+    }
+  }
+  ${COLLECTION_PRODUCT_FRAGMENT}
+` as const;
+
 export async function loader(args: LoaderFunctionArgs) {
   // Start fetching non-critical data without blocking time to first byte
   const deferredData = loadDeferredData(args);
@@ -42,13 +92,34 @@ export async function loader(args: LoaderFunctionArgs) {
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
 async function loadCriticalData({context}: LoaderFunctionArgs) {
-  const [{collections}] = await Promise.all([
+  const HOMEPAGE_COLLECTION_HANDLE = 'vacation-package';
+
+  const [featuredResponse, homepageResponse] = await Promise.all([
     context.storefront.query(FEATURED_COLLECTION_QUERY),
-    // Add other queries here, so that they are loaded in parallel
+    context.storefront.query(HOMEPAGE_COLLECTION_QUERY, {
+      variables: {handle: HOMEPAGE_COLLECTION_HANDLE},
+    }),
   ]);
 
+  const featuredCollection = featuredResponse.collections.nodes[0];
+  const homepageCollection = homepageResponse.collection; // this is your collection or null
+
+  if (!homepageCollection) {
+    console.error(
+      'No collection found for handle:',
+      HOMEPAGE_COLLECTION_HANDLE,
+    );
+  } else {
+    console.log(
+      'Products in homepage collection:',
+      homepageCollection.products?.nodes,
+    );
+  }
+
   return {
-    featuredCollection: collections.nodes[0],
+    featuredCollection,
+    homepageCollection,
+    homepageProducts: homepageCollection?.products?.nodes || [],
   };
 }
 
@@ -73,6 +144,7 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
 
 export default function Homepage() {
   const data = useLoaderData<typeof loader>();
+  console.log('datahere', data);
   const bookingRef = useRef<HTMLDivElement>(null);
 
   const handleScroll = () => {
@@ -248,7 +320,15 @@ export default function Homepage() {
             and customize as needed.
           </p>
           {/* Tabs */}
-          <Tabs />
+          {data.homepageProducts && data.homepageProducts.length > 0 ? (
+            <Tabs products={data.homepageProducts} />
+          ) : (
+            <div className="text-center text-red-600 font-bold py-12">
+              No products found for the Home page collection.
+              <br />
+              {/* You can check your server logs for more info. */}
+            </div>
+          )}
         </div>
 
         <div className="flex justify-center mt-[4rem] mb-8">
@@ -479,13 +559,27 @@ function RecommendedProducts({
 }
 
 // Simple Tabs implementation for demo
-function Tabs() {
+function Tabs({
+  products,
+}: {
+  products: Array<{
+    id: string;
+    handle: string;
+    title: string;
+    description?: string;
+    featuredImage?: {url: string; altText?: string};
+    priceRange: {
+      minVariantPrice: {amount: string};
+      maxVariantPrice: {amount: string};
+    };
+  }>;
+}) {
   const [active, setActive] = useState(0);
   const tabs = ['Popular', 'Hotels', 'Cruise', 'Exclusive Deals'];
   return (
     <div>
       <div className="flex mb-12 border-b border-[#135868]">
-        {tabs.map((tab, idx) => (
+        {tabs.map((tab: string, idx: number) => (
           <button
             key={tab}
             onClick={() => setActive(idx)}
@@ -495,157 +589,130 @@ function Tabs() {
           </button>
         ))}
       </div>
-      <div>
-        {/* Tab content: for now, static demo cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Card design  */}
-          <div className="relative bg-white rounded-lg shadow flex flex-col">
-            <div className="absolute -top-7 left-1 flex items-center justify-center gap-1 bg-[#F2B233] text-[#FEFEFE] px-2 py-1 text-[14px] font-[400] rounded">
-              <IoDiamond /> <span>Exclusive Offer</span>
-            </div>
-
-            <div className="relative w-full h-[280px] rounded-t mb-4 overflow-hidden">
-              {/* Discount polygon badge */}
-              <img
-                src="/assets/polygonDiscount.svg"
-                alt="Discount"
-                className="absolute top-0 right-0 z-8"
-              />
-
-              {/* Destination image */}
-              <img
-                src="/assets/DestinationImage.png"
-                alt="Orlando, FL"
-                className="w-full h-full object-cover"
-              />
-
-              {/* Destination title */}
-              <h4 className="absolute top-3 left-4 font-bold text-white text-[20px] z-10">
-                Orlando, FL
-              </h4>
-
-              {/* Details button */}
-              <Link
-                to="/detail/destinations/orlando"
-                className="absolute left-4 bottom-3 text-[#26A5A5] bg-white px-4 py-1 text-[16px] font-medium z-10 rounded"
-              >
-                Details
-              </Link>
-            </div>
-
-            <ul className="text-sm text-[#000] mb-4 list-disc list-inside pl-4 space-y-2">
-              <li className="flex gap-2 items-center">
-                <FaCheck className="text-amber-400" />{' '}
-                <span>2 night hotel accommodation for two adults</span>
-              </li>
-              <li className="flex gap-2 items-center">
-                <FaCheck className="text-amber-400" />{' '}
-                <span>Includes flights, Park Hopper tickets, City Bus</span>
-              </li>
-            </ul>
-            <div className="bg-[#FBE7C0] rounded-[8px] px-3 py-1 mx-4 flex gap-2 items-center justify-center">
-              <FaGift />
-              <span className="text-[16px] font-[400] text-[#151515]">
-                Includes a Gift: Your Next Vacation, On Us
-              </span>
-            </div>
-            <div className="mt-8 p-4 bg-[#F5F5F5] flex flex-col gap-1 items-center justify-center border-t border-gray-300">
-              <span className="text-[#676767] font-[400] text-[13px]">
-                3 night/4 days
-              </span>
-              <div className="flex items-center justify-center gap-1">
-                <span className="text-[#135868] font-[500] text-[27px]">
-                  $49
-                </span>
-                <span className="text-[#135868] font-[500] text-[12px]">
-                  per <br /> couple
-                </span>
-              </div>
-              <span className="text-[#676767] font-[400] text-[13px]">
-                not included taxes + fees
-              </span>
-            </div>
-            <div className="bg-[#2AB7B7] h-[28px] flex justify-center items-center rounded-b text-white font-[500] text-[12px]">
-              Select Offer
-            </div>
+      <div className="grid grid-cols-[2fr_1fr] gap-8">
+        {active === 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {products.map(
+              (
+                product: {
+                  id: string;
+                  handle: string;
+                  title: string;
+                  description?: string;
+                  featuredImage?: {url: string; altText?: string};
+                  priceRange: {
+                    minVariantPrice: {amount: string};
+                    maxVariantPrice: {amount: string};
+                  };
+                },
+                idx: number,
+              ) => {
+                // Parse description as bullet points (split by newline or period)
+                const bullets = product.description
+                  ? product.description
+                      .split(/\r?\n|<br\s*\/?>|•|‣|▪|●|–|-|\u2022/) // Handle common bullet separators
+                      .map((s: string) => s.trim())
+                      .filter((b: string) => b.length > 0)
+                  : [];
+                return (
+                  <div
+                    key={product.id}
+                    className="relative bg-white rounded-lg shadow flex flex-col"
+                  >
+                    <div className="absolute -top-7 left-1 flex items-center justify-center gap-1 bg-[#F2B233] text-[#FEFEFE] px-2 py-1 text-[14px] font-[400] rounded">
+                      <IoDiamond /> <span>Exclusive Offer</span>
+                    </div>
+                    <div className="relative w-full h-[280px] rounded-t mb-4 overflow-hidden">
+                      {/* Discount polygon badge */}
+                      <img
+                        src="/assets/polygonDiscount.svg"
+                        alt="Discount"
+                        className="absolute top-0 right-0 z-8"
+                      />
+                      {/* Destination image */}
+                      {product.featuredImage ? (
+                        <img
+                          src={product.featuredImage.url}
+                          alt={product.featuredImage.altText || product.title}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                          No Image
+                        </div>
+                      )}
+                      {/* Destination title */}
+                      <h4 className="absolute top-3 left-4 font-bold text-white text-[20px] z-10">
+                        {product.title}
+                      </h4>
+                      {/* Details button */}
+                      <Link
+                        to={`/products/${product.handle}`}
+                        className="absolute left-4 bottom-3 text-[#26A5A5] bg-white px-4 py-1 text-[16px] font-medium z-10 rounded"
+                      >
+                        Details
+                      </Link>
+                    </div>
+                    <ul className="text-sm text-[#000] mb-4 list-disc list-inside pl-4 space-y-2">
+                      {product.description
+                        ? product.description
+                            .split(/\r?\n/)
+                            .filter((b: string) => b.trim().length > 0)
+                            .map((b: string, i: number) => (
+                              <li key={i} className="flex gap-2 items-center">
+                                <FaCheck className="text-amber-400" />{' '}
+                                <span>{b}</span>
+                              </li>
+                            ))
+                        : null}
+                    </ul>
+                    <div className="bg-[#FBE7C0] rounded-[8px] px-3 py-1 mx-4 flex gap-2 items-center justify-center">
+                      <FaGift />
+                      <span className="text-[16px] font-[400] text-[#151515]">
+                        Includes a Gift: Your Next Vacation, On Us
+                      </span>
+                    </div>
+                    <div className="mt-8 p-4 bg-[#F5F5F5] flex flex-col gap-1 items-center justify-center border-t border-gray-300">
+                      <span className="text-[#676767] font-[400] text-[13px]">
+                        {/* You can add duration info as metafield or in description if needed */}
+                      </span>
+                      <div className="flex items-center justify-center gap-1">
+                        <span className="text-[#135868] font-[500] text-[27px]">
+                          ${product.priceRange.minVariantPrice.amount}
+                        </span>
+                        <span className="text-[#135868] font-[500] text-[12px]">
+                          per <br /> couple
+                        </span>
+                      </div>
+                      <span className="text-[#676767] font-[400] text-[13px]">
+                        not included taxes + fees
+                      </span>
+                    </div>
+                    <div className="bg-[#2AB7B7] h-[28px] flex justify-center items-center rounded-b text-white font-[500] text-[12px]">
+                      Select Offer
+                    </div>
+                  </div>
+                );
+              },
+            )}
           </div>
-
-          <div className="relative bg-white rounded-lg shadow flex flex-col">
-            <div className="relative w-full h-[280px] rounded-t mb-4 overflow-hidden">
-              {/* Discount polygon badge */}
-              <img
-                src="/assets/polygonDiscount.svg"
-                alt="Discount"
-                className="absolute top-0 right-0 z-8"
-              />
-
-              {/* Destination image */}
-              <img
-                src="/assets/DestinationImage2.png"
-                alt="Orlando, FL"
-                className="w-full h-full object-cover"
-              />
-
-              {/* Destination title */}
-              <h4 className="absolute top-3 left-4 font-bold text-white text-[20px] z-10">
-                Poconos, PA
-              </h4>
-
-              {/* Details button */}
-              <button className="absolute left-4 bottom-3 text-[#26A5A5] bg-white px-4 py-1 text-[16px] font-medium z-10 rounded">
-                Details
-              </button>
-            </div>
-
-            <ul className="text-sm text-[#000] mb-4 list-disc list-inside pl-4 space-y-2">
-              <li className="flex gap-2 items-center">
-                <FaCheck className="text-amber-400" />{' '}
-                <span>3 nights hotel accommodations for two adults</span>
-              </li>
-              <li className="flex gap-2 items-center">
-                <FaCheck className="text-amber-400" />{' '}
-                <span>Enjoy Exclusive Perks During Your Stay</span>
-              </li>
-            </ul>
-            <div className="bg-[#FBE7C0] rounded-[8px] px-3 py-1 mx-4 flex gap-2 items-center justify-center">
-              <FaGift />
-              <span className="text-[16px] font-[400] text-[#151515]">
-                Includes a Gift: Your Next Vacation, On Us
-              </span>
-            </div>
-            <div className="mt-8 p-4 bg-[#F5F5F5] flex flex-col gap-1 items-center justify-center border-t border-gray-300">
-              <span className="text-[#676767] font-[400] text-[13px]">
-                3 night/4 days
-              </span>
-              <div className="flex items-center justify-center gap-1">
-                <span className="text-[#135868] font-[500] text-[27px]">
-                  $49
-                </span>
-                <span className="text-[#135868] font-[500] text-[12px]">
-                  per <br /> couple
-                </span>
-              </div>
-              <span className="text-[#676767] font-[400] text-[13px]">
-                not included taxes + fees
-              </span>
-            </div>
-            <div className="bg-[#2AB7B7] h-[28px] flex justify-center items-center rounded-b text-white font-[500] text-[12px]">
-              Select Offer
-            </div>
+        ) : (
+          <div className="flex items-center justify-center min-h-[200px] text-2xl text-[#135868] font-[500]">
+            {tabs[active]}
           </div>
+        )}
 
-          <div
-            className="relative bg-[#0E424E] rounded-lg shadow p-6 text-white bg-cover"
-            style={{backgroundImage: 'url(/assets/PlanImage.png)'}}
-          >
-            <h4 className="font-[500] text-[47px]">Plan Less. Travel More.</h4>
-            <button className="absolute bottom-4 left-4 bg-[#2AB7B7] text-white px-6 py-2 rounded shadow font-semibold hover:bg-[#229a9a] transition mt-4 cursor-pointer">
-              Discover Offers
-            </button>
-            <button className="absolute bottom-4 right-4 underline text-white px-6 py-2 font-semibold transition cursor-pointer">
-              Contact Us
-            </button>
-          </div>
+        <div
+          className="relative bg-[#0E424E] rounded-lg shadow p-6 text-white bg-cover"
+          style={{backgroundImage: 'url(/assets/PlanImage.png)'}}
+        >
+          <h4 className="font-[500] text-[47px]">Plan Less. Travel More.</h4>
+          <button className="absolute bottom-4 left-4 bg-[#2AB7B7] text-white px-6 py-2 rounded shadow font-semibold hover:bg-[#229a9a] transition mt-4 cursor-pointer">
+            Discover Offers
+          </button>
+          <button className="absolute bottom-4 right-4 underline text-white px-6 py-2 font-semibold transition cursor-pointer">
+            Contact Us
+          </button>
         </div>
       </div>
     </div>
