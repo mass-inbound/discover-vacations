@@ -1,19 +1,18 @@
 import React, {useState} from 'react';
-import HowItWorksHero from './HowItWorksHero';
-import { FaLocationDot } from 'react-icons/fa6';
+import {FaLocationDot} from 'react-icons/fa6';
+import SectionHeroBanner from './SectionHeroBanner';
 
-
-export default function HowItWorks () {
-    return (
-        <>
-        <HowItWorksHero
+export default function HowItWorks() {
+  return (
+    <>
+      <SectionHeroBanner
         tagline="Vacation booking made simple"
         title="How it works"
         description="Choose your destination, select your offer, and pick your travel dates, it’s that easy. We’ve streamlined the entire booking process so you can focus on getting excited for your trip, not figuring out how to plan it."
         image="/assets/beach1.png"
       />
-      <div className='py-14 px-8'>
-       <div className="relative z-8 max-w-5xl mx-auto text-center">
+      <div className="py-14 px-8">
+        <div className="relative z-8 max-w-5xl mx-auto text-center">
           <p className="text-[16px] font-[500] text-[#208989]">
             Plan Less. Enjoy More.
           </p>
@@ -81,7 +80,7 @@ export default function HowItWorks () {
             </div>
           </div>
         </div>
-        </div>
-        </>
-    )
+      </div>
+    </>
+  );
 }

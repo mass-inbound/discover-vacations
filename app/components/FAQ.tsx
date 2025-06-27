@@ -1,5 +1,6 @@
-import React, {useState} from 'react';
-import HowItWorksHero from './HowItWorksHero';
+import {useState} from 'react';
+import SectionHeroBanner from './SectionHeroBanner';
+import {FaCircleChevronDown} from 'react-icons/fa6';
 
 const faqs = [
   {
@@ -70,7 +71,7 @@ export default function FAQ() {
 
   return (
     <div className="flex flex-col items-center w-full ">
-      <HowItWorksHero
+      <SectionHeroBanner
         tagline="FAQS"
         title="Frequently asked questions"
         description="Find quick answers to the most common questions about booking, payments, cancellations, and more. Still need help? Our support team is always here for you."
@@ -95,8 +96,10 @@ export default function FAQ() {
                 {openIdx === idx ? faq.answer : faq.summary}
               </p>
             </div>
-            <span className={`ml-4 transition-transform duration-300 ${openIdx === idx ? 'rotate-180' : ''}`}>
-              <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
+            <span
+              className={`ml-4 transition-transform duration-300 ${openIdx === idx ? 'rotate-180' : ''}`}
+            >
+              {/* <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="12" fill="#22D3EE" />
                 <path
                   d="M8 12.5l3 3 5-5"
@@ -105,7 +108,8 @@ export default function FAQ() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
-              </svg>
+              </svg> */}
+              <FaCircleChevronDown size={20} className="text-[#2AB7B7]" />
             </span>
           </button>
           <div
@@ -116,13 +120,11 @@ export default function FAQ() {
             }}
           >
             <div className="overflow-hidden">
-              <p className="text-gray-600 text-sm">
-                {faq.answer}
-              </p>
+              <p className="text-gray-600 text-sm">{faq.answer}</p>
             </div>
           </div>
         </div>
       ))}
     </div>
   );
-} 
+}

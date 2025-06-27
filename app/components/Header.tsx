@@ -94,7 +94,7 @@ export function Header({
       dropdown: true,
       items: [
         {label: 'FAQ', href: '/faq'},
-        {label: 'Contact Us', href: '/contact'},
+        {label: 'Contact Us', href: '/contact-us'},
       ],
     },
     {label: 'Log in', href: '/account'},
