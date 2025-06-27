@@ -305,18 +305,18 @@ function CartBadge({count}: {count: number | null}) {
   const {publish, shop, cart, prevCart} = useAnalytics();
 
   return (
-    <a
-      href="/cart"
-      onClick={(e) => {
-        e.preventDefault();
-        open('cart');
-        publish('cart_viewed', {
-          cart,
-          prevCart,
-          shop,
-          url: window.location.href || '',
-        } as CartViewPayload);
-      }}
+    <NavLink
+      to="/cart"
+      // onClick={(e) => {
+      //   e.preventDefault();
+      //   open('cart');
+      //   publish('cart_viewed', {
+      //     cart,
+      //     prevCart,
+      //     shop,
+      //     url: window.location.href || '',
+      //   } as CartViewPayload);
+      // }}
       className="relative flex items-center text-white font-[500] text-[14px]"
     >
       <svg
@@ -333,7 +333,7 @@ function CartBadge({count}: {count: number | null}) {
         />
       </svg>
       Cart {count === null ? <span>&nbsp;</span> : count}
-    </a>
+    </NavLink>
   );
 }
 
