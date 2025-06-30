@@ -106,7 +106,10 @@ export default function Product() {
 
   // Parse description for bullet points (split by newlines)
   const bullets = product.description
-    ? product.description.split(/\r?\n/).filter((b) => b.trim().length > 0)
+    ? product.description
+        .replace(/\/n/g, '\n') // convert "/n" to real newline
+        .split(/\r?\n/)
+        .filter((b) => b.trim().length > 0)
     : [];
 
   // Optimistically selects a variant with given available variant information
@@ -159,14 +162,16 @@ export default function Product() {
             </span>
           </div>
           <ul className="text-sm text-[#000] my-4 list-disc list-inside space-y-2">
-            {bullets.map((b, i) => (
-              <li key={i} className="flex gap-2 items-center">
-                <FaCheck className="text-[#113B3F]" />{' '}
-                <span className="text-[#113B3F] font-[400] text-[16px]">
-                  {b}
-                </span>
-              </li>
-            ))}
+            {bullets.map((b, i) => {
+              return (
+                <li key={i} className="flex gap-2 items-center">
+                  <FaCheck className="text-[#113B3F]" />{' '}
+                  <span className="text-[#113B3F] font-[400] text-[16px]">
+                    {b}
+                  </span>
+                </li>
+              );
+            })}
           </ul>
           <div className="max-w-[80%] bg-[#F2B233] rounded-[8px] px-3 py-1 flex gap-2 items-center justify-center">
             <FaGift className="text-white" />

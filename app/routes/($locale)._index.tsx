@@ -148,7 +148,13 @@ export default function Homepage() {
   const bookingRef = useRef<HTMLDivElement>(null);
 
   const handleScroll = () => {
-    bookingRef.current?.scrollIntoView({behavior: 'smooth'});
+    const offset = 130; // height of your fixed navbar
+    const element = bookingRef.current;
+    if (element) {
+      const top =
+        element.getBoundingClientRect().top + window.pageYOffset - offset;
+      window.scrollTo({top, behavior: 'smooth'});
+    }
   };
 
   const slides = [
@@ -219,7 +225,7 @@ export default function Homepage() {
 
       {/* Vacation Booking, Simplified Section */}
       <section
-        ref={bookingRef}
+        // ref={bookingRef}
         className="relative py-20 bg-white overflow-hidden"
       >
         {/* Decorative tree icon */}
@@ -299,7 +305,10 @@ export default function Homepage() {
       </section>
 
       {/* Find Your Next Escape Section */}
-      <section className="relative overflow-x-hidden py-20 mt-5 bg-[#EAF8F84D]">
+      <section
+        ref={bookingRef}
+        className="relative overflow-x-hidden py-20 mt-5 bg-[#EAF8F84D]"
+      >
         <img
           src="/assets/starPattern.png"
           alt=""
@@ -332,7 +341,7 @@ export default function Homepage() {
         </div>
 
         <div className="flex justify-center mt-[4rem] mb-8">
-          <button className="text-[#2AB7B7] shadow-lg bg-white px-4 py-2 text-[16px] font-[500] rounded-md">
+          <button className="text-[#2AB7B7] shadow-lg bg-white px-4 py-2 text-[16px] font-[500] rounded-md border border-transparent hover:border-[#2AB7B7]">
             Show more offers
           </button>
         </div>
@@ -497,12 +506,18 @@ export default function Homepage() {
             clicks, no pressure, no complicated steps.
           </p>
           <div className="flex gap-8 justify-end">
-            <button className="bg-[#2AB7B7] text-white px-6 py-2 rounded-[10px] shadow text-[20px] font-[400] hover:bg-[#229a9a] transition">
+            <Link
+              to={'/discover-offers'}
+              className="bg-[#2AB7B7] text-white px-6 py-2 rounded-[10px] shadow text-[20px] font-[400] hover:bg-[#229a9a] transition"
+            >
               Discover Offers
-            </button>
-            <button className="text-white underline text-[20px] font-[400]">
+            </Link>
+            <Link
+              to={'/contact-us'}
+              className="text-white underline text-[20px] font-[400] flex items-center"
+            >
               Contact Us
-            </button>
+            </Link>
           </div>
         </div>
       </section>
@@ -610,9 +625,9 @@ function Tabs({
                 // Parse description as bullet points (split by newline or period)
                 const bullets = product.description
                   ? product.description
-                      .split(/\r?\n|<br\s*\/?>|•|‣|▪|●|–|-|\u2022/) // Handle common bullet separators
-                      .map((s: string) => s.trim())
-                      .filter((b: string) => b.length > 0)
+                      .replace(/\/n/g, '\n') // convert "/n" to real newline
+                      .split(/\r?\n/)
+                      .filter((b) => b.trim().length > 0)
                   : [];
                 return (
                   <div
@@ -648,23 +663,20 @@ function Tabs({
                       {/* Details button */}
                       <Link
                         to={`/products/${product.handle}`}
-                        className="absolute left-4 bottom-3 text-[#26A5A5] bg-white px-4 py-1 text-[16px] font-medium z-10 rounded"
+                        className="absolute left-4 bottom-3 text-[#26A5A5] bg-white px-4 py-1 text-[16px] font-medium z-10 rounded border border-transparent hover:border-[#26A5A5] transition"
                       >
                         Details
                       </Link>
                     </div>
                     <ul className="text-sm text-[#000] mb-4 list-disc list-inside pl-4 space-y-2">
-                      {product.description
-                        ? product.description
-                            .split(/\r?\n/)
-                            .filter((b: string) => b.trim().length > 0)
-                            .map((b: string, i: number) => (
-                              <li key={i} className="flex gap-2 items-center">
-                                <FaCheck className="text-amber-400" />{' '}
-                                <span>{b}</span>
-                              </li>
-                            ))
-                        : null}
+                      {bullets.map((b, i) => {
+                        return (
+                          <li key={i} className="flex gap-2 items-center">
+                            <FaCheck className="text-amber-400" />{' '}
+                            <span>{b}</span>
+                          </li>
+                        );
+                      })}
                     </ul>
                     <div className="bg-[#FBE7C0] rounded-[8px] px-3 py-1 mx-4 flex gap-2 items-center justify-center">
                       <FaGift />
@@ -697,23 +709,31 @@ function Tabs({
             )}
           </div>
         ) : (
-          <div className="flex items-center justify-center min-h-[200px] text-2xl text-[#135868] font-[500]">
+          <div className="flex items-center justify-center transform translate-x-55 min-h-[200px] text-2xl text-[#135868] font-[500]">
             {tabs[active]}
           </div>
         )}
 
-        <div
-          className="relative bg-[#0E424E] rounded-lg shadow p-6 text-white bg-cover"
-          style={{backgroundImage: 'url(/assets/PlanImage.png)'}}
-        >
-          <h4 className="font-[500] text-[47px]">Plan Less. Travel More.</h4>
-          <button className="absolute bottom-4 left-4 bg-[#2AB7B7] text-white px-6 py-2 rounded shadow font-semibold hover:bg-[#229a9a] transition mt-4 cursor-pointer">
-            Discover Offers
-          </button>
-          <button className="absolute bottom-4 right-4 underline text-white px-6 py-2 font-semibold transition cursor-pointer">
-            Contact Us
-          </button>
-        </div>
+        {tabs[active] === 'Popular' && (
+          <div
+            className="relative bg-[#0E424E] rounded-lg shadow p-6 text-white bg-cover"
+            style={{backgroundImage: 'url(/assets/PlanImage.png)'}}
+          >
+            <h4 className="font-[500] text-[47px]">Plan Less. Travel More.</h4>
+            <Link
+              to={'/discover-offers'}
+              className="absolute bottom-4 left-4 bg-[#2AB7B7] text-white px-6 py-2 rounded shadow font-semibold hover:bg-[#229a9a] transition mt-4 cursor-pointer"
+            >
+              Discover Offers
+            </Link>
+            <Link
+              to={'/contact-us'}
+              className="absolute bottom-4 right-4 underline text-white px-6 py-2 font-semibold transition cursor-pointer"
+            >
+              Contact Us
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

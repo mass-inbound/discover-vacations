@@ -3,6 +3,7 @@ import {Await, NavLink} from 'react-router';
 import type {FooterQuery, HeaderQuery} from 'storefrontapi.generated';
 import {FaFacebookF, FaInstagram, FaTwitter} from 'react-icons/fa';
 import {MdEmail} from 'react-icons/md';
+import {Link} from 'react-router';
 
 interface FooterProps {
   footer: Promise<FooterQuery | null>;
@@ -57,9 +58,9 @@ export function Footer({
                 <h4 className="font-bold mb-6 text-lg">About</h4>
                 <ul className="space-y-4 text-sm opacity-90">
                   <li>
-                    <a href="#" className="hover:underline">
+                    <Link to={'/how-it-works'} className="hover:underline">
                       How it works
-                    </a>
+                    </Link>
                   </li>
                   <li>
                     <a href="#" className="hover:underline">
@@ -67,14 +68,14 @@ export function Footer({
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="hover:underline">
+                    <Link to={'/faq'} className="hover:underline">
                       FAQs
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a href="#" className="hover:underline">
+                    <Link to="/" className="hover:underline">
                       About Us
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>
@@ -93,9 +94,9 @@ export function Footer({
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="hover:underline">
+                    <Link to="/contact-us" className="hover:underline">
                       Contact Us
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>
