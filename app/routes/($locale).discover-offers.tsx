@@ -1,81 +1,227 @@
 import {useEffect, useRef, useState} from 'react';
 import {IoDiamond} from 'react-icons/io5';
 import {FaCheck, FaGift} from 'react-icons/fa6';
-import {Link} from 'react-router';
+import {Link, useLoaderData, useNavigate} from 'react-router';
+import type {LoaderFunctionArgs} from '@shopify/remix-oxygen';
 
-type PriceRange = {min: number; max: number};
-
-type PriceRangeFilterProps = {
-  maxProductPrice?: number;
-};
-
-export default function DiscoverOfferPage({
-  maxProductPrice = 10000,
-}: PriceRangeFilterProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState('Sort by');
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  const options = ['Price', 'Popularity', 'Rating'];
-
-  const toggleDropdown = () => setIsOpen((prev) => !prev);
-
-  const handleSelect = (option: string) => {
-    setSelected(option);
-    setIsOpen(false);
-  };
-
-  // Close dropdown if clicked outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
+// --- GraphQL fragment and query ---
+const PRODUCT_FRAGMENT = `#graphql
+  fragment MoneyProductItem on MoneyV2 {
+    amount
+    currencyCode
+  }
+  fragment ProductItem on Product {
+    id
+    handle
+    title
+    description
+    featuredImage {
+      id
+      altText
+      url
+      width
+      height
+    }
+    priceRange {
+      minVariantPrice {
+        ...MoneyProductItem
       }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+      maxVariantPrice {
+        ...MoneyProductItem
+      }
+    }
+    tags
+  }
+` as const;
 
-  const MIN = 0;
-  const MAX = maxProductPrice;
+const DISCOVER_OFFERS_QUERY = `#graphql
+  query DiscoverOffers(
+    $handle: String!
+    $country: CountryCode
+    $language: LanguageCode
+    $first: Int
+  ) @inContext(country: $country, language: $language) {
+    collection(handle: $handle) {
+      id
+      handle
+      title
+      description
+      products(first: $first) {
+        nodes {
+          ...ProductItem
+        }
+      }
+    }
+  }
+  ${PRODUCT_FRAGMENT}
+` as const;
 
-  // Accordion state
-  const [openSections, setOpenSections] = useState<{price: boolean}>({
-    price: true,
+// --- Loader ---
+export async function loader({context, request}: LoaderFunctionArgs) {
+  const url = new URL(request.url);
+  // Support multi-select for destination and vacationType
+  const destinationParam = url.searchParams.get('destination');
+  const vacationTypeParam = url.searchParams.get('vacationType');
+  const destinationsSelected = destinationParam
+    ? destinationParam.split(',')
+    : [];
+  const vacationTypesSelected = vacationTypeParam
+    ? vacationTypeParam.split(',')
+    : [];
+  const min = Number(url.searchParams.get('min') || 0);
+  const max = Number(url.searchParams.get('max') || 10000);
+  const sort = url.searchParams.get('sort') || 'Price';
+
+  // Fetch all products in the collection
+  const {collection} = await context.storefront.query(DISCOVER_OFFERS_QUERY, {
+    variables: {
+      handle: 'vacation-package',
+      first: 50, // adjust as needed
+    },
   });
 
-  // Input values as strings
+  let allProducts = collection?.products?.nodes || [];
+
+  // --- Extract filter options BEFORE filtering ---
+  const allTags = allProducts.flatMap((p: any) => p.tags);
+  const destinations = Array.from(
+    new Set(allTags.filter((t: string) => t.match(/,|FL|PA/))),
+  );
+  const vacationTypes = Array.from(
+    new Set(allTags.filter((t: string) => t === 'Hotels' || t === 'Cruise')),
+  );
+
+  // --- Filtering ---
+  let products = allProducts;
+  if (destinationsSelected.length > 0) {
+    products = products.filter((p: any) =>
+      destinationsSelected.some((d) => p.tags.includes(d)),
+    );
+  }
+  if (vacationTypesSelected.length > 0) {
+    products = products.filter((p: any) =>
+      vacationTypesSelected.some((v) => p.tags.includes(v)),
+    );
+  }
+  products = products.filter(
+    (p: any) =>
+      Number(p.priceRange.minVariantPrice.amount) >= min &&
+      Number(p.priceRange.maxVariantPrice.amount) <= max,
+  );
+
+  // --- Sorting ---
+  if (sort === 'Price') {
+    products = products.sort(
+      (a: any, b: any) =>
+        Number(a.priceRange.minVariantPrice.amount) -
+        Number(b.priceRange.minVariantPrice.amount),
+    );
+  } else if (sort === 'Popularity') {
+    // You can implement popularity logic if you have metafields or sales data
+  } else if (sort === 'Rating') {
+    // You can implement rating logic if you have metafields or reviews
+  }
+
+  // For price slider UI
+  const maxProductPrice = Math.max(
+    ...allProducts.map((p: any) => Number(p.priceRange.maxVariantPrice.amount)),
+    10000,
+  );
+
+  return {
+    products,
+    destinations,
+    vacationTypes,
+    maxProductPrice,
+    selected: {
+      destination: destinationsSelected,
+      vacationType: vacationTypesSelected,
+      min,
+      max,
+      sort,
+    },
+  };
+}
+
+// --- Main Component ---
+export default function DiscoverOfferPage() {
+  const {products, destinations, vacationTypes, maxProductPrice, selected} =
+    useLoaderData<typeof loader>();
+  const navigate = useNavigate();
+  const mainDivRef = useRef<HTMLDivElement>(null);
+
+  // --- Filter state (controlled by URL) ---
+  const [selectedDestinations, setSelectedDestinations] = useState<string[]>(
+    selected.destination || [],
+  );
+  const [selectedVacationTypes, setSelectedVacationTypes] = useState<string[]>(
+    selected.vacationType || [],
+  );
   const [inputValues, setInputValues] = useState<{min: string; max: string}>({
-    min: MIN.toString(),
-    max: MAX.toString(),
+    min: String(selected.min ?? 0),
+    max: String(selected.max ?? maxProductPrice),
   });
-
-  // Numeric price range
-  const [priceRange, setPriceRange] = useState<PriceRange>({
-    min: MIN,
-    max: MAX,
+  const [priceRange, setPriceRange] = useState<{min: number; max: number}>({
+    min: selected.min ?? 0,
+    max: selected.max ?? maxProductPrice,
   });
-
-  // Refs for slider track and thumbs
+  const [sort, setSort] = useState(selected.sort || 'Price');
   const rangeRef = useRef<HTMLDivElement>(null);
   const rangeTrackRef = useRef<HTMLDivElement>(null);
   const minThumbRef = useRef<HTMLDivElement>(null);
   const maxThumbRef = useRef<HTMLDivElement>(null);
+  // Track if user is dragging slider
+  const [isDragging, setIsDragging] = useState(false);
 
-  // Toggle accordion sections
-  const toggleSection = (section: keyof typeof openSections) => {
-    setOpenSections((prev) => ({...prev, [section]: !prev[section]}));
+  // Update URL on filter change (except price slider drag)
+  useEffect(() => {
+    if (isDragging) return;
+    const params = new URLSearchParams();
+    if (selectedDestinations.length > 0)
+      params.set('destination', selectedDestinations.join(','));
+    if (selectedVacationTypes.length > 0)
+      params.set('vacationType', selectedVacationTypes.join(','));
+    params.set('min', String(priceRange.min));
+    params.set('max', String(priceRange.max));
+    params.set('sort', sort);
+    navigate(`?${params.toString()}`, {replace: true});
+    // Scroll to main offers div after filter change
+    setTimeout(() => {
+      if (mainDivRef.current) {
+        const topOffset = 120; // height of the navbar
+        const elementPosition = mainDivRef.current.getBoundingClientRect().top;
+        const offsetPosition = window.scrollY + elementPosition - topOffset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth',
+        });
+      }
+    }, 400);
+    // eslint-disable-next-line
+  }, [
+    selectedDestinations,
+    selectedVacationTypes,
+    priceRange,
+    sort,
+    isDragging,
+  ]);
+
+  // Handle checkbox changes
+  const handleDestinationChange = (d: string) => {
+    setSelectedDestinations((prev) =>
+      prev.includes(d) ? prev.filter((item) => item !== d) : [...prev, d],
+    );
   };
-
-  // Handle input field changes
+  const handleVacationTypeChange = (v: string) => {
+    setSelectedVacationTypes((prev) =>
+      prev.includes(v) ? prev.filter((item) => item !== v) : [...prev, v],
+    );
+  };
+  // Handle price input changes
   const handlePriceInputChange = (type: 'min' | 'max', value: string) => {
-    if (!/^\d*$/.test(value)) return;
-
+    if (!/^[0-9]*$/.test(value)) return;
     setInputValues((prev) => ({...prev, [type]: value}));
-
     if (value !== '') {
       const numValue = parseInt(value, 10);
       if (type === 'min' && numValue <= priceRange.max) {
@@ -85,41 +231,31 @@ export default function DiscoverOfferPage({
       }
     }
   };
-
-  // Update slider thumbs and track
+  // Price slider UI logic (as before)
   useEffect(() => {
     const rangeEl = rangeRef.current;
     const trackEl = rangeTrackRef.current;
     const minThumb = minThumbRef.current;
     const maxThumb = maxThumbRef.current;
     if (!rangeEl || !trackEl || !minThumb || !maxThumb) return;
-
-    const rangeWidth = rangeEl.offsetWidth;
-    const minPercent = (priceRange.min / MAX) * 100;
-    const maxPercent = (priceRange.max / MAX) * 100;
-
-    // Position thumbs
+    const minPercent = (priceRange.min / maxProductPrice) * 100;
+    const maxPercent = (priceRange.max / maxProductPrice) * 100;
     minThumb.style.left = `${minPercent}%`;
     maxThumb.style.left = `${maxPercent}%`;
-
-    // Position and size track
     trackEl.style.left = `${minPercent}%`;
     trackEl.style.width = `${maxPercent - minPercent}%`;
-  }, [priceRange, MAX]);
-
-  // Drag handler
+  }, [priceRange, maxProductPrice]);
   const handleThumbDrag = (type: 'min' | 'max') => {
+    setIsDragging(true);
     const rangeEl = rangeRef.current;
     if (!rangeEl) return;
     const rect = rangeEl.getBoundingClientRect();
-
     const onMouseMove = (e: MouseEvent) => {
       const pos = Math.min(
         1,
         Math.max(0, (e.clientX - rect.left) / rect.width),
       );
-      const value = Math.round(pos * MAX);
-
+      const value = Math.round(pos * maxProductPrice);
       if (type === 'min') {
         const newMin = Math.min(value, priceRange.max);
         setPriceRange((prev) => ({...prev, min: newMin}));
@@ -130,18 +266,19 @@ export default function DiscoverOfferPage({
         setInputValues((prev) => ({...prev, max: newMax.toString()}));
       }
     };
-
     const onMouseUp = () => {
+      setIsDragging(false);
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
     };
-
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   };
 
+  // --- UI ---
   return (
     <div>
+      {/* Hero */}
       <div
         style={{
           backgroundImage: "url('/assets/discoverImage.png')",
@@ -167,49 +304,24 @@ export default function DiscoverOfferPage({
         </div>
       </div>
 
-      <div className="max-w-[1400px] my-7 mx-auto">
-        <div
-          className="flex gap-2 items-center justify-end relative"
-          ref={dropdownRef}
-        >
+      {/* Main discover offers  */}
+      <div className="max-w-[1400px] my-7 mx-auto" ref={mainDivRef}>
+        {/* Sort by */}
+        <div className="flex gap-2 items-center justify-end relative">
           <p className="font-[400] text-[18px] text-[#0E424E]">Sort by</p>
-          <button
-            className="border border-[#2AB7B7] rounded-[10px] p-3 flex items-center justify-between w-[150px]"
-            onClick={toggleDropdown}
+          <select
+            className="border border-[#2AB7B7] rounded-[10px] p-3 w-[150px]"
+            value={sort}
+            onChange={(e) => setSort(e.target.value)}
           >
-            <span>{selected}</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className={`h-5 w-5 text-[#2AB7B7] transform transition-transform duration-200 ${
-                isOpen ? 'rotate-180' : ''
-              }`}
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </button>
-
-          {isOpen && (
-            <ul className="absolute top-full right-0 mt-2 w-[150px] bg-white border border-[#2AB7B7] rounded-[10px] shadow-lg z-10">
-              {options.map((option) => (
-                <li
-                  key={option}
-                  className="p-2 hover:bg-[#E6F7F7] hover:rounded-[10px] cursor-pointer"
-                  onClick={() => handleSelect(option)}
-                >
-                  {option}
-                </li>
-              ))}
-            </ul>
-          )}
+            <option value="Price">Price</option>
+            <option value="Popularity">Popularity</option>
+            <option value="Rating">Rating</option>
+          </select>
         </div>
 
         <div className="flex gap-14 my-14">
+          {/* Filters */}
           <div className="w-[400px] p-6 border border-[#E5E5E5] rounded-[10px] shadow-md">
             {/* Destination Filter */}
             <div className="mb-6">
@@ -217,14 +329,20 @@ export default function DiscoverOfferPage({
                 Destination
               </h2>
               <div className="flex flex-col gap-2">
-                <label className="flex items-center gap-2 text-[#1A202C] text-[16px] font-[400]">
-                  <input type="checkbox" className="w-4 h-4" />
-                  Orlando, FL (4)
-                </label>
-                <label className="flex items-center gap-2 text-[#1A202C] text-[16px] font-[400]">
-                  <input type="checkbox" className="w-4 h-4" />
-                  Poconos, PA (1)
-                </label>
+                {((destinations ?? []).filter(Boolean) as string[]).map((d) => (
+                  <label
+                    key={d}
+                    className="flex items-center gap-2 text-[#1A202C] text-[16px] font-[400]"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selectedDestinations.includes(d)}
+                      onChange={() => handleDestinationChange(d)}
+                      className="w-4 h-4"
+                    />
+                    {d}
+                  </label>
+                ))}
               </div>
             </div>
 
@@ -234,14 +352,22 @@ export default function DiscoverOfferPage({
                 Vacation Type
               </h2>
               <div className="flex flex-col gap-2">
-                <label className="flex items-center gap-2 text-[#1A202C] text-[16px] font-[400]">
-                  <input type="checkbox" className="w-4 h-4" />
-                  Hotels
-                </label>
-                <label className="flex items-center gap-2 text-[#1A202C] text-[16px] font-[400]">
-                  <input type="checkbox" className="w-4 h-4" />
-                  Cruise
-                </label>
+                {((vacationTypes ?? []).filter(Boolean) as string[]).map(
+                  (v) => (
+                    <label
+                      key={v}
+                      className="flex items-center gap-2 text-[#1A202C] text-[16px] font-[400]"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedVacationTypes.includes(v)}
+                        onChange={() => handleVacationTypeChange(v)}
+                        className="w-4 h-4"
+                      />
+                      {v}
+                    </label>
+                  ),
+                )}
               </div>
             </div>
 
@@ -249,8 +375,8 @@ export default function DiscoverOfferPage({
             <div className="mb-6">
               <button
                 className="text-lg mb-2 flex justify-between items-center w-full text-left"
-                onClick={() => toggleSection('price')}
-                aria-expanded={openSections.price}
+                // Accordion logic can be added if needed
+                aria-expanded={true}
                 aria-controls="price-panel"
               >
                 PRICE RANGE
@@ -259,7 +385,7 @@ export default function DiscoverOfferPage({
                   width="16"
                   height="16"
                   fill="currentColor"
-                  className={`bi bi-chevron-down transition-transform ${openSections.price ? '' : '-rotate-90'}`}
+                  className="bi bi-chevron-down transition-transform"
                   viewBox="0 0 16 16"
                   aria-hidden="true"
                 >
@@ -269,10 +395,9 @@ export default function DiscoverOfferPage({
                   />
                 </svg>
               </button>
-
               <div
                 id="price-panel"
-                className={`space-y-4 overflow-hidden transition-all ${openSections.price ? 'max-h-60' : 'max-h-0'}`}
+                className="space-y-4 overflow-hidden transition-all max-h-60"
               >
                 {/* Inputs */}
                 <div className="flex gap-2">
@@ -295,7 +420,6 @@ export default function DiscoverOfferPage({
                     aria-label="Maximum price"
                   />
                 </div>
-
                 {/* Slider */}
                 <div
                   className="relative h-1 bg-gray-200 rounded mt-6 mb-8 mx-2"
@@ -305,28 +429,30 @@ export default function DiscoverOfferPage({
                     className="absolute h-1 bg-gray-500 rounded"
                     ref={rangeTrackRef}
                   />
-
                   <div
                     className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-4 h-4 bg-black rounded-full cursor-pointer"
                     ref={minThumbRef}
-                    style={{left: '0%'}}
+                    style={{
+                      left: `${(priceRange.min / maxProductPrice) * 100}%`,
+                    }}
                     onMouseDown={() => handleThumbDrag('min')}
                     role="slider"
-                    aria-valuemin={MIN}
-                    aria-valuemax={MAX}
+                    aria-valuemin={0}
+                    aria-valuemax={maxProductPrice}
                     aria-valuenow={priceRange.min}
                     aria-label="Minimum price slider"
                     tabIndex={0}
                   />
-
                   <div
                     className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-4 h-4 bg-black rounded-full cursor-pointer"
                     ref={maxThumbRef}
-                    style={{left: '100%'}}
+                    style={{
+                      left: `${(priceRange.max / maxProductPrice) * 100}%`,
+                    }}
                     onMouseDown={() => handleThumbDrag('max')}
                     role="slider"
-                    aria-valuemin={MIN}
-                    aria-valuemax={MAX}
+                    aria-valuemin={0}
+                    aria-valuemax={maxProductPrice}
                     aria-valuenow={priceRange.max}
                     aria-label="Maximum price slider"
                     tabIndex={0}
@@ -336,142 +462,105 @@ export default function DiscoverOfferPage({
             </div>
           </div>
 
-          {/* Right side content  */}
+          {/* Product Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
-            <div className="relative bg-white rounded-lg shadow flex flex-col">
-              <div className="absolute -top-7 left-1 flex items-center justify-center gap-1 bg-[#F2B233] text-[#FEFEFE] px-2 py-1 text-[14px] font-[400] rounded">
-                <IoDiamond /> <span>Exclusive Offer</span>
+            {products.length === 0 && (
+              <div className="col-span-2 text-center text-red-600 font-bold py-12">
+                No offers found for selected filters.
               </div>
-
-              <div className="relative w-full h-[280px] rounded-t mb-4 overflow-hidden">
-                {/* Discount polygon badge */}
-                <img
-                  src="/assets/polygonDiscount.svg"
-                  alt="Discount"
-                  className="absolute top-0 right-0 z-8"
-                />
-
-                {/* Destination image */}
-                <img
-                  src="/assets/DestinationImage.png"
-                  alt="Orlando, FL"
-                  className="w-full h-full object-cover"
-                />
-
-                {/* Destination title */}
-                <h4 className="absolute top-3 left-4 font-bold text-white text-[20px] z-10">
-                  Orlando, FL
-                </h4>
-
-                {/* Details button */}
-                <Link
-                  to="/detail/destinations/orlando"
-                  className="absolute left-4 bottom-3 text-[#26A5A5] bg-white px-4 py-1 text-[16px] font-medium z-10 rounded"
+            )}
+            {products.map((product: any) => {
+              // Parse description as bullet points
+              const bullets = product.description
+                ? product.description
+                    .replace(/\/n/g, '\n')
+                    .split(/\r?\n/)
+                    .filter((b: string) => b.trim().length > 0)
+                : [];
+              const isExclusive = product.tags.includes('Exclusive');
+              return (
+                <div
+                  key={product.id}
+                  className="relative bg-white rounded-lg shadow flex flex-col"
                 >
-                  Details
-                </Link>
-              </div>
-
-              <ul className="text-sm text-[#000] mb-4 list-disc list-inside pl-4 space-y-2">
-                <li className="flex gap-2 items-center">
-                  <FaCheck className="text-amber-400" />{' '}
-                  <span>2 night hotel accommodation for two adults</span>
-                </li>
-                <li className="flex gap-2 items-center">
-                  <FaCheck className="text-amber-400" />{' '}
-                  <span>Includes flights, Park Hopper tickets, City Bus</span>
-                </li>
-              </ul>
-              <div className="bg-[#FBE7C0] rounded-[8px] px-3 py-1 mx-4 flex gap-2 items-center justify-center">
-                <FaGift />
-                <span className="text-[16px] font-[400] text-[#151515]">
-                  Includes a Gift: Your Next Vacation, On Us
-                </span>
-              </div>
-              <div className="mt-8 p-4 bg-[#F5F5F5] flex flex-col gap-1 items-center justify-center border-t border-gray-300">
-                <span className="text-[#676767] font-[400] text-[13px]">
-                  3 night/4 days
-                </span>
-                <div className="flex items-center justify-center gap-1">
-                  <span className="text-[#135868] font-[500] text-[27px]">
-                    $49
-                  </span>
-                  <span className="text-[#135868] font-[500] text-[12px]">
-                    per <br /> couple
-                  </span>
+                  {isExclusive && (
+                    <div className="absolute -top-7 left-1 flex items-center justify-center gap-1 bg-[#F2B233] text-[#FEFEFE] px-2 py-1 text-[14px] font-[400] rounded">
+                      <IoDiamond /> <span>Exclusive Offer</span>
+                    </div>
+                  )}
+                  <div className="relative w-full h-[280px] rounded-t mb-4 overflow-hidden">
+                    {/* Discount polygon badge */}
+                    <img
+                      src="/assets/polygonDiscount.svg"
+                      alt="Discount"
+                      className="absolute top-0 right-0 z-8"
+                    />
+                    {/* Destination image */}
+                    {product.featuredImage ? (
+                      <img
+                        src={product.featuredImage.url}
+                        alt={product.featuredImage.altText || product.title}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                        No Image
+                      </div>
+                    )}
+                    {/* Destination title */}
+                    <h4 className="absolute top-3 left-4 font-bold text-white text-[20px] z-10">
+                      {product.title}
+                    </h4>
+                    {/* Details button */}
+                    <Link
+                      to={`/products/${product.handle}`}
+                      className="absolute left-4 bottom-3 text-[#26A5A5] bg-white px-4 py-1 text-[16px] font-medium z-10 rounded border border-transparent hover:border-[#26A5A5] transition"
+                    >
+                      Details
+                    </Link>
+                  </div>
+                  <ul className="text-sm text-[#000] mb-4 list-disc list-inside pl-4 space-y-2">
+                    {bullets.map((b: string, i: number) => (
+                      <li key={i} className="flex gap-2 items-center">
+                        <FaCheck className="text-amber-400" /> <span>{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="bg-[#FBE7C0] rounded-[8px] px-3 py-1 mx-4 flex gap-2 items-center justify-center">
+                    <FaGift />
+                    <span className="text-[16px] font-[400] text-[#151515]">
+                      Includes a Gift: Your Next Vacation, On Us
+                    </span>
+                  </div>
+                  <div className="mt-8 p-4 bg-[#F5F5F5] flex flex-col gap-1 items-center justify-center border-t border-gray-300">
+                    <span className="text-[#676767] font-[400] text-[13px]">
+                      {/* You can add duration info as metafield or in description if needed */}
+                    </span>
+                    <div className="flex items-center justify-center gap-1">
+                      <span className="text-[#135868] font-[500] text-[27px]">
+                        ${product.priceRange.minVariantPrice.amount}
+                      </span>
+                      <span className="text-[#135868] font-[500] text-[12px]">
+                        per <br /> couple
+                      </span>
+                    </div>
+                    <span className="text-[#676767] font-[400] text-[13px]">
+                      not included taxes + fees
+                    </span>
+                  </div>
+                  <div
+                    className="bg-[#2AB7B7] h-[28px] flex justify-center items-center rounded-b text-white font-[500] text-[12px] cursor-pointer"
+                    onClick={() =>
+                      navigate(
+                        `/cart?title=${encodeURIComponent(product.title)}&location=${encodeURIComponent(product.tags?.find((t: string) => t.match(/,|FL|PA/)) || '')}&image=${encodeURIComponent(product.featuredImage?.url || '')}&price=${product.priceRange.minVariantPrice.amount}`,
+                      )
+                    }
+                  >
+                    Select Offer
+                  </div>
                 </div>
-                <span className="text-[#676767] font-[400] text-[13px]">
-                  not included taxes + fees
-                </span>
-              </div>
-              <div className="bg-[#2AB7B7] h-[28px] flex justify-center items-center rounded-b text-white font-[500] text-[12px]">
-                Select Offer
-              </div>
-            </div>
-
-            <div className="relative bg-white rounded-lg shadow flex flex-col">
-              <div className="relative w-full h-[280px] rounded-t mb-4 overflow-hidden">
-                {/* Discount polygon badge */}
-                <img
-                  src="/assets/polygonDiscount.svg"
-                  alt="Discount"
-                  className="absolute top-0 right-0 z-8"
-                />
-
-                {/* Destination image */}
-                <img
-                  src="/assets/DestinationImage2.png"
-                  alt="Orlando, FL"
-                  className="w-full h-full object-cover"
-                />
-
-                {/* Destination title */}
-                <h4 className="absolute top-3 left-4 font-bold text-white text-[20px] z-10">
-                  Poconos, PA
-                </h4>
-
-                {/* Details button */}
-                <button className="absolute left-4 bottom-3 text-[#26A5A5] bg-white px-4 py-1 text-[16px] font-medium z-10 rounded">
-                  Details
-                </button>
-              </div>
-
-              <ul className="text-sm text-[#000] mb-4 list-disc list-inside pl-4 space-y-2">
-                <li className="flex gap-2 items-center">
-                  <FaCheck className="text-amber-400" />{' '}
-                  <span>3 nights hotel accommodations for two adults</span>
-                </li>
-                <li className="flex gap-2 items-center">
-                  <FaCheck className="text-amber-400" />{' '}
-                  <span>Enjoy Exclusive Perks During Your Stay</span>
-                </li>
-              </ul>
-              <div className="bg-[#FBE7C0] rounded-[8px] px-3 py-1 mx-4 flex gap-2 items-center justify-center">
-                <FaGift />
-                <span className="text-[16px] font-[400] text-[#151515]">
-                  Includes a Gift: Your Next Vacation, On Us
-                </span>
-              </div>
-              <div className="mt-8 p-4 bg-[#F5F5F5] flex flex-col gap-1 items-center justify-center border-t border-gray-300">
-                <span className="text-[#676767] font-[400] text-[13px]">
-                  3 night/4 days
-                </span>
-                <div className="flex items-center justify-center gap-1">
-                  <span className="text-[#135868] font-[500] text-[27px]">
-                    $49
-                  </span>
-                  <span className="text-[#135868] font-[500] text-[12px]">
-                    per <br /> couple
-                  </span>
-                </div>
-                <span className="text-[#676767] font-[400] text-[13px]">
-                  not included taxes + fees
-                </span>
-              </div>
-              <div className="bg-[#2AB7B7] h-[28px] flex justify-center items-center rounded-b text-white font-[500] text-[12px]">
-                Select Offer
-              </div>
-            </div>
+              );
+            })}
           </div>
         </div>
         <div className="flex justify-center mt-[4rem] mb-8">

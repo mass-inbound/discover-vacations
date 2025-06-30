@@ -18,6 +18,7 @@ import {FaCheck, FaGift} from 'react-icons/fa';
 import {FaLocationDot} from 'react-icons/fa6';
 import {HiOutlineChevronLeft, HiOutlineChevronRight} from 'react-icons/hi';
 import {IoDiamond} from 'react-icons/io5';
+import {useNavigate} from 'react-router';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [
@@ -109,7 +110,7 @@ export default function Product() {
     ? product.description
         .replace(/\/n/g, '\n') // convert "/n" to real newline
         .split(/\r?\n/)
-        .filter((b) => b.trim().length > 0)
+        .filter((b: string) => b.trim().length > 0)
     : [];
 
   // Optimistically selects a variant with given available variant information
@@ -129,6 +130,8 @@ export default function Product() {
   });
 
   const {title, descriptionHtml} = product;
+
+  const navigate = useNavigate();
 
   return (
     <div className="mx-auto mt-20">
@@ -162,7 +165,7 @@ export default function Product() {
             </span>
           </div>
           <ul className="text-sm text-[#000] my-4 list-disc list-inside space-y-2">
-            {bullets.map((b, i) => {
+            {bullets.map((b: string, i: number) => {
               return (
                 <li key={i} className="flex gap-2 items-center">
                   <FaCheck className="text-[#113B3F]" />{' '}
@@ -180,7 +183,14 @@ export default function Product() {
             </span>
           </div>
           <p className="underline my-8 cursor-pointer">Need Help? Contact Us</p>
-          <button className="bg-[#2AB7B7] rounded flex gap-2 items-center justify-center text-white px-4 py-2 hover:bg-[#229a9a]">
+          <button
+            className="bg-[#2AB7B7] rounded flex gap-2 items-center justify-center text-white px-4 py-2 hover:bg-[#229a9a]"
+            onClick={() =>
+              navigate(
+                `/cart?title=${encodeURIComponent(product.title)}&location=${encodeURIComponent(product.tags?.find((t: string) => t.match(/,|FL|PA/)) || '')}&image=${encodeURIComponent(mainImage)}&price=${price}`,
+              )
+            }
+          >
             <BiCart size={25} />
             <span className="text-[16px] font-[600]">Save My Deal Now</span>
           </button>
@@ -456,6 +466,7 @@ const PRODUCT_FRAGMENT = `#graphql
     description
     encodedVariantExistence
     encodedVariantAvailability
+    tags
     options {
       name
       optionValues {

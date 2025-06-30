@@ -1,4 +1,9 @@
-import {type MetaFunction, useLoaderData} from 'react-router';
+import {
+  type MetaFunction,
+  useLoaderData,
+  useLocation,
+  redirect,
+} from 'react-router';
 import type {CartQueryDataReturn} from '@shopify/hydrogen';
 import {CartForm} from '@shopify/hydrogen';
 import {
@@ -24,87 +29,39 @@ export const headers: HeadersFunction = ({actionHeaders}) => actionHeaders;
 
 export async function action({request, context}: ActionFunctionArgs) {
   const {cart} = context;
-
   const formData = await request.formData();
-
-  const {action, inputs} = CartForm.getFormInput(formData);
-
-  if (!action) {
-    throw new Error('No action provided');
-  }
-
-  let status = 200;
-  let result: CartQueryDataReturn;
-
-  switch (action) {
-    case CartForm.ACTIONS.LinesAdd:
-      result = await cart.addLines(inputs.lines);
-      break;
-    case CartForm.ACTIONS.LinesUpdate:
-      result = await cart.updateLines(inputs.lines);
-      break;
-    case CartForm.ACTIONS.LinesRemove:
-      result = await cart.removeLines(inputs.lineIds);
-      break;
-    case CartForm.ACTIONS.DiscountCodesUpdate: {
-      const formDiscountCode = inputs.discountCode;
-
-      // User inputted discount code
-      const discountCodes = (
-        formDiscountCode ? [formDiscountCode] : []
-      ) as string[];
-
-      // Combine discount codes already applied on cart
-      discountCodes.push(...inputs.discountCodes);
-
-      result = await cart.updateDiscountCodes(discountCodes);
-      break;
-    }
-    case CartForm.ACTIONS.GiftCardCodesUpdate: {
-      const formGiftCardCode = inputs.giftCardCode;
-
-      // User inputted gift card code
-      const giftCardCodes = (
-        formGiftCardCode ? [formGiftCardCode] : []
-      ) as string[];
-
-      // Combine gift card codes already applied on cart
-      giftCardCodes.push(...inputs.giftCardCodes);
-
-      result = await cart.updateGiftCardCodes(giftCardCodes);
-      break;
-    }
-    case CartForm.ACTIONS.BuyerIdentityUpdate: {
-      result = await cart.updateBuyerIdentity({
-        ...inputs.buyerIdentity,
-      });
-      break;
-    }
-    default:
-      throw new Error(`${action} cart action is not defined`);
-  }
-
-  const cartId = result?.cart?.id;
-  const headers = cartId ? cart.setCartId(result.cart.id) : new Headers();
-  const {cart: cartResult, errors, warnings} = result;
-
-  const redirectTo = formData.get('redirectTo') ?? null;
-  if (typeof redirectTo === 'string') {
-    status = 303;
-    headers.set('Location', redirectTo);
-  }
-
-  return data(
-    {
-      cart: cartResult,
-      errors,
-      warnings,
-      analytics: {
-        cartId,
+  // Get all form fields
+  const variantId = formData.get('variantId');
+  const quantity = 1;
+  // Add to cart if variantId is present
+  let result;
+  if (variantId) {
+    result = await cart.addLines([
+      {
+        merchandiseId: variantId as string,
+        quantity,
+        attributes: [
+          {key: 'First Name', value: String(formData.get('firstName') || '')},
+          {key: 'Last Name', value: String(formData.get('lastName') || '')},
+          {key: 'Email', value: String(formData.get('email') || '')},
+          {key: 'Phone', value: String(formData.get('phone') || '')},
+          {key: 'Adults', value: String(formData.get('adults') || '')},
+          {key: 'Kids', value: String(formData.get('kids') || '')},
+          {key: 'Check In', value: String(formData.get('checkIn') || '')},
+          {key: 'Check Out', value: String(formData.get('checkOut') || '')},
+          {key: 'Offer Title', value: String(formData.get('offerTitle') || '')},
+          {
+            key: 'Offer Location',
+            value: String(formData.get('offerLocation') || ''),
+          },
+          {key: 'Offer Image', value: String(formData.get('offerImage') || '')},
+          {key: 'Offer Price', value: String(formData.get('offerPrice') || '')},
+        ],
       },
-    },
-    {status, headers},
-  );
+    ]);
+  }
+  // Redirect to checkout or show confirmation
+  return redirect('/checkout');
 }
 
 export async function loader({context}: LoaderFunctionArgs) {
@@ -114,6 +71,20 @@ export async function loader({context}: LoaderFunctionArgs) {
 
 export default function Cart() {
   const cart = useLoaderData<typeof loader>();
+  const location = useLocation();
+
+  // Parse offer data from query string
+  const params = new URLSearchParams(location.search);
+  const offer = {
+    title: params.get('title') || 'Magical Orlando Getaway',
+    location: params.get('location') || 'Orlando, FL',
+    image: params.get('image') || '/assets/DestinationImage.png',
+    price: params.get('price') || 49,
+    nights: 3,
+    days: 4,
+    expires: '00:00:00',
+    description: params.get('description') || '',
+  };
 
   // Form state
   const [form, setForm] = useState({
@@ -126,27 +97,7 @@ export default function Cart() {
     consent: false,
   });
 
-  // Offer summary static data
-  const offer = {
-    title: 'Magical Orlando Getaway',
-    location: 'Orlando, FL',
-    image: '/assets/DestinationImage.png',
-    price: 49,
-    nights: 3,
-    days: 4,
-    expires: '00:00:00',
-  };
-
-  // Handle form input
-  function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
-    const {name, value, type, checked} = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
-  }
-
-  //Date range picker
+  // Date range picker
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [checkIn, setCheckIn] = useState<Date | null>(null);
@@ -180,6 +131,14 @@ export default function Cart() {
     }
   }
 
+  function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
+    const {name, value, type, checked} = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  }
+
   return (
     <div className="min-h-screen ">
       <div className="py-8 px-2 flex flex-col items-start mx-auto max-w-7xl">
@@ -192,7 +151,10 @@ export default function Cart() {
         <div className="w-full max-w-7xl grid grid-cols-1 md:grid-cols-[1.5fr_1fr] gap-8">
           <div className="grid grid-cols-[60%_40%]">
             {/* General Information Form */}
-            <div className="bg-[#FAFAFA] rounded-l-xl shadow-xl p-8 flex flex-col gap-2">
+            <form
+              method="post"
+              className="bg-[#FAFAFA] rounded-l-xl shadow-xl p-8 flex flex-col gap-2"
+            >
               <div>
                 <h2 className="text-[21px] font-[500]">General Information</h2>
                 <p className="text-[#111] font-[400] text-[13px] mb-4 tracking-wide">
@@ -291,7 +253,46 @@ export default function Cart() {
                   I agree to the terms and conditions
                 </span>
               </div>
-            </div>
+              {/* Hidden offer data inputs */}
+              <input type="hidden" name="offerTitle" value={offer.title} />
+              <input
+                type="hidden"
+                name="offerLocation"
+                value={offer.location}
+              />
+              <input type="hidden" name="offerImage" value={offer.image} />
+              <input type="hidden" name="offerPrice" value={offer.price} />
+              <input type="hidden" name="offerNights" value={offer.nights} />
+              <input type="hidden" name="offerDays" value={offer.days} />
+              <input
+                type="hidden"
+                name="offerDescription"
+                value={offer.description || ''}
+              />
+              <input
+                type="hidden"
+                name="variantId"
+                value={params.get('variantId') || ''}
+              />
+              {/* Date picker values as hidden inputs */}
+              <input
+                type="hidden"
+                name="checkIn"
+                value={checkIn ? checkIn.toISOString() : ''}
+              />
+              <input
+                type="hidden"
+                name="checkOut"
+                value={checkOut ? checkOut.toISOString() : ''}
+              />
+              <button
+                type="submit"
+                className="w-full bg-[#2AB7B7] text-white rounded-lg py-3 mt-auto font-semibold flex items-center justify-center gap-2"
+              >
+                <BsCreditCard2BackFill size={20} />
+                Proceed to Payment
+              </button>
+            </form>
 
             {/* Date Picker & Toggle */}
             <div className="bg-[#164C51] rounded-r-xl shadow-xl p-8 flex flex-col items-center text-white min-h-[500px]">
@@ -330,7 +331,7 @@ export default function Cart() {
                 </label>
               </div>
 
-              {/* Calendar or “NO” fallback */}
+              {/* Calendar or "NO" fallback */}
               {showDatePicker ? (
                 <div className="space-y-4">
                   {/* Month nav */}
@@ -422,10 +423,6 @@ export default function Cart() {
                   <span className="text-xl font-semibold"></span>
                 </div>
               )}
-              <button className="w-full bg-[#2AB7B7] text-white rounded-lg py-3 mt-auto font-semibold flex items-center justify-center gap-2">
-                <BsCreditCard2BackFill size={20} />
-                Proceed to Payment
-              </button>
             </div>
           </div>
 
@@ -470,8 +467,18 @@ export default function Cart() {
               </span>
             </div>
             <ul className="text-sm text-[#135868] mx-8 my-2 space-y-2">
-              <li>✔ 3 nights hotel accomodations</li>
-              <li>✔ Enjoy Exclusive Perks During Your Stay</li>
+              {offer.description ? (
+                offer.description
+                  .split('\n')
+                  .map((line: string, idx: number) => (
+                    <li key={idx}>✔ {line}</li>
+                  ))
+              ) : (
+                <>
+                  <li>✔ 3 nights hotel accommodations</li>
+                  <li>✔ Enjoy Exclusive Perks During Your Stay</li>
+                </>
+              )}
             </ul>
             <button className="bg-[#F2B233] text-white rounded-lg py-2 px-4 mx-8 my-2 font-semibold flex items-center gap-2 max-w-[80%]">
               <FaGift />
