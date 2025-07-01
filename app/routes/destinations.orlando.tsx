@@ -43,12 +43,11 @@ export default function ProductDetail() {
         />
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-3xl md:text-[61px] font-[500] text-center mb-4 text-[#0E424E]">
-            Find Your Next Escape
+          Discover Your Next Vacation
+
           </h2>
           <p className="font-[400] text-[20px] text-[#676767] mx-auto max-w-3xl text-center mb-10">
-            Explore a collection of vacation offers crafted for ease, comfort,
-            and flexibility. Just choose your favorite, set your travel dates,
-            and customize as needed.
+          Discover a collection of vacations
           </p>
           {/* Tabs */}
           <Tabs />
@@ -133,8 +132,8 @@ function Tabs() {
             </ul>
             <div className="bg-[#FBE7C0] rounded-[8px] px-3 py-1 mx-4 flex gap-2 items-center justify-center">
               <FaGift />
-              <span className="text-[16px] font-[400] text-[#151515]">
-                Includes a Gift: Your Next Vacation, On Us
+              <span className="text-[16px] font-[500] text-[#151515]">
+              Includes a Bonus Gift: Your Choice Vacation Getaway
               </span>
             </div>
             <div className="mt-8 p-4 bg-[#F5F5F5] flex flex-col gap-1 items-center justify-center border-t border-gray-300">
@@ -146,7 +145,7 @@ function Tabs() {
                   $49
                 </span>
                 <span className="text-[#135868] font-[500] text-[12px]">
-                  per <br /> couple
+                  per <br /> family of four
                 </span>
               </div>
               <span className="text-[#676767] font-[400] text-[13px]">

@@ -69,8 +69,8 @@ export function OfferCard({
       </ul>
       <div className="bg-[#FBE7C0] rounded-[8px] px-3 py-1 mx-4 flex gap-2 items-center justify-center">
         <FaGift />
-        <span className="text-[16px] font-[400] text-[#151515]">
-          Includes a Gift: Your Next Vacation, On Us
+        <span className="text-[16px] font-[500] text-[#151515]">
+        Includes a Bonus Gift: Your Choice Vacation Getaway
         </span>
       </div>
       <div className="mt-8 p-4 bg-[#F5F5F5] flex flex-col gap-1 items-center justify-center border-t border-gray-300">
@@ -82,7 +82,7 @@ export function OfferCard({
             ${product.priceRange.minVariantPrice.amount}
           </span>
           <span className="text-[#135868] font-[500] text-[12px]">
-            per <br /> couple
+            per <br /> family of four
           </span>
         </div>
         <span className="text-[#676767] font-[400] text-[13px]">

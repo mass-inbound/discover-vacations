@@ -78,7 +78,7 @@ export default function Cart() {
   const offer = {
     title: params.get('title') || 'Magical Orlando Getaway',
     location: params.get('location') || 'Orlando, FL',
-    image: params.get('image') || '/assets/DestinationImage.png',
+    image: params.get('image') || '/assets/orlando.jpg',
     price: params.get('price') || 49,
     nights: 3,
     days: 4,
@@ -464,7 +464,7 @@ export default function Cart() {
               </span>
               <span className="text-[28px] text-[#0E424E]">
                 ${offer.price}{' '}
-                <span className="text-base font-normal">per couple</span>
+                <span className="text-base font-normal"> per couple or upto a family of four</span>
               </span>
               <span className="text-xs text-gray-400">
                 not included taxes + fees
@@ -479,8 +479,8 @@ export default function Cart() {
                   ))
               ) : (
                 <>
-                  <li>✔ 3 nights hotel accommodations</li>
-                  <li>✔ Enjoy Exclusive Perks During Your Stay</li>
+                  <li>✔ 3 nights hotel accommodations in Magical Orlando per couple or up to a family of 4</li>
+                 
                 </>
               )}
             </ul>
@@ -498,16 +498,16 @@ export default function Cart() {
         </div>
       </div>
 
-      {/* your next vacation, on us  */}
+      {/* Discover More — Choose Your Bonus Vacation  */}
 
       <div className="max-w-7xl py-12 mx-auto">
         <div className="text-center flex flex-col justify-center items-center mb-6">
           <h1 className="text-[#0E424E] font-[500] text-[36px]">
-            Your Next Vacation, On Us
+            Discover More — Choose Your Bonus Vacation
           </h1>
           <p className="font-[400] text-[20px] text-[#676767]">
-            Choose one of the exclusive vacation packages below, a special
-            reward to start planning your next escape.
+          Select your preferred gift and add it to your cart for $0.00.
+          It will be confirmed during your vacation, and you’ll have the chance to change it if you'd like.
           </p>
         </div>
         <div className="h-[1px] bg-gray-300"></div>

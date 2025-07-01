@@ -27,7 +27,7 @@ export default function DetailsOrlandoView() {
     <div className="mx-auto mt-20">
       <div className="grid grid-cols-[1.5fr_1fr] min-h-[528px] max-w-7xl mx-auto">
         <div className="h-full">
-          <img src="/assets/DestinationImage.png" alt="" className="h-full" />
+          <img src="/assets/orlando.jpg" alt="" className="h-full" />
         </div>
         <div className="bg-[#F5F5F5] p-8">
           <h1 className="uppercase font-[800] text-[24px]">
@@ -44,7 +44,7 @@ export default function DetailsOrlandoView() {
             <div className="flex items-center justify-center gap-1">
               <span className="text-[#135868] font-[500] text-[27px]">$49</span>
               <span className="text-[#135868] font-[500] text-[12px]">
-                per <br /> couple
+                per <br /> family of four
               </span>
             </div>
             <span className="text-[#0E424E] font-[400] text-[13px]">
@@ -67,8 +67,8 @@ export default function DetailsOrlandoView() {
           </ul>
           <div className="max-w-[80%] bg-[#F2B233] rounded-[8px] px-3 py-1 flex gap-2 items-center justify-center">
             <FaGift className="text-white" />
-            <span className="text-[16px] font-[400] text-white">
-              Includes a Gift: Your Next Vacation, On Us
+            <span className="text-[16px] font-[500] text-white">
+            Includes a Bonus Gift: Your Choice Vacation Getaway
             </span>
           </div>
           <p className="underline my-8 cursor-pointer">Need Help? Contact Us</p>
@@ -100,8 +100,7 @@ export default function DetailsOrlandoView() {
             Vacation Booking, Simplified
           </h2>
           <p className="text-[#1A202C] mb-[3.5rem] max-w-2xl mx-auto font-[400] text-[20px]">
-            We combine curated offers with flexible trip customization so every
-            detail fits your time, budget, and group size.
+           Curated offers. Real value. Flexible dates and room options to fit your travel plans — without overcomplicating the process.
           </p>
           <div className="flex flex-col md:flex-row items-start justify-center relative">
             {/* Curly line connecting icons */}
@@ -111,10 +110,11 @@ export default function DetailsOrlandoView() {
                 <FaLocationDot size={40} fill="#135868" />
               </div>
               <h3 className="font-semibold text-[24px] my-3 text-[#135868]">
-                Choose Location
+                Discover Your Next Vacation
+
               </h3>
               <p className="text-[#151515] text-[14px] font-[400]">
-                Choose a day trip based on your location and interests.
+                Browse your exclusive offer and add it to your cart — real value, no hidden fees.
               </p>
             </div>
             <img
@@ -131,11 +131,12 @@ export default function DetailsOrlandoView() {
                 />
               </div>
               <h3 className="font-semibold text-[24px] my-3 text-[#135868]">
-                Pick-up Date
+                Pick a Date
+
               </h3>
               <p className="text-[#151515] text-[14px] font-[400]">
-                Adjust your schedule—departure dates and trip duration are all
-                customizable.
+                Know your dates? Select them on the calendar before checkout.
+Not ready yet? No problem — purchase now and choose your dates anytime in the Booking Hub.
               </p>
             </div>
             <img
@@ -152,10 +153,12 @@ export default function DetailsOrlandoView() {
                 />
               </div>
               <h3 className="font-semibold text-[24px] my-3 text-[#135868]">
-                Book your vacation
+                Book Your Getaway
+
               </h3>
               <p className="text-[#151515] text-[14px] font-[400]">
-                Enjoy a streamlined booking process and dedicated support.
+                Complete your purchase and get instant access to your personal Booking Portal, where reserving your trip is quick, easy, and secure.
+
               </p>
             </div>
           </div>
