@@ -14,9 +14,11 @@ export default function ContactUs() {
   return (
     <>
       <SectionHeroBanner
-        tagline="General Inquire"
-        title="Contact Us"
-        description="Have a question, request, or just want to say hello? Fill out the form below or reach out to us directly, our team will get back to you as soon as possible."
+        tagline="General Inquiry"
+        title="Ask Discover
+We're here to help you Discover more, stress less."
+        description="Ask away — your My Discover Vacation starts here.
+Whether you're planning a trip, managing a reservation, or just need a few details clarified, our team is ready to help. Fill out the form below and we'll get back to you within one business day."
         image="/assets/beach3.png"
       />
       <div
@@ -25,38 +27,38 @@ export default function ContactUs() {
       >
         {/* Left: Form */}
         <form
-          className="flex-1 bg-white rounded-xl shadow-lg p-8 flex flex-col gap-4 min-w-[320px] animate-fade-in justify-between"
+          className="flex-1 bg-white rounded-xl shadow-lg p-4 sm:p-6 md:p-8 flex flex-col gap-4 min-w-[0] animate-fade-in justify-between w-full max-w-full" 
           style={{minHeight: 520}}
         >
           <div>
-            <h2 className="text-2xl font-semibold text-gray-800 mb-1">
+            <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-1">
               General Inquire Form
             </h2>
-            <p className="text-gray-500 mb-4">
+            <p className="text-gray-500 mb-4 text-sm sm:text-base">
               Please fill out to form for sending your message.
             </p>
             <div className="flex flex-col md:flex-row gap-4">
               <input
                 type="text"
                 placeholder="First Name"
-                className="flex-1 rounded-md border border-gray-200 bg-gray-50 px-4 py-3 text-gray-800 focus:ring-2 focus:ring-green-200 focus:bg-white transition"
+                className="flex-1 rounded-md border border-gray-200 bg-gray-50 px-3 py-2 sm:px-4 sm:py-3 text-gray-800 focus:ring-2 focus:ring-green-200 focus:bg-white transition text-sm sm:text-base"
               />
               <input
                 type="text"
                 placeholder="Last Name"
-                className="flex-1 rounded-md border border-gray-200 bg-gray-50 px-4 py-3 text-gray-800 focus:ring-2 focus:ring-green-200 focus:bg-white transition"
+                className="flex-1 rounded-md border border-gray-200 bg-gray-50 px-3 py-2 sm:px-4 sm:py-3 text-gray-800 focus:ring-2 focus:ring-green-200 focus:bg-white transition text-sm sm:text-base mt-2 md:mt-0"
               />
             </div>
             <div className="flex flex-col md:flex-row gap-4 mt-4">
               <input
                 type="email"
                 placeholder="Email"
-                className="flex-1 rounded-md border border-gray-200 bg-gray-50 px-4 py-3 text-gray-800 focus:ring-2 focus:ring-green-200 focus:bg-white transition"
+                className="flex-1 rounded-md border border-gray-200 bg-gray-50 px-3 py-2 sm:px-4 sm:py-3 text-gray-800 focus:ring-2 focus:ring-green-200 focus:bg-white transition text-sm sm:text-base"
               />
               <input
                 type="tel"
                 placeholder="Phone Number"
-                className="flex-1 rounded-md border border-gray-200 bg-gray-50 px-4 py-3 text-gray-800 focus:ring-2 focus:ring-green-200 focus:bg-white transition"
+                className="flex-1 rounded-md border border-gray-200 bg-gray-50 px-3 py-2 sm:px-4 sm:py-3 text-gray-800 focus:ring-2 focus:ring-green-200 focus:bg-white transition text-sm sm:text-base mt-2 md:mt-0"
               />
             </div>
             <div className="mt-4">
@@ -70,7 +72,7 @@ export default function ContactUs() {
                 id="message"
                 placeholder="Please write here."
                 rows={5}
-                className="w-full rounded-md border border-gray-200 bg-gray-50 px-4 py-3 text-gray-800 focus:ring-2 focus:ring-green-200 focus:bg-white transition resize-none"
+                className="w-full rounded-md border border-gray-200 bg-gray-50 px-3 py-2 sm:px-4 sm:py-3 text-gray-800 focus:ring-2 focus:ring-green-200 focus:bg-white transition resize-none text-sm sm:text-base"
               />
             </div>
             <div className="flex items-start gap-2 mt-2">
@@ -85,29 +87,14 @@ export default function ContactUs() {
                 htmlFor="consent"
                 className="text-xs text-gray-500 select-none"
               >
-                I understand by clicking the Check box, I hereby give prior
-                express written consent to receive e-mail, SMS/Text messages,
-                ringless voice mail, ringless voicemail drops, voicemail drops,
-                direct-to- voicemail messages, other messaging, and/or
-                telemarketing/telephonic sales calls about offers, products,
-                services and/or deals from an automatic telephone dialing
-                system, autodialer, and/or artificial or pre-recorded voice, or
-                recorded messages, including through voice assisted technology
-                or ringless voicemail technology from or on behalf of Discover
-                Vacations, LLC at the telephone number(s) and address(es) that I
-                have provided above, regardless of whether my telephone number
-                is on any Do Not Call registry. My consent is not a condition of
-                purchase. By clicking Continue Booking, I confirm that I am over
-                age 25, and agree to the Privacy Policy and Terms & Conditions,
-                both of which I agree I have read, understand and agree to. As
-                an alternate to the above consent, click here for other ways to
-                take advantage of this promotion.
+               By submitting this form, you consent to be contacted by Discover Vacations via phone, email, or SMS. Standard messaging rates may apply.
+
               </label>
             </div>
           </div>
           <button
             type="submit"
-            className="mt-2 font-semibold py-2 px-18 rounded-md shadow-md transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-green-200 self-start"
+            className="mt-2 font-semibold py-2 px-8 rounded-md shadow-md transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-green-200 self-start w-full sm:w-auto text-base"
             style={{background: green, color: 'white'}}
           >
             Submit
@@ -115,7 +102,7 @@ export default function ContactUs() {
         </form>
         {/* Right: Contact Cards */}
         <div
-          className="flex flex-col gap-6 flex-1 min-w-[260px] max-w-sm justify-between"
+          className="flex flex-col gap-6 flex-1 min-w-[0] max-w-full md:max-w-sm justify-between mt-8 md:mt-0 w-full"
           style={{
             background: greyBg,
             borderRadius: '0.75rem',
@@ -181,12 +168,17 @@ export default function ContactUs() {
             <div className="text-gray-700 text-sm mb-2">
               Team is available Mon-Sat 9am - 6pm EST.
             </div>
-            <button
-              className="mt-2 w-full border rounded-md py-2 font-medium text-center transition-all duration-150"
-              style={{borderColor: green, color: green, background: 'white'}}
-            >
-              Connect
-            </button>
+            <div className="relative group inline-block">
+              <button
+                className="bg-gray-300 text-gray-500 cursor-not-allowed px-6 py-2 rounded-lg font-semibold flex items-center gap-2 opacity-60"
+                disabled
+              >
+                Live Chat
+              </button>
+              <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-max bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 pointer-events-none transition">
+                Coming Soon
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -70,45 +70,35 @@ export default function FAQ() {
   };
 
   return (
-    <div className="flex flex-col items-center w-full ">
+    <div className="flex flex-col items-center w-full px-2 sm:px-0 ">
       <SectionHeroBanner
         tagline="FAQS"
-        title="Frequently asked questions"
-        description="Find quick answers to the most common questions about booking, payments, cancellations, and more. Still need help? Our support team is always here for you."
+        title="Looking for Answers?"
+        description="You've come to the right place. From booking and payments to rescheduling and bonus gifts, we've gathered the most common questions right here to help you plan with confidence. Still have a question? Ask Discover and one of our team members will follow up with personalized support — or use our chat feature (coming soon) for instant help."
         image="/assets/beach2.png"
       />
       {faqs.map((faq, idx) => (
         <div
           key={idx}
-          className="w-full max-w-3xl bg-white rounded-lg shadow-md mb-6 overflow-hidden transition-all duration-300"
+          className="w-full max-w-3xl sm:rounded-lg rounded-md bg-white shadow-md mb-4 sm:mb-6 overflow-hidden transition-all duration-300 max-w-full"
         >
           <button
-            className="w-full flex items-center justify-between p-4 focus:outline-none group"
+            className="w-full flex flex-col sm:flex-row sm:items-center sm:justify-between items-start justify-start p-3 sm:p-4 focus:outline-none group gap-2 sm:gap-0"
             onClick={() => toggle(idx)}
             aria-expanded={openIdx === idx}
             aria-controls={`faq-panel-${idx}`}
           >
-            <div className="text-left">
-              <h3 className="text-xl font-semibold text-gray-800">
+            <div className="text-left w-full">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-800 break-words">
                 {faq.question}
               </h3>
-              <p className="text-gray-600 text-sm mt-1">
+              <p className="text-gray-600 text-sm sm:text-base mt-1">
                 {openIdx === idx ? faq.answer : faq.summary}
               </p>
             </div>
             <span
-              className={`ml-4 transition-transform duration-300 ${openIdx === idx ? 'rotate-180' : ''}`}
+              className={`sm:ml-4 ml-0 transition-transform duration-300 ${openIdx === idx ? 'rotate-180' : ''}`}
             >
-              {/* <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="12" fill="#22D3EE" />
-                <path
-                  d="M8 12.5l3 3 5-5"
-                  stroke="#fff"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg> */}
               <FaCircleChevronDown size={20} className="text-[#2AB7B7]" />
             </span>
           </button>
@@ -120,7 +110,7 @@ export default function FAQ() {
             }}
           >
             <div className="overflow-hidden">
-              <p className="text-gray-600 text-sm">{faq.answer}</p>
+              <p className="text-gray-600 text-sm sm:text-base">{faq.answer}</p>
             </div>
           </div>
         </div>

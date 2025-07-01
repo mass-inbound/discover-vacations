@@ -91,7 +91,7 @@ export default function Product() {
   const {product} = useLoaderData<typeof loader>();
   const mainImage =
     product.selectedOrFirstAvailableVariant?.image?.url ||
-    '/assets/DestinationImage.png';
+    '/assets/orlando.jpg';
   const mainImageAlt =
     product.selectedOrFirstAvailableVariant?.image?.altText || product.title;
   const price = product.selectedOrFirstAvailableVariant?.price?.amount || '0';
@@ -157,7 +157,7 @@ export default function Product() {
                 ${price}
               </span>
               <span className="text-[#135868] font-[500] text-[12px]">
-                per <br /> couple
+                per <br /> family of four
               </span>
             </div>
             <span className="text-[#0E424E] font-[400] text-[13px]">
@@ -176,10 +176,10 @@ export default function Product() {
               );
             })}
           </ul>
-          <div className="max-w-[80%] bg-[#F2B233] rounded-[8px] px-3 py-1 flex gap-2 items-center justify-center">
+          <div className="max-w-[100%] bg-[#F2B233] rounded-[8px] px-3 py-1 flex gap-2 items-center justify-center">
             <FaGift className="text-white" />
-            <span className="text-[16px] font-[400] text-white">
-              Includes a Gift: Your Next Vacation, On Us
+            <span className="text-[16px] font-[500] text-white w-full">
+            Includes a Bonus Gift: Your Choice Vacation Getaway
             </span>
           </div>
           <p className="underline my-8 cursor-pointer">Need Help? Contact Us</p>
@@ -216,8 +216,7 @@ export default function Product() {
             Vacation Booking, Simplified
           </h2>
           <p className="text-[#1A202C] mb-[3.5rem] max-w-2xl mx-auto font-[400] text-[20px]">
-            We combine curated offers with flexible trip customization so every
-            detail fits your time, budget, and group size.
+           Curated offers. Real value. Flexible dates and room options to fit your travel plans — without overcomplicating the process.
           </p>
           <div className="flex flex-col md:flex-row items-start justify-center relative">
             {/* Curly line connecting icons */}
@@ -227,10 +226,11 @@ export default function Product() {
                 <FaLocationDot size={40} fill="#135868" />
               </div>
               <h3 className="font-semibold text-[24px] my-3 text-[#135868]">
-                Choose Location
+                Discover Your Next Vacation
+
               </h3>
               <p className="text-[#151515] text-[14px] font-[400]">
-                Choose a day trip based on your location and interests.
+                Browse your exclusive offer and add it to your cart — real value, no hidden fees.
               </p>
             </div>
             <img
@@ -247,11 +247,12 @@ export default function Product() {
                 />
               </div>
               <h3 className="font-semibold text-[24px] my-3 text-[#135868]">
-                Pick-up Date
+                Pick a Date
+
               </h3>
               <p className="text-[#151515] text-[14px] font-[400]">
-                Adjust your schedule—departure dates and trip duration are all
-                customizable.
+              Know your dates? Select them on the calendar before checkout.
+              Not ready yet? No problem — purchase now and choose your dates anytime in the Booking Hub.
               </p>
             </div>
             <img
@@ -268,10 +269,12 @@ export default function Product() {
                 />
               </div>
               <h3 className="font-semibold text-[24px] my-3 text-[#135868]">
-                Book your vacation
+                Book Your Getaway
+
               </h3>
               <p className="text-[#151515] text-[14px] font-[400]">
-                Enjoy a streamlined booking process and dedicated support.
+                Complete your purchase and get instant access to your personal Booking Portal, where reserving your trip is quick, easy, and secure.
+
               </p>
             </div>
           </div>
@@ -364,14 +367,25 @@ function Tabs() {
       </ul>
     </div>,
     <div className="bg-gray-100 p-8 text-center flex flex-col gap-4 rounded">
-      <h2 className="text-[#0E424E] font-[500] text-[36px]">
+      <h2 className="text-[#0E424E] font-[500] text-[36px] mb-2">
         Nearby Attractions
       </h2>
-      <ul className="columns-2 list-disc list-inside text-[#0E424E] text-[20px] font-[400]">
-        <li>Universal Studios</li>
-        <li>Walt Disney World</li>
-        <li>Volcano Bay</li>
-      </ul>
+      <div className="flex gap-16 justify-center mx-auto max-w-3xl">
+        <ul className="list-disc list-inside text-[#0E424E] text-[20px] font-[400] text-left">
+          <li>Universal Studios</li>
+          <li>Walt Disney World</li>
+          <li>Volcano Bay</li> 
+          <li>Universal Citywalk</li>
+          <li>SeaWorld Orlando</li>
+        </ul>
+        <ul className="list-disc list-inside text-[#0E424E] text-[20px] font-[400] text-left">
+          <li>Old Town Theme Park</li>
+          <li>Pirates Dinner Adventure</li>
+          <li>Buccaneer Adventure Park</li>
+          <li>Pineapple Pete Kids Park</li>
+          <li>Rocky Falls Adventure Golf</li>
+        </ul>
+      </div>
     </div>,
     <div className="bg-gray-100 p-8 text-center flex flex-col gap-4 rounded">
       <h1 className="text-[#0E424E] font-[500] text-[36px]">Travel Notes</h1>
@@ -414,7 +428,7 @@ function Tabs() {
           </button>
         ))}
       </div>
-      <div>{tabContents[active]}</div>
+      <div>{tabContents[active]}</div>,
     </div>
   );
 }
