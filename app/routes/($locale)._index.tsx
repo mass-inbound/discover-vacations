@@ -203,9 +203,12 @@ export default function Homepage() {
             >
               Discover Offers
             </Link>
-            <button className="text-white underline text-[20px] font-[400]">
+            <Link
+              to="/discover-offers"
+              className="flex items-center text-white underline text-[20px] font-[400] hover:text-gray-300"
+            >
               See All Offers
-            </button>
+            </Link>
           </div>
         </div>
         {/* Logo at bottom right */}
@@ -342,9 +345,12 @@ export default function Homepage() {
         </div>
 
         <div className="flex justify-center mt-[4rem] mb-8">
-          <button className="text-[#2AB7B7] shadow-lg bg-white px-4 py-2 text-[16px] font-[500] rounded-md border border-transparent hover:border-[#2AB7B7]">
+          <Link
+            to="/discover-offers"
+            className="text-[#2AB7B7] shadow-lg bg-white px-4 py-2 text-[16px] font-[500] rounded-md border border-transparent hover:border-[#2AB7B7]"
+          >
             Show more offers
-          </button>
+          </Link>
         </div>
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2">
           <img src="/assets/wavePattern.png" alt="" className="w-[176px]" />
@@ -594,6 +600,21 @@ function Tabs({
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
   const tabs = ['Popular', 'Hotels', 'Cruise', 'Exclusive Deals'];
+
+  // Map tab index to tag
+  const tabTagMap: Record<number, string> = {
+    0: 'Popular',
+    1: 'Hotels',
+    2: 'Cruise',
+    3: 'Exclusive',
+  };
+
+  // Filter products for the active tab
+  const filteredProducts = products.filter(
+    (product) =>
+      Array.isArray(product.tags) && product.tags.includes(tabTagMap[active]),
+  );
+
   return (
     <div>
       <div className="flex mb-12 border-b border-[#135868]">
@@ -607,10 +628,14 @@ function Tabs({
           </button>
         ))}
       </div>
-      <div className="grid grid-cols-[2fr_1fr] gap-8">
-        {active === 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {products.map((product, idx) => (
+      <div
+        className={`grid gap-8 ${
+          tabs[active] === 'Popular' ? 'grid-cols-[2fr_1fr]' : 'grid-cols-1'
+        }`}
+      >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {filteredProducts.length > 0 ? (
+            filteredProducts.map((product, idx) => (
               <OfferCard
                 key={product.id}
                 product={product}
@@ -620,17 +645,16 @@ function Tabs({
                   )
                 }
               />
-            ))}
-          </div>
-        ) : (
-          <div className="flex items-center justify-center transform translate-x-55 min-h-[200px] text-2xl text-[#135868] font-[500]">
-            {tabs[active]}
-          </div>
-        )}
-
+            ))
+          ) : (
+            <div className="col-span-2 text-center text-red-600 font-bold py-12">
+              No products found for this tab.
+            </div>
+          )}
+        </div>
         {tabs[active] === 'Popular' && (
           <div
-            className="relative bg-[#0E424E] rounded-lg shadow p-6 text-white bg-cover"
+            className="relative bg-[#0E424E] rounded-lg shadow p-6 text-white bg-cover min-h-[400px]"
             style={{backgroundImage: 'url(/assets/PlanImage.png)'}}
           >
             <h4 className="font-[500] text-[47px]">Plan Less. Travel More.</h4>
