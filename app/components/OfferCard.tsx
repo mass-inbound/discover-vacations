@@ -62,7 +62,8 @@ export function OfferCard({
       <ul className="text-sm text-[#000] mb-4 list-disc list-inside pl-4 space-y-2">
         {bullets.map((b: string, i: number) => (
           <li key={i} className="flex gap-2 items-center">
-            <FaCheck className="text-amber-400" /> <span>{b}</span>
+            <FaCheck className="text-amber-400" />{' '}
+            <span className="max-w-[85%]">{b}</span>
           </li>
         ))}
       </ul>

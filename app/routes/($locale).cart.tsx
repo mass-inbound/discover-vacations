@@ -149,12 +149,9 @@ export default function Cart() {
           </span>
         </div>
         <div className="w-full max-w-7xl grid grid-cols-1 md:grid-cols-[1.5fr_1fr] gap-8">
-          <div className="grid grid-cols-[60%_40%]">
+          <form method="post" className="grid grid-cols-[60%_40%]">
             {/* General Information Form */}
-            <form
-              method="post"
-              className="bg-[#FAFAFA] rounded-l-xl shadow-xl p-8 flex flex-col gap-2"
-            >
+            <div className="bg-[#FAFAFA] rounded-l-xl shadow-xl p-8 flex flex-col gap-2">
               <div>
                 <h2 className="text-[21px] font-[500]">General Information</h2>
                 <p className="text-[#111] font-[400] text-[13px] mb-4 tracking-wide">
@@ -285,14 +282,14 @@ export default function Cart() {
                 name="checkOut"
                 value={checkOut ? checkOut.toISOString() : ''}
               />
-              <button
+              {/* <button
                 type="submit"
                 className="w-full bg-[#2AB7B7] text-white rounded-lg py-3 mt-auto font-semibold flex items-center justify-center gap-2"
               >
                 <BsCreditCard2BackFill size={20} />
                 Proceed to Payment
-              </button>
-            </form>
+              </button> */}
+            </div>
 
             {/* Date Picker & Toggle */}
             <div className="bg-[#164C51] rounded-r-xl shadow-xl p-8 flex flex-col items-center text-white min-h-[500px]">
@@ -423,8 +420,15 @@ export default function Cart() {
                   <span className="text-xl font-semibold"></span>
                 </div>
               )}
+              <button
+                type="submit"
+                className="w-full bg-[#2AB7B7] text-white rounded-lg py-3 mt-auto font-semibold flex items-center justify-center gap-2"
+              >
+                <BsCreditCard2BackFill size={20} />
+                Proceed to Payment
+              </button>
             </div>
-          </div>
+          </form>
 
           {/* Offer Summary */}
           <div className="bg-gray-100 rounded-xl shadow flex flex-col min-h-[500px]">
