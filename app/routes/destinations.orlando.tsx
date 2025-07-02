@@ -151,7 +151,7 @@ function Tabs() {
                 </span>
               </div>
               <span className="text-[#676767] font-[400] text-[13px]">
-                not included taxes + fees
+                 
               </span>
             </div>
             <div className="bg-[#2AB7B7] h-[28px] flex justify-center items-center rounded-b text-white font-[500] text-[12px]">

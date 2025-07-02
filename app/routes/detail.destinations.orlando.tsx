@@ -48,7 +48,7 @@ export default function DetailsOrlandoView() {
               </span>
             </div>
             <span className="text-[#0E424E] font-[400] text-[13px]">
-              not included taxes + fees
+               
             </span>
           </div>
           <ul className="text-sm text-[#000] my-4 list-disc list-inside space-y-2">

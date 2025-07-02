@@ -447,7 +447,7 @@ export default function Cart() {
                 <span className="text-base font-normal"> per couple or upto a family of four</span>
               </span>
               <span className="text-xs text-gray-400">
-                not included taxes + fees
+                 
               </span>
             </div>
             <ul className="text-sm text-[#135868] mx-8 my-2 space-y-2">
