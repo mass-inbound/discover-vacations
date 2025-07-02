@@ -483,9 +483,9 @@ export default function Homepage() {
       </section>
 
       {/* carousel section  */}
-      <section className="relative bg-[#EAF8F8] px-4 py-16 md:py-0">
+      <section className="relative bg-[#EAF8F8] px-4 md:py-0 min-h-[460px]">
         <div
-          className="relative w-full max-w-7xl overflow-hidden rounded-lg mx-auto"
+          className="relative w-full py-16 max-w-7xl overflow-hidden rounded-lg mx-auto"
           style={{maxHeight: 360}}
         >
           {/* Slides */}
@@ -536,7 +536,7 @@ export default function Homepage() {
       </section>
 
       {/* Ready to Plan Your Next Getaway Section */}
-      <section
+      {/* <section
         className="relative flex flex-col md:flex-row justify-between bg-cover bg-center h-[760px]"
         style={{
           backgroundImage: 'url(/assets/readyPlanImg.jpg)',
@@ -569,7 +569,7 @@ export default function Homepage() {
             </Link>
           </div>
         </div>
-      </section>
+      </section> */}
     </div>
   );
 }
