@@ -21,11 +21,11 @@ export default function ProductDetail() {
           <p className="font-[500] text-[12px] md:text-[14px]">
             Sunshine, Theme Parks, and Family Fun
           </p>
-          <h1 className="font-[800] text-[28px] md:text-[46px]">
+          <h1 className="font-[800] text-[28px] md:text-[28px] md:text-[46px]">
             {' '}
             OFFERS IN ORLANDO, FL
           </h1>
-          <p className="max-w-3xl font-[400] text-[13px] md:text-[16px] text-center">
+          <p className="max-w-3xl font-[400] text-[13px] md:text-[13px] md:text-[16px] text-center">
             Explore our Orlando packages designed for families, couples, and
             adventurers. From world-famous attractions to relaxing resorts, find
             a getaway that fits your style, starting at an unbeatable price.

@@ -1,3 +1,4 @@
+import AboutUs from '~/components/AboutUs';
 import FAQ from '~/components/FAQ';
 
 export default function FAQPage() {

@@ -19,7 +19,7 @@ export default function AboutUs() {
         <div className="absolute inset-0 flex flex-col md:flex-row items-end md:items-center justify-center w-full h-full px-6 md:px-4">
           {/* Family Image Card - perfectly centered, fixed aspect, strong shadow, overlaps white section */}
           <div
-            className="hidden md:block flex-shrink-0 z-20 relative bg-white rounded-[18px] shadow-2xl overflow-hidden items-center justify-center"
+            className="hidden md:block flex-shrink-0 z-20 relative bg-white rounded-[18px] shadow-2xl overflow-hidden flex items-center justify-center"
             style={{
               width: '90%',
               maxWidth: 420,
@@ -49,9 +49,9 @@ export default function AboutUs() {
             <h1
               className="mb-8 text-5xl font-bold leading-tight text-white"
               style={{
+                color: 'white',
                 textShadow:
-                  '0 2px 12px rgba(0,0,0,0. 5), 0 1px 2px rgba(0,0,0,0.3)',
-                fontFamily: '"Brush Script MT", cursive',
+                  '0 2px 12px rgba(0,0,0,0.5), 0 1px 2px rgba(0,0,0,0.3)',
               }}
             >
               Catch The Wave. Discover
@@ -59,8 +59,10 @@ export default function AboutUs() {
               More For Less.
             </h1>
             <p
-              className="font-normal font-[#101010] opacity-80 mt-2"
-              style={{}}
+              className="text-white text-base leading-relaxed"
+              style={{
+                textShadow: '0 2px 8px rgba(0,0,0,0.4)',
+              }}
             >
               At Discover Vacations, we believe planning your next getaway
               should be as exciting as the trip itself. That&apos;s why
@@ -77,14 +79,14 @@ export default function AboutUs() {
         <img
           src="/assets/starPattern.png"
           alt="Stars"
-          className="absolute -left-12 -bottom-240 md:-left-10 md:-bottom-120 opacity-40 pointer-events-none select-none z-10 scale-x-[-1]"
-          style={{width: '10vw', minWidth: 100, maxWidth: 190}}
+          className="absolute left-0 bottom-0 opacity-50 pointer-events-none select-none z-10"
+          style={{width: '8vw', minWidth: 60, maxWidth: 120}}
         />
         <img
           src="/assets/treebgIcon.png"
           alt="Tree"
-          className="absolute -right-0 -bottom-90 md:-right-4 md:-bottom-60 opacity-50 pointer-events-none select-none z-10"
-          style={{width: '10vw', minWidth: 100, maxWidth: 140}}
+          className="absolute right-0 bottom-0 opacity-50 pointer-events-none select-none z-10"
+          style={{width: '10vw', minWidth: 80, maxWidth: 140}}
         />
       </div>
       {/* Mission and Values Section */}
@@ -92,7 +94,7 @@ export default function AboutUs() {
         <h4 className="text-[#8DD3C7] text-xs md:text-lg font-semibold mb-3 tracking-widest uppercase">
           OUR MISSION
         </h4>
-        <p className="text-gray-500 mb-15 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
+        <p className="text-gray-600 mb-12 text-base leading-relaxed max-w-3xl mx-auto">
           To provide travelers with high-quality, value-packed vacation
           experiences through transparent offers, flexible support, and
           unmatched customer service — all backed by a team you can trust.
@@ -124,10 +126,11 @@ export default function AboutUs() {
       {/* What Sets Us Apart Section */}
       <div className="relative w-full pt-24 pb-16">
         <div className="max-w-5xl mx-auto px-6 md:px-4">
-          <h2 className="text-3xl font-semibold text-center mb-12 text-[#0E424E]">
+          <h2 className="text-3xl font-semibold text-center mb-12 text-[#0e424e]">
             What Sets Us Apart
           </h2>
-          <div className="bg-[#EAF8F8] rounded-1xl p-10 grid grid-cols-1 md:grid-cols-2 gap-12 mb-16 shadow-sm">
+
+          <div className="bg-[#EAF8F8] rounded-2xl p-12 grid grid-cols-1 md:grid-cols-2 gap-12 mb-16 shadow-sm">
             {/* Feature 1 */}
             <div className="flex flex-col items-center text-center">
               <div className="bg-[#8DD3C7] rounded-full w-16 h-16 flex items-center justify-center mb-4">
@@ -186,21 +189,19 @@ export default function AboutUs() {
         <img
           src="/assets/wavePattern.png"
           alt="Wave"
-          style={{width: '10vw', minWidth: 100, maxWidth: 190}}
-          className="absolute md:-left-4 md:bottom-120 -left-6 bottom-230 w-32 opacity-50 pointer-events-none select-none z-0"
+          className="absolute left-0 top-1/3 w-32 opacity-40 pointer-events-none select-none z-0"
         />
         <img
           src="/assets/shipPattern.png"
           alt="Ship"
-          style={{width: '15vw', minWidth: 240, maxWidth: 280}}
-          className="absolute bottom-130 -right-0 md:-right-20 md:bottom-66 w-40 opacity-30 pointer-events-none select-none z-0"
+          className="absolute right-0 bottom-8 w-40 opacity-40 pointer-events-none select-none z-0"
         />
         {/* Who We Are */}
         <div className="max-w-4xl mx-auto px-6 md:px-8">
-          <h2 className="text-3xl font-semibold text-center mb-6 text-[#0E424E]">
+          <h2 className="text-3xl font-semibold text-center mb-6 text-[#0e424e]">
             Who We Are
           </h2>
-          <p className="text-center text-gray-500 mb-16 text-base leading-relaxed max-w-3xl mx-auto">
+          <p className="text-center text-gray-600 mb-16 text-base leading-relaxed max-w-3xl mx-auto">
             We&apos;re a team of travel professionals who&apos;ve spent decades
             helping families, couples, and explorers just like you create
             unforgettable getaways. With experience in vacation planning, resort
@@ -209,7 +210,7 @@ export default function AboutUs() {
             check in.
           </p>
           {/* Trusted and Certified */}
-          <h2 className="text-3xl font-semibold text-center mb-6 text-[#0E424E]">
+          <h2 className="text-3xl font-semibold text-center mb-6 text-[#0e424e]">
             Trusted and Certified
           </h2>
           <div className="text-center text-gray-500 text-base leading-relaxed max-w-3xl mx-auto space-y-4">
@@ -227,7 +228,8 @@ export default function AboutUs() {
               in the footer below.
             </p>
           </div>
-          <p className="text-xs text-center text-gray-00 max-w-3xl mx-auto mt-8">
+
+          <p className="text-xs text-center text-gray-400 max-w-3xl mx-auto mt-8">
             Discover Vacations operates under authorized Seller of Travel
             registrations: Florida ST-17213, California CST 2025290-40,
             Washington UBI 602 005 020, and Hawaii TAR-5681.

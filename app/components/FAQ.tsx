@@ -9,8 +9,9 @@ const faqs = [
     summary:
       "At Discover Vacations, we've built support, convenience, and peace of mind into every step of your journey: - Real support from real people — Our team is here to help before...",
     answer:
-      "At Discover Vacations, we've built support, convenience, and peace of mind into every step of your journey:\n\n- Real support from real people — Our team is here to help before, during, and after your trip.\n- Secure, encrypted checkout — Your payment is protected using trusted technology.\n- Simple, guided booking — Select your dates, view available hotels, and manage your reservation easily through our online portal.\n- Flexible travel options — Choose dates that work for you, add extra nights, and upgrade accommodations when available — no pressure or hidden fees.",
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation',
   },
+  // Repeat 7 times for demo
   {
     question: 'How do I complete the purchase of My Discover Vacation?',
     summary:
@@ -24,6 +25,20 @@ const faqs = [
       "Once your purchase is complete, you'll receive a link via email or SMS to access the My Discover Booking Hub. Enter your email and Package ID to log in. Or visit...",
     answer:
       "Once your purchase is complete, you'll receive a link via email or SMS to access the My Discover Booking Hub. Enter your email and Package ID to log in. Or visit https://mydiscovervacations.com and click the MyDiscoverVacation button to access the portal.",
+  },
+  {
+    question: 'How was I selected for this offer?',
+    summary:
+      'You received this exclusive offer because you are part of our valued travel community. Whether through a past travel experience or direct connection, these offers are...',
+    answer:
+      'You received this exclusive offer because you are part of our valued travel community. Whether through a past travel experience or direct connection, these offers are by invitation only and not available to the general public.',
+  },
+  {
+    question: "What's included in this vacation package?",
+    summary:
+      "You'll receive 4 Days / 3 Nights hotel accommodations for two adults at a participating hotel (3 stars+). After a short presentation on vacation ownership, you'll...",
+    answer:
+      "You'll receive 4 Days / 3 Nights hotel accommodations for two adults at a participating hotel (3 stars+). After a short presentation on vacation ownership, you'll receive a Bonus Vacation Gift — your choice of:\n\n- A 4-, 5-, or 7-night cruise for two\n- A 3-night U.S. hotel stay + $100 Visa Gift Card or Attraction Tickets (Orlando or Las Vegas only)\n- A 7-night resort condo stay for up to 4 travelers",
   },
   {
     question: 'How was I selected for this offer?',
