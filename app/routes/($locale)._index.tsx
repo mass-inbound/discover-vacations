@@ -22,7 +22,7 @@ import {IoMdPricetags} from 'react-icons/io';
 import {GiPalmTree} from 'react-icons/gi';
 import {HiOutlineChevronLeft, HiOutlineChevronRight} from 'react-icons/hi';
 import {useState} from 'react';
-import {OfferCard} from '~/components/OfferCard';
+import {OfferCard} from '../components/OfferCard';
 
 export const meta: MetaFunction = () => {
   return [{title: 'Hydrogen | Home'}];
@@ -34,27 +34,32 @@ const COLLECTION_PRODUCT_FRAGMENT = `#graphql
     currencyCode
   }
   fragment ProductItem on Product {
+  id
+  handle
+  title
+  description
+  featuredImage {
     id
-    handle
-    title
-    description
-    featuredImage {
-      id
-      altText
-      url
-      width
-      height
-    }
-    priceRange {
-      minVariantPrice {
-        ...MoneyProductItem
-      }
-      maxVariantPrice {
-        ...MoneyProductItem
-      }
-    }
-    tags
+    altText
+    url
+    width
+    height
   }
+  priceRange {
+    minVariantPrice {
+      ...MoneyProductItem
+    }
+    maxVariantPrice {
+      ...MoneyProductItem
+    }
+  }
+  tags
+  variants(first: 1) {
+    nodes {
+      id
+    }
+  }
+}
 ` as const;
 
 const HOMEPAGE_COLLECTION_QUERY = `#graphql
@@ -192,7 +197,10 @@ export default function Homepage() {
             Travel, Discover, Experience
           </h1>
           <p className="text-white text-[20px] font-[400] max-w-4xl mx-auto mb-6 drop-shadow">
-          Discover curated vacation offers with simple pricing and a simple and stress-free booking experience — designed to make planning easy. Whether you&apos;re ready to travel now or 12 months from now, your getaway starts here.
+            Discover curated vacation offers with simple pricing and a simple
+            and stress-free booking experience — designed to make planning easy.
+            Whether you&apos;re ready to travel now or 12 months from now, your
+            getaway starts here.
           </p>
           <div className="flex gap-12 justify-center my-8">
             <Link
@@ -244,7 +252,8 @@ export default function Homepage() {
             Vacation Booking, Simplified
           </h2>
           <p className="text-[#1A202C] mb-[3.5rem] max-w-2xl mx-auto font-[400] text-[20px]">
-          Curated offers. Real value. Flexible dates and room options to fit your travel plans — without overcomplicating the process
+            Curated offers. Real value. Flexible dates and room options to fit
+            your travel plans — without overcomplicating the process
           </p>
           <div className="flex flex-col md:flex-row items-start justify-center relative">
             {/* Curly line connecting icons */}
@@ -254,10 +263,11 @@ export default function Homepage() {
                 <FaLocationDot size={40} fill="#135868" />
               </div>
               <h3 className="font-semibold text-[24px] my-3 text-[#135868]">
-              Discover Your Next Vacation
+                Discover Your Next Vacation
               </h3>
               <p className="text-[#151515] text-[14px] font-[400]">
-              Browse your exclusive offer and add it to your cart — real value, no hidden fees.
+                Browse your exclusive offer and add it to your cart — real
+                value, no hidden fees.
               </p>
             </div>
             <img
@@ -274,11 +284,12 @@ export default function Homepage() {
                 />
               </div>
               <h3 className="font-semibold text-[24px] my-3 text-[#135868]">
-              Pick a Date
+                Pick a Date
               </h3>
               <p className="text-[#151515] text-[14px] font-[400]">
-              Know your dates? Select them on the calendar before checkout.
-              Not ready yet? No problem — purchase now and choose your dates anytime in the Booking Hub.
+                Know your dates? Select them on the calendar before checkout.
+                Not ready yet? No problem — purchase now and choose your dates
+                anytime in the Booking Hub.
               </p>
             </div>
             <img
@@ -295,11 +306,12 @@ export default function Homepage() {
                 />
               </div>
               <h3 className="font-semibold text-[24px] my-3 text-[#135868]">
-              Book Your Getaway
-
+                Book Your Getaway
               </h3>
               <p className="text-[#151515] text-[14px] font-[400]">
-              Complete your purchase and get instant access to your personal Booking Portal, where reserving your trip is quick, easy, and secure.
+                Complete your purchase and get instant access to your personal
+                Booking Portal, where reserving your trip is quick, easy, and
+                secure.
               </p>
             </div>
           </div>
@@ -323,9 +335,10 @@ export default function Homepage() {
         />
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-3xl md:text-[61px] font-[500] text-center mb-4 text-[#0E424E]">
-          Discover Your Next Vacation          </h2>
+            Discover Your Next Vacation{' '}
+          </h2>
           <p className="font-[400] text-[20px] text-[#676767] mx-auto max-w-3xl text-center mb-10">
-          Discover a collection of vacations
+            Discover a collection of vacations
           </p>
           {/* Tabs */}
           {data.homepageProducts && data.homepageProducts.length > 0 ? (
@@ -359,7 +372,9 @@ export default function Homepage() {
             Peace of Mind, Included
           </h2>
           <p className="font-[400] text-[20px] text-[#676767] mx-auto max-w-3xl text-center mb-10">
-          Your vacation should be stress-free from start to finish. That’s why we’ve built in support, security, and convenience every step of the way.   
+            Your vacation should be stress-free from start to finish. That’s why
+            we’ve built in support, security, and convenience every step of the
+            way.
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mx-auto max-w-7xl">
@@ -375,10 +390,12 @@ export default function Homepage() {
               </div>
               <div className="flex flex-col gap-1">
                 <h3 className="text-[#1A202C] font-[600] text-[22px]">
-                Personal Support, When You Need It
+                  Personal Support, When You Need It
                 </h3>
                 <p className="text-[#1A202C] font-[400] text-[16px] max-w-xl">
-                Whether you have a question before booking or need help finalizing your travel dates, our team is here for you — real people, ready to help.
+                  Whether you have a question before booking or need help
+                  finalizing your travel dates, our team is here for you — real
+                  people, ready to help.
                 </p>
               </div>
             </div>
@@ -389,10 +406,13 @@ export default function Homepage() {
               </div>
               <div className="flex flex-col gap-1">
                 <h3 className="text-[#1A202C] font-[600] text-[22px]">
-                Guided Self-Service Booking
+                  Guided Self-Service Booking
                 </h3>
                 <p className="text-[#1A202C] font-[400] text-[16px] max-w-xl">
-                Use our secure booking portal to select your travel dates, view available hotels, and manage your reservation at your convenience. Want to upgrade or add nights? We’ll show you what’s available  
+                  Use our secure booking portal to select your travel dates,
+                  view available hotels, and manage your reservation at your
+                  convenience. Want to upgrade or add nights? We’ll show you
+                  what’s available
                 </p>
               </div>
             </div>
@@ -403,10 +423,12 @@ export default function Homepage() {
               </div>
               <div className="flex flex-col gap-1">
                 <h3 className="text-[#1A202C] font-[600] text-[22px]">
-                Secure, Encrypted Checkout
+                  Secure, Encrypted Checkout
                 </h3>
                 <p className="text-[#1A202C] font-[400] text-[16px] max-w-xl">
-                Your payment is processed using secure, encrypted checkout technology — giving you peace of mind when making your purchase.
+                  Your payment is processed using secure, encrypted checkout
+                  technology — giving you peace of mind when making your
+                  purchase.
                 </p>
               </div>
             </div>
@@ -417,10 +439,13 @@ export default function Homepage() {
               </div>
               <div className="flex flex-col gap-1">
                 <h3 className="text-[#1A202C] font-[600] text-[22px]">
-                Simple, Flexible Travel Options
+                  Simple, Flexible Travel Options
                 </h3>
                 <p className="text-[#1A202C] font-[400] text-[16px] max-w-xl">
-                We know plans can shift — that’s why we allow you to choose travel dates that work for your schedule, add extra nights, and upgrade your accommodations when available. No pressure, no hidden fees, and no guessing.
+                  We know plans can shift — that’s why we allow you to choose
+                  travel dates that work for your schedule, add extra nights,
+                  and upgrade your accommodations when available. No pressure,
+                  no hidden fees, and no guessing.
                 </p>
               </div>
             </div>
@@ -496,10 +521,11 @@ export default function Homepage() {
             CATCH THE WAVE, DISCOVER MORE FOR LESS
           </div>
           <h2 className="text-4xl md:text-[48px] font-[500] text-white mb-4 drop-shadow-lg">
-          Ready to Discover Your Next Vacation? 
+            Ready to Discover Your Next Vacation?
           </h2>
           <p className="text-white text-start text-[20px] font-[400] max-w-xl mb-6 drop-shadow">
-          Browse our Value Added offers and Discover your Vacation in just a few clicks!
+            Browse our Value Added offers and Discover your Vacation in just a
+            few clicks!
           </p>
           <div className="flex gap-8 justify-end">
             <Link

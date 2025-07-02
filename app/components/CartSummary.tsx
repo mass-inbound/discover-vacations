@@ -29,6 +29,9 @@ export function CartSummary({cart, layout}: CartSummaryProps) {
       <CartDiscounts discountCodes={cart.discountCodes} />
       <CartGiftCard giftCardCodes={cart.appliedGiftCards} />
       <CartCheckoutActions checkoutUrl={cart.checkoutUrl} />
+      <a href={cart.checkoutUrl} className="checkout-button">
+        Checkout
+      </a>
     </div>
   );
 }

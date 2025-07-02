@@ -32,6 +32,11 @@ const PRODUCT_FRAGMENT = `#graphql
       }
     }
     tags
+    variants(first: 1) {
+      nodes {
+        id
+      }
+    }
   }
 ` as const;
 
@@ -81,7 +86,24 @@ export async function loader({context, request}: LoaderFunctionArgs) {
     },
   });
 
-  let allProducts = collection?.products?.nodes || [];
+  // Handle missing collection gracefully
+  if (!collection || !collection.products || !collection.products.nodes) {
+    return {
+      products: [],
+      destinations: [],
+      vacationTypes: [],
+      maxProductPrice: 10000,
+      selected: {
+        destination: [],
+        vacationType: [],
+        min,
+        max,
+        sort,
+      },
+    };
+  }
+
+  let allProducts = collection.products.nodes;
 
   // --- Extract filter options BEFORE filtering ---
   const allTags = allProducts.flatMap((p: any) => p.tags);
@@ -295,15 +317,19 @@ export default function DiscoverOfferPage() {
       >
         <div className="flex flex-col items-center">
           <p className="font-[500] text-[14px]">Plan Less, Experience More</p>
-          <h1 className="font-[800] text-[46px]"> Discover Your Next Vacation</h1>
+          <h1 className="font-[800] text-[46px]">
+            {' '}
+            Discover Your Next Vacation
+          </h1>
           <p className="max-w-3xl font-[400] text-[16px] text-center">
-          Explore our handpicked vacation offers — from theme park favorites, sunny beaches to cozy mountain retreats — all designed to deliver more vacation for less.
-Whether you were invited to view a specific destination or just browsing for inspiration, every offer includes real value, trusted accommodations, and an easy path to booking.
-</p>
-
-New locations are added regularly, so check back often — or catch the wave with the destination that’s calling you now.
-         
-          
+            Explore our handpicked vacation offers — from theme park favorites,
+            sunny beaches to cozy mountain retreats — all designed to deliver
+            more vacation for less. Whether you were invited to view a specific
+            destination or just browsing for inspiration, every offer includes
+            real value, trusted accommodations, and an easy path to booking.
+          </p>
+          New locations are added regularly, so check back often — or catch the
+          wave with the destination that's calling you now.
         </div>
       </div>
 

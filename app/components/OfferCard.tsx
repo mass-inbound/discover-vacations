@@ -70,7 +70,7 @@ export function OfferCard({
       <div className="bg-[#FBE7C0] rounded-[8px] px-3 py-1 mx-4 flex gap-2 items-center justify-center">
         <FaGift />
         <span className="text-[16px] font-[500] text-[#151515]">
-        Includes a Bonus Gift: Your Choice Vacation Getaway
+          Includes a Bonus Gift: Your Choice Vacation Getaway
         </span>
       </div>
       <div className="mt-8 p-4 bg-[#F5F5F5] flex flex-col gap-1 items-center justify-center border-t border-gray-300">
@@ -89,12 +89,50 @@ export function OfferCard({
           not included taxes + fees
         </span>
       </div>
-      <div
-        className="bg-[#2AB7B7] h-[28px] flex justify-center items-center rounded-b text-white font-[500] text-[12px] cursor-pointer"
-        onClick={() => onSelect && onSelect(product)}
+      <form
+        method="post"
+        className="w-full flex justify-center items-center"
+        action="/cart"
       >
-        Select Offer
-      </div>
+        <input
+          type="hidden"
+          name="variantId"
+          value={product.variants.nodes[0].id}
+        />
+        <input type="hidden" name="offerTitle" value={product.title} />
+        <input
+          type="hidden"
+          name="offerImage"
+          value={product.featuredImage?.url || ''}
+        />
+        <input
+          type="hidden"
+          name="offerPrice"
+          value={product.priceRange.minVariantPrice.amount}
+        />
+        <input
+          type="hidden"
+          name="offerDescription"
+          value={product.description || ''}
+        />
+        <input
+          type="hidden"
+          name="offerLocation"
+          value={
+            Array.isArray(product.tags)
+              ? product.tags.find((t: string) => t.match(/,|FL|PA/)) || ''
+              : ''
+          }
+        />
+        <input type="hidden" name="offerNights" value={product.nights || 3} />
+        <input type="hidden" name="offerDays" value={product.days || 4} />
+        <button
+          type="submit"
+          className="bg-[#2AB7B7] h-[28px] w-full flex justify-center items-center rounded-b text-white font-[500] text-[12px] cursor-pointer"
+        >
+          Select Offer
+        </button>
+      </form>
     </div>
   );
 }
