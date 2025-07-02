@@ -185,7 +185,7 @@ export default function Homepage() {
       {/* Hero Section */}
       <section
         className="relative h-[calc(100vh-100px)] flex items-center justify-center bg-cover bg-center"
-        style={{backgroundImage: 'url(/assets/heroImage.jpg)'}}
+        style={{backgroundImage: 'url(/assets/hero-new.png)'}}
       >
         {/* Overlay */}
         <div className="absolute inset-0 bg-black/40 z-0" />
@@ -253,9 +253,9 @@ export default function Homepage() {
           <h2 className="text-3xl md:text-[47px] font-[500] text-[#0E424E] my-5 relative">
             Vacation Booking, Simplified
           </h2>
-          <p className="text-[#1A202C] mb-[3.5rem] max-w-2xl mx-auto font-[400] text-[20px]">
+          <p className="text-[#1A202C] mb-[3.5rem] max-w-2xl mx-auto font-[400] text-[20px] opacity-80">
             Curated offers. Real value. Flexible dates and room options to fit
-            your travel plans — without overcomplicating the process
+            your travel plans — without overcomplicating the process.
           </p>
           <div className="flex flex-col md:flex-row items-start justify-center relative">
             {/* Curly line connecting icons */}
@@ -267,7 +267,7 @@ export default function Homepage() {
               <h3 className="font-semibold text-[24px] my-3 text-[#135868]">
                 Discover Your Next Vacation
               </h3>
-              <p className="text-[#151515] text-[14px] font-[400]">
+              <p className="text-[#151515] text-[14px] font-[400] opacity-80">
                 Choose a day trip based on your location and interests.
               </p>
             </div>
@@ -294,7 +294,7 @@ export default function Homepage() {
               <h3 className="font-semibold text-[24px] my-3 text-[#135868]">
                 Pick a Date
               </h3>
-              <p className="text-[#151515] text-[14px] font-[400]">
+              <p className="text-[#151515] text-[14px] font-[400] opacity-80">
                 Know your dates? Select them on the calendar before checkout.
                 Not ready yet? No problem — purchase now and choose your dates
                 anytime in the Booking Hub.
@@ -323,7 +323,7 @@ export default function Homepage() {
               <h3 className="font-semibold text-[24px] my-3 text-[#135868]">
                 Book Your Getaway
               </h3>
-              <p className="text-[#151515] text-[14px] font-[400]">
+              <p className="text-[#151515] text-[14px] font-[400] opacity-80">
                 Complete your purchase and get instant access to your personal
                 Booking Portal, where reserving your trip is quick, easy, and
                 secure.
@@ -357,7 +357,7 @@ export default function Homepage() {
           <h2 className="text-3xl md:text-[61px] font-[500] text-center mb-4 text-[#0E424E]">
             Discover Your Next Vacation{' '}
           </h2>
-          <p className="font-[400] text-[20px] text-[#676767] mx-auto max-w-3xl text-center mb-10">
+          <p className="font-[400] text-[20px] text-[#676767] mx-auto max-w-3xl text-center mb-10 ">
             Discover a collection of vacations
           </p>
           {/* Tabs */}
@@ -391,6 +391,12 @@ export default function Homepage() {
           <h2 className="text-3xl md:text-[61px] font-[500] text-center mb-4 text-[#0E424E]">
             Peace of Mind, Included
           </h2>
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <FaGift size={48} className="text-[#2AB7B7]" />
+            <span className="text-[#135868] text-[22px] font-semibold">
+              Includes a bonus gift
+            </span>
+          </div>
           <p className="font-[400] text-[20px] text-[#676767] mx-auto max-w-3xl text-center mb-10">
             Your vacation should be stress-free from start to finish. That’s why
             we’ve built in support, security, and convenience every step of the
@@ -399,74 +405,77 @@ export default function Homepage() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:mx-auto px-8 md:px-0 max-w-7xl">
           <img
-            src="/assets/peaceMindImg.jpg"
+            src="/assets/peace2.jpg"
             alt="Peace of Mind"
             className="rounded-[10px] shadow-2xl"
           />
           <div className="space-y-8">
             <div className="flex gap-4">
-              <div className="bg-[#2AB7B7] px-3 md:px-0 rounded-[10px] h-[50px] w-[50px] flex justify-center items-center text-white">
+              <div className="bg-[#2AB7B7] px-3 md:px-0 rounded-[10px] h-[50px] md:w-[90px] flex justify-center items-center text-white">
                 <RiCustomerService2Line size={25} />
               </div>
               <div className="flex flex-col gap-1">
                 <h3 className="text-[#1A202C] font-[600] text-[22px]">
                   Personal Support, When You Need It
                 </h3>
-                <p className="text-[#1A202C] font-[400] text-[16px] max-w-xl">
+                <div className="text-[#1A202C] text-[16px] font-[400] pl-4">
                   Whether you have a question before booking or need help
                   finalizing your travel dates, our team is here for you — real
                   people, ready to help.
-                </p>
+                </div>
               </div>
             </div>
 
             <div className="flex gap-4">
-              <div className="bg-[#2AB7B7] px-3 md:px-0 rounded-[10px] h-[50px] w-[50px] flex justify-center items-center text-white">
+              <div className="bg-[#2AB7B7] px-3 md:px-0 rounded-[10px] h-[50px] md:w-[90px] flex justify-center items-center text-white">
                 <IoMdPricetags size={25} />
               </div>
               <div className="flex flex-col gap-1">
                 <h3 className="text-[#1A202C] font-[600] text-[22px]">
                   Guided Self-Service Booking
                 </h3>
-                <p className="text-[#1A202C] font-[400] text-[16px] max-w-xl">
+                <div className="text-[#1A202C] text-[16px] font-[400] pl-4">
                   Use our secure booking portal to select your travel dates,
                   view available hotels, and manage your reservation at your
-                  convenience. Want to upgrade or add nights? We’ll show you
-                  what’s available
-                </p>
+                  convenience.
+                  <br />
+                  Want to upgrade or add nights? We&apos;ll show you what&apos;s
+                  available.
+                </div>
               </div>
             </div>
 
             <div className="flex gap-4">
-              <div className="bg-[#2AB7B7] px-3 md:px-0 rounded-[10px] h-[50px] w-[50px] flex justify-center items-center text-white">
+              <div className="bg-[#2AB7B7] px-3 md:px-0 rounded-[10px] h-[50px] md:w-[90px] flex justify-center items-center text-white">
                 <IoShieldHalf size={25} />
               </div>
               <div className="flex flex-col gap-1">
                 <h3 className="text-[#1A202C] font-[600] text-[22px]">
                   Secure, Encrypted Checkout
                 </h3>
-                <p className="text-[#1A202C] font-[400] text-[16px] max-w-xl">
+                <div className="text-[#1A202C] text-[16px] font-[400] pl-4">
                   Your payment is processed using secure, encrypted checkout
                   technology — giving you peace of mind when making your
                   purchase.
-                </p>
+                </div>
               </div>
             </div>
 
             <div className="flex gap-4">
-              <div className="bg-[#2AB7B7] px-3 md:px-0 rounded-[10px] h-[50px] w-[50px] flex justify-center items-center text-white">
+              <div className="bg-[#2AB7B7] px-3 md:px-0 rounded-[10px] h-[50px] md:w-[120px] flex justify-center items-center text-white">
                 <GiPalmTree size={25} />
               </div>
               <div className="flex flex-col gap-1">
                 <h3 className="text-[#1A202C] font-[600] text-[22px]">
                   Simple, Flexible Travel Options
                 </h3>
-                <p className="text-[#1A202C] font-[400] text-[16px] max-w-xl">
-                  We know plans can shift — that’s why we allow you to choose
-                  travel dates that work for your schedule, add extra nights,
-                  and upgrade your accommodations when available. No pressure,
-                  no hidden fees, and no guessing.
-                </p>
+                <div className="text-[#1A202C] text-[16px] font-[400] pl-4">
+                  We know plans can shift — that&apos;s why we allow you to
+                  choose travel dates that work for your schedule, add extra
+                  nights, and upgrade your accommodations when available.
+                  <br />
+                  No pressure, no hidden fees, and no guessing.
+                </div>
               </div>
             </div>
           </div>
