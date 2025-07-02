@@ -35,6 +35,9 @@ export function OfferCard({
           alt="Discount"
           className="absolute top-0 right-0 z-8"
         />
+        <span className="absolute top-8 rotate-45 right-2 z-8 text-white text-[18px] font-[500]">
+          82% OFF
+        </span>
         {/* Destination image */}
         {product.featuredImage ? (
           <img
@@ -85,9 +88,7 @@ export function OfferCard({
             per <br /> family of four
           </span>
         </div>
-        <span className="text-[#676767] font-[400] text-[13px]">
-           
-        </span>
+        <span className="text-[#676767] font-[400] text-[13px]"></span>
       </div>
       <form
         method="post"
