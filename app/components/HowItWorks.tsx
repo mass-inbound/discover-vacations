@@ -13,10 +13,21 @@ export default function HowItWorks() {
       />
       <div className="py-14 px-8">
         <div className="relative z-8 max-w-5xl mx-auto text-center">
+          {/* Tree Icon BG behind heading */}
+          <img
+            src="/assets/treebgIcon.png"
+            alt="Tree Icon"
+            className="hidden md:block absolute left-[90px] top-[30px] w-42 h-52 opacity-80 -z-10 pointer-events-none"
+          />
+          <img
+            src="/assets/treebgIcon.png"
+            alt="Tree Icon"
+            className="block md:hidden absolute left-1 top-[18px] w-42 h-52 opacity-80 -z-10 pointer-events-none"
+          />
           <p className="text-[16px] font-[500] text-[#208989]">
             Plan Less. Enjoy More.
           </p>
-          <h2 className="text-3xl md:text-[47px] font-[500] text-[#0E424E] my-5">
+          <h2 className="text-3xl md:text-[47px] font-[500] text-[#0E424E] my-5 relative">
             Vacation Booking, Simplified
           </h2>
           <p className="text-[#1A202C] mb-[3.5rem] max-w-2xl mx-auto font-[400] text-[20px]">
@@ -88,12 +99,16 @@ Not ready yet? No problem — purchase now and choose your dates anytime in the 
               </div>
               <h3 className="font-semibold text-[24px] my-3 text-[#135868]">
                 Book Your Getaway
-
               </h3>
               <p className="text-[#151515] text-[14px] font-[400]">
                 Complete your purchase and get instant access to your personal Booking Portal, where reserving your trip is quick, easy, and secure.
-
               </p>
+              {/* Wave Pattern below the last card */}
+              <img
+                src="/assets/wavePattern.png"
+                alt="Wave Pattern"
+                className="absolute -right-1 -bottom-10 w-48 md:w-72 opacity-90 pointer-events-none"
+              />
             </div>
           </div>
         </div>

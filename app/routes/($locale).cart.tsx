@@ -141,19 +141,19 @@ export default function Cart() {
 
   return (
     <div className="min-h-screen ">
-      <div className="py-8 px-2 flex flex-col items-start mx-auto max-w-7xl">
+      <div className="py-8 px-2 sm:px-4 md:px-8 flex flex-col items-start mx-auto max-w-7xl w-full">
         <div className="flex items-center gap-2 mb-6 bg-[#BDE9E9] px-4 py-1 rounded-[10px]">
           <MdOutlineShoppingCart size={25} className="text-[#164C51]" />
           <span className="text-[27px] font-[500] text-[#164C51]">
             YOUR CART
           </span>
         </div>
-        <div className="w-full max-w-7xl grid grid-cols-1 md:grid-cols-[1.5fr_1fr] gap-8">
-          <div className="grid grid-cols-[60%_40%]">
+        <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* General Information Form */}
             <form
               method="post"
-              className="bg-[#FAFAFA] rounded-l-xl shadow-xl p-8 flex flex-col gap-2"
+              className="bg-[#FAFAFA] rounded-t-xl md:rounded-l-xl md:rounded-tr-none shadow-xl p-4 sm:p-6 md:p-8 flex flex-col gap-2 w-full"
             >
               <div>
                 <h2 className="text-[21px] font-[500]">General Information</h2>
@@ -161,7 +161,7 @@ export default function Cart() {
                   Please fill out the form to proceed to payment.
                 </p>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <input
                   name="firstName"
                   value={form.firstName}
@@ -181,65 +181,47 @@ export default function Cart() {
                   value={form.email}
                   onChange={handleInput}
                   placeholder="Email"
-                  className=" rounded-[10px] px-3 py-2 outline-none border border-gray-100 col-span-2 shadow-md"
+                  className=" rounded-[10px] px-3 py-2 outline-none border border-gray-100 shadow-md sm:col-span-2"
                 />
                 <input
                   name="phone"
                   value={form.phone}
                   onChange={handleInput}
                   placeholder="Phone Number"
-                  className=" rounded-[10px] px-3 py-2 outline-none border border-gray-100 col-span-2 shadow-md"
+                  className=" rounded-[10px] px-3 py-2 outline-none border border-gray-100 shadow-md sm:col-span-2"
                 />
               </div>
               <h3 className="text-[21px] font-[500] mt-5">
                 How Many Traveling
               </h3>
-              <div className="grid grid-cols-2 gap-4 my-2">
-                <div>
-                  <label className="block font-[400] text-4 text-[#071F24]">
-                    Adults
-                  </label>
-                  <input
-                    name="adults"
-                    type="number"
-                    min={1}
-                    value={form.adults}
-                    onChange={handleInput}
-                    className="rounded-[10px] px-3 py-2 outline-none border border-gray-100 col-span-2 shadow-md w-full"
-                  />
-                </div>
-                <div>
-                  <label className="block font-[400] text-4 text-[#071F24]">
-                    Kids
-                  </label>
-                  <input
-                    name="kids"
-                    type="number"
-                    min={0}
-                    value={form.kids}
-                    onChange={handleInput}
-                    className="rounded-[10px] px-3 py-2 outline-none border border-gray-100 col-span-2 shadow-md w-full"
-                  />
-                </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-2">
+                <label htmlFor="adults" className="block font-[400] text-4 text-[#071F24]">
+                  Adults
+                </label>
+                <input
+                  id="adults"
+                  name="adults"
+                  type="number"
+                  min={1}
+                  value={form.adults}
+                  onChange={handleInput}
+                  className="rounded-[10px] px-3 py-2 outline-none border border-gray-100 col-span-2 shadow-md w-full"
+                />
+                <label htmlFor="kids" className="block font-[400] text-4 text-[#071F24]">
+                  Kids
+                </label>
+                <input
+                  id="kids"
+                  name="kids"
+                  type="number"
+                  min={0}
+                  value={form.kids}
+                  onChange={handleInput}
+                  className="rounded-[10px] px-3 py-2 outline-none border border-gray-100 col-span-2 shadow-md w-full"
+                />
               </div>
               <div className="text-[10px] font-[400] text-gray-600 mt-2">
-                I understand by clicking the Check box, I hereby give prior
-                express written consent to receive e-mail, SMS/Text messages,
-                ringless voice mail, ringless voicemail drops, voicemail drops,
-                direct-to- voicemail messages, other messaging, and/or
-                telemarketing/telephonic sales calls about offers, products,
-                services and/or deals from an automatic telephone dialing
-                system, autodialer, and/or artificial or pre-recorded voice, or
-                recorded messages, including through voice assisted technology
-                or ringless voicemail technology from or on behalf of Discover
-                Vacations, LLC at the telephone number(s) and address(es) that I
-                have provided above, regardless of whether my telephone number
-                is on any Do Not Call registry. My consent is not a condition of
-                purchase. By clicking Continue Booking, I confirm that I'm over
-                age 25, and agree to the Privacy Policy and Terms & Conditions,
-                both of which I agree I have read, understand and agree to. As
-                an alternate to the above consent, click here for other ways to
-                take advantage of this promotion.
+                I understand by clicking the Check box, I hereby give prior express written consent to receive e-mail, SMS/Text messages, ringless voice mail, ringless voicemail drops, voicemail drops, direct-to- voicemail messages, other messaging, and/or telemarketing/telephonic sales calls about offers, products, services and/or deals from an automatic telephone dialing system, autodialer, and/or artificial or pre-recorded voice, or recorded messages, including through voice assisted technology or ringless voicemail technology from or on behalf of Discover Vacations, LLC at the telephone number(s) and address(es) that I have provided above, regardless of whether my telephone number is on any Do Not Call registry. My consent is not a condition of purchase. By clicking Continue Booking, I confirm that I&apos;m over age 25, and agree to the Privacy Policy and Terms & Conditions, both of which I agree I have read, understand and agree to. As an alternate to the above consent, click here for other ways to take advantage of this promotion.
               </div>
               <div className="flex items-center mt-2">
                 <input
@@ -287,7 +269,7 @@ export default function Cart() {
               />
               <button
                 type="submit"
-                className="w-full bg-[#2AB7B7] text-white rounded-lg py-3 mt-auto font-semibold flex items-center justify-center gap-2"
+                className="w-full bg-[#2AB7B7] text-white rounded-lg py-3 mt-auto font-semibold flex items-center justify-center gap-2 text-base"
               >
                 <BsCreditCard2BackFill size={20} />
                 Proceed to Payment
@@ -295,12 +277,13 @@ export default function Cart() {
             </form>
 
             {/* Date Picker & Toggle */}
-            <div className="bg-[#164C51] rounded-r-xl shadow-xl p-8 flex flex-col items-center text-white min-h-[500px]">
-              <div className="flex items-center justify-between mb-12">
+            <div className="bg-[#164C51] rounded-b-xl md:rounded-r-xl md:rounded-bl-none shadow-xl p-4 sm:p-6 md:p-8 flex flex-col items-center text-white min-h-[300px] md:min-h-[500px] w-full">
+              <div className="flex items-center justify-between mb-12 w-full">
                 <span className="font-medium text-lg">
                   Do you know your dates?
                 </span>
                 <label className="relative inline-flex items-center cursor-pointer">
+                  <span className="sr-only">Toggle date picker</span>
                   <input
                     type="checkbox"
                     checked={showDatePicker}
@@ -333,7 +316,7 @@ export default function Cart() {
 
               {/* Calendar or "NO" fallback */}
               {showDatePicker ? (
-                <div className="space-y-4">
+                <div className="space-y-4 w-full">
                   {/* Month nav */}
                   <div className="flex items-center justify-between text-white">
                     <BiChevronLeft
@@ -419,7 +402,7 @@ export default function Cart() {
                   </div>
                 </div>
               ) : (
-                <div className="flex items-center justify-center h-32">
+                <div className="flex items-center justify-center h-32 w-full">
                   <span className="text-xl font-semibold"></span>
                 </div>
               )}
@@ -427,7 +410,7 @@ export default function Cart() {
           </div>
 
           {/* Offer Summary */}
-          <div className="bg-gray-100 rounded-xl shadow flex flex-col min-h-[500px]">
+          <div className="bg-gray-100 rounded-xl shadow flex flex-col min-h-[300px] md:min-h-[500px] mt-8 md:mt-0 w-full">
             <div className="bg-[#2AB7B7] text-white rounded-t-xl px-4 py-2 h-[50px] flex items-center justify-center gap-4">
               <span className="font-[500] text-[21px]">Offer Expires:</span>
               <div className="font-mono flex items-center gap-1 mt-1">
@@ -484,26 +467,27 @@ export default function Cart() {
               <FaGift />
               Choice of Your Next Vacation Getaway
             </button>
-            <a
-              href="#"
+            <button
+              type="button"
               className="text-[#0E424E] underline text-[16px] font-[600] mt-4 mx-8"
+              onClick={() => {/* handle contact us click */}}
             >
               Need Help? Contact Us
-            </a>
+            </button>
           </div>
         </div>
       </div>
 
       {/* Discover More — Choose Your Bonus Vacation  */}
 
-      <div className="max-w-7xl py-12 mx-auto">
+      <div className="max-w-7xl py-12 mx-auto px-8">
         <div className="text-center flex flex-col justify-center items-center mb-6">
           <h1 className="text-[#0E424E] font-[500] text-[36px]">
             Discover More — Choose Your Bonus Vacation
           </h1>
           <p className="font-[400] text-[20px] text-[#676767]">
           Select your preferred gift and add it to your cart for $0.00.
-          It will be confirmed during your vacation, and you’ll have the chance to change it if you'd like.
+          It will be confirmed during your vacation, and you&apos;ll have the chance to change it if you&apos;d like.
           </p>
         </div>
         <div className="h-[1px] bg-gray-300"></div>

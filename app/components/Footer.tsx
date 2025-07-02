@@ -18,6 +18,39 @@ export function Footer({
 }: FooterProps) {
   return (
     <Suspense>
+       <section
+        className="relative flex flex-col md:flex-row justify-between bg-cover bg-center h-[760px]"
+        style={{
+          backgroundImage: 'url(/assets/readyPlanImg.jpg)',
+        }}
+      >
+        <div className="md:flex-1" />
+        <div className="flex-1 flex flex-col justify-center items-start gap-2 px-8 py-16 md:py-0 md:pr-20 z-8">
+          <div className="inline-block px-5 py-2 mb-4 bg-[#EAF8F8] text-[#0E424E] text-[21px] font-[500] rounded-[10px] uppercase tracking-wider">
+            CATCH THE WAVE, DISCOVER MORE FOR LESS
+          </div>
+          <h2 className="text-4xl md:text-[48px] font-[500] text-white mb-4 drop-shadow-lg">
+          Ready to Discover Your Next Vacation? 
+          </h2>
+          <p className="text-white text-start text-[20px] font-[400] max-w-xl mb-6 drop-shadow">
+          Browse our Value Added offers and Discover your Vacation in just a few clicks!
+          </p>
+          <div className="flex gap-8  justify-end">
+            <Link
+              to={'/discover-offers'}
+              className="bg-[#2AB7B7]  text-white px-2 md:px-6 py-2 rounded-[10px] shadow text-[16px] md:text-[20px] font-[400] hover:bg-[#229a9a] transition"
+            >
+              Discover Offers
+            </Link>
+            <Link
+              to={'/contact-us'}
+              className="text-white underline text-[16px] md:text-[20px] font-[400] flex items-center"
+            >
+              Contact Us
+            </Link>
+          </div>
+        </div>
+      </section> 
       <Await resolve={footerPromise}>
         {(footer) => (
           <footer className="bg-[#0E424E] text-white pt-12 pb-4">

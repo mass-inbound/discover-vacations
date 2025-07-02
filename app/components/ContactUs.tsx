@@ -13,6 +13,7 @@ export default function ContactUs() {
 
   return (
     <>
+    <div>
       <SectionHeroBanner
         tagline="General Inquiry"
         title="Ask Discover
@@ -181,6 +182,7 @@ Whether you're planning a trip, managing a reservation, or just need a few detai
             </div>
           </div>
         </div>
+      </div>
       </div>
     </>
   );

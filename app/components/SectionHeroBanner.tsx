@@ -15,7 +15,7 @@ export default function SectionHeroBanner({
 }: SectionHeroBannerProps) {
   return (
     <section
-      className="relative w-full overflow-hidden flex items-center justify-center mb-8"
+      className="relative w-full overflow-hidden flex items-center justify-center mb-14"
       style={{minHeight: '340px', height: 'auto'}}
     >
       <img
