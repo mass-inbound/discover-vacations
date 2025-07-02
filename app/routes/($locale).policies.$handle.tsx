@@ -7,8 +7,35 @@ type SelectedPolicies = keyof Pick<
   'privacyPolicy' | 'shippingPolicy' | 'termsOfService' | 'refundPolicy'
 >;
 
+const SHOPIFY_PAGE_HANDLES = [
+  'terms-conditions',
+  'privacy-policy',
+  'refund-cancellation-policy',
+];
+
+const PAGE_QUERY = `#graphql
+  query Page(
+    $language: LanguageCode,
+    $country: CountryCode,
+    $handle: String!
+  )
+  @inContext(language: $language, country: $country) {
+    page(handle: $handle) {
+      handle
+      id
+      title
+      body
+      seo {
+        description
+        title
+      }
+    }
+  }
+` as const;
+
 export const meta: MetaFunction<typeof loader> = ({data}) => {
-  return [{title: `Hydrogen | ${data?.policy.title ?? ''}`}];
+  const title = data?.page?.title || data?.policy?.title || '';
+  return [{title: `Hydrogen | ${title}`}];
 };
 
 export async function loader({params, context}: LoaderFunctionArgs) {
@@ -16,6 +43,22 @@ export async function loader({params, context}: LoaderFunctionArgs) {
     throw new Response('No handle was passed in', {status: 404});
   }
 
+  // If the handle matches a Shopify Online Store Page, fetch the page
+  if (SHOPIFY_PAGE_HANDLES.includes(params.handle)) {
+    const {page} = await context.storefront.query(PAGE_QUERY, {
+      variables: {
+        handle: params.handle,
+        language: context.storefront.i18n?.language,
+        country: context.storefront.i18n?.country,
+      },
+    });
+    if (!page) {
+      throw new Response('Page not found', {status: 404});
+    }
+    return {page};
+  }
+
+  // Otherwise, fallback to policy logic
   const policyName = params.handle.replace(
     /-([a-z])/g,
     (_: unknown, m1: string) => m1.toUpperCase(),
@@ -42,20 +85,42 @@ export async function loader({params, context}: LoaderFunctionArgs) {
 }
 
 export default function Policy() {
-  const {policy} = useLoaderData<typeof loader>();
+  const data = useLoaderData<typeof loader>();
 
-  return (
-    <div className="policy">
-      <br />
-      <br />
-      <div>
-        <Link to="/policies">← Back to Policies</Link>
+  // Render Shopify Page if present
+  if ('page' in data && data.page) {
+    return (
+      <div className="policy">
+        <br />
+        <br />
+        <div>
+          <Link to="/policies">← Back to Policies</Link>
+        </div>
+        <br />
+        <h1>{data.page.title}</h1>
+        <div dangerouslySetInnerHTML={{__html: data.page.body}} />
       </div>
-      <br />
-      <h1>{policy.title}</h1>
-      <div dangerouslySetInnerHTML={{__html: policy.body}} />
-    </div>
-  );
+    );
+  }
+
+  // Otherwise, render Policy if present
+  if ('policy' in data && data.policy) {
+    return (
+      <div className="policy">
+        <br />
+        <br />
+        <div>
+          <Link to="/policies">← Back to Policies</Link>
+        </div>
+        <br />
+        <h1>{data.policy.title}</h1>
+        <div dangerouslySetInnerHTML={{__html: data.policy.body}} />
+      </div>
+    );
+  }
+
+  // Fallback if neither page nor policy is found
+  return <div>Policy not found.</div>;
 }
 
 // NOTE: https://shopify.dev/docs/api/storefront/latest/objects/Shop

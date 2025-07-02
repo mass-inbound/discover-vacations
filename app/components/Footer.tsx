@@ -63,7 +63,7 @@ export function Footer({
                     </Link>
                   </li>
                   <li>
-                    <a href="#" className="hover:underline">
+                    <a href="/discover-offers" className="hover:underline">
                       Offers
                     </a>
                   </li>
@@ -128,12 +128,15 @@ export function Footer({
             <div className="border-t border-white/20 mt-10 pt-4 flex flex-col md:flex-row items-center justify-between max-w-7xl mx-auto px-4 text-xs opacity-80">
               <span>©2024 My Discover Vacations. All rights reserved</span>
               <div className="flex gap-4 mt-2 md:mt-0">
-                <a href="#" className="hover:underline">
+                <Link to="/policies/privacy-policy" className="hover:underline">
                   Privacy & Policy
-                </a>
-                <a href="#" className="hover:underline">
+                </Link>
+                <Link
+                  to="/policies/terms-conditions"
+                  className="hover:underline"
+                >
                   Terms of Use
-                </a>
+                </Link>
               </div>
             </div>
           </footer>
