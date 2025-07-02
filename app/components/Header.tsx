@@ -108,13 +108,13 @@ export function Header({
           : 'bg-white shadow-sm w-full sticky top-0 h-[100px]'
       }  z-9 transition-all duration-300`}
     >
-      <div className="max-w-8xl mx-auto px-12 flex items-center justify-between h-full">
+      <div className="max-w-8xl mx-auto md:px-12 px-3 flex items-center justify-between h-full">
         {/* Logo */}
         <NavLink to="/" className="flex items-center gap-2" end>
           <img
             src="/assets/navLogo.png"
             alt="Discover Vacations"
-            className="w-[170px]"
+            className="w-[100px] md:w-[170px]"
           />
         </NavLink>
         {/* Desktop Nav */}
@@ -195,16 +195,23 @@ export function Header({
           </div>
         </nav>
         {/* Mobile Hamburger */}
-        <button
-          className="md:hidden p-2"
-          onClick={() => setShowMobileMenu((v) => !v)}
-        >
-          {showMobileMenu ? (
-            <HiX className="w-7 h-7" />
-          ) : (
-            <HiMenu className="w-7 h-7" />
-          )}
-        </button>
+        <div className="flex items-center gap-2 md:hidden">
+        <div className="bg-[#164C51] px-3 py-2 rounded-[10px]">
+            <CartToggle cart={cart} />
+          </div>
+          <button
+            className="p-2"
+            onClick={() => setShowMobileMenu((v) => !v)}
+          >
+            {showMobileMenu ? (
+              <HiX className="w-7 h-7" />
+            ) : (
+              <HiMenu className="w-7 h-7" />
+            )}
+          </button>
+          {/* Always show cart button on mobile */}
+        
+        </div>
       </div>
       {/* Mobile Drawer */}
       {showMobileMenu && (
