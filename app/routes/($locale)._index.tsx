@@ -474,9 +474,9 @@ export default function Homepage() {
       </section>
 
       {/* carousel section  */}
-      <section className="relative bg-[#EAF8F8] md:py-[7rem] px-4 py-16 md:py-0">
+      <section className="relative bg-[#EAF8F8] px-4 py-16 md:py-0">
         <div
-          className="relative w-full max-w-7xl overflow-hidden rounded-lg"
+          className="relative w-full max-w-7xl overflow-hidden rounded-lg mx-auto"
           style={{maxHeight: 360}}
         >
           {/* Slides */}
