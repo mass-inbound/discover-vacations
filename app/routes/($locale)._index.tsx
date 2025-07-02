@@ -190,7 +190,7 @@ export default function Homepage() {
         {/* Overlay */}
         <div className="absolute inset-0 bg-black/40 z-0" />
         <div className="relative z-8 flex flex-col items-center justify-center text-center gap-4 w-full px-4">
-          <div className="inline-block px-5 py-2 mb-4 bg-[#EAF8F8] text-[#0E424E] text-[21px] font-[500] rounded-[10px] uppercase tracking-wider">
+          <div className="inline-block px-5 py-2 mb-4 bg-[#EAF8F8] text-[#0E424E] text-[21px] font-[500] rounded-[10px] opacity-80 uppercase tracking-wider">
             CATCH THE WAVE, DISCOVER MORE FOR LESS
           </div>
           <h1 className="text-4xl md:text-[61px] font-[500] text-white mb-4 drop-shadow-lg">
@@ -205,13 +205,13 @@ export default function Homepage() {
           <div className="flex gap-12 justify-center my-8">
             <Link
               to="/discover-offers"
-              className="bg-[#2AB7B7] text-white px-6 py-2 rounded-[10px] shadow text-[20px] font-[400] hover:bg-[#229a9a] transition"
+              className="bg-[#2AB7B7] text-white px-6 py-2 rounded-[10px] shadow text-[16px] md:text-[20px] font-[400] hover:bg-[#229a9a] transition"
             >
               Discover Offers
             </Link>
             <Link
               to="/discover-offers"
-              className="flex items-center text-white underline text-[20px] font-[400] hover:text-gray-300"
+              className="flex items-center text-white underline text-[16px] md:text-[20px] font-[400] hover:text-gray-300"
             >
               See All Offers
             </Link>
@@ -234,21 +234,23 @@ export default function Homepage() {
       </section>
 
       {/* Vacation Booking, Simplified Section */}
-      <section
-        // ref={bookingRef}
-        className="relative py-20 bg-white overflow-hidden"
-      >
-        {/* Decorative tree icon */}
-        <img
-          src="/assets/treebgIcon.png"
-          alt="Tree"
-          className="absolute left-1/4 top-1/10 w-40 opacity-60 pointer-events-none select-none"
-        />
+      <div className="py-8 px-4 md:py-14 md:px-8">
         <div className="relative z-8 max-w-5xl mx-auto text-center">
+          {/* Tree Icon BG behind heading */}
+          <img
+            src="/assets/treebgIcon.png"
+            alt="Tree Icon"
+            className="hidden md:block absolute left-[90px] top-[30px] w-42 h-52 opacity-80 -z-10 pointer-events-none"
+          />
+          <img
+            src="/assets/treebgIcon.png"
+            alt="Tree Icon"
+            className="block md:hidden absolute left-1 top-[18px] w-42 h-52 opacity-80 -z-10 pointer-events-none"
+          />
           <p className="text-[16px] font-[500] text-[#208989]">
             Plan Less. Enjoy More.
           </p>
-          <h2 className="text-3xl md:text-[47px] font-[500] text-[#0E424E] my-5">
+          <h2 className="text-3xl md:text-[47px] font-[500] text-[#0E424E] my-5 relative">
             Vacation Booking, Simplified
           </h2>
           <p className="text-[#1A202C] mb-[3.5rem] max-w-2xl mx-auto font-[400] text-[20px]">
@@ -266,14 +268,20 @@ export default function Homepage() {
                 Discover Your Next Vacation
               </h3>
               <p className="text-[#151515] text-[14px] font-[400]">
-                Browse your exclusive offer and add it to your cart — real
-                value, no hidden fees.
+                Choose a day trip based on your location and interests.
               </p>
             </div>
+            {/* After first card: horizontal for desktop, vertical for mobile */}
             <img
               src="/assets/curlyLine.png"
               alt="Curly Line"
-              className="hidden md:block mt-5"
+              className="hidden md:block mt-8"
+            />
+            {/* Mobile vertical curly line after first card */}
+            <img
+              src="/assets/curlyLine-vertical.png"
+              alt="Curly Line"
+              className="block md:hidden my-6 h-16 w-auto mx-auto pb-4"
             />
             <div className="relative flex flex-col items-center bg-transparent min-w-[250px]">
               <div className="w-[106px] h-[106px] bg-[#DFF4F4] rounded-[30px] flex items-center justify-center shadow-lg">
@@ -292,10 +300,17 @@ export default function Homepage() {
                 anytime in the Booking Hub.
               </p>
             </div>
+            {/* After second card: horizontal for desktop, vertical for mobile */}
             <img
               src="/assets/curlyLine.png"
               alt="Curly Line"
-              className="hidden md:block mt-5"
+              className="hidden md:block mt-8"
+            />
+            {/* Mobile vertical curly line after second card */}
+            <img
+              src="/assets/curlyLine-vertical.png"
+              alt="Curly Line"
+              className="block md:hidden my-6 h-16 w-auto mx-auto pb-4"
             />
             <div className="relative flex flex-col items-center bg-transparent min-w-[250px]">
               <div className="w-[106px] h-[106px] bg-[#DFF4F4] rounded-[30px] flex items-center justify-center shadow-lg">
@@ -313,25 +328,30 @@ export default function Homepage() {
                 Booking Portal, where reserving your trip is quick, easy, and
                 secure.
               </p>
+              {/* Wave Pattern below the last card */}
+              <img
+                src="/assets/wavePattern.png"
+                alt="Wave Pattern"
+                className="md:block hidden absolute -right-1 -bottom-10 w-48 md:w-72 opacity-90 pointer-events-none"
+              />
             </div>
           </div>
         </div>
-      </section>
-
+      </div>
       {/* Find Your Next Escape Section */}
       <section
         ref={bookingRef}
-        className="relative overflow-x-hidden py-20 mt-5 bg-[#EAF8F84D]"
+        className="relative overflow-x-hidden py-10 md:py-20 mt-5 bg-[#EAF8F84D]"
       >
         <img
           src="/assets/starPattern.png"
           alt=""
-          className="absolute top-5 -left-8 w-[247px] opacity-30"
+          className="absolute -top-2 md:top-5 -left-8 md:w-[247px] w-[100px] opacity-30 scale-x-[-1] "
         />
         <img
           src="/assets/shipPattern.png"
           alt=""
-          className="absolute top-10 -right-12 opacity-30 w-[280px]"
+          className="md:block hidden absolute top-10 -right-12 opacity-30 w-[280px]"
         />
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-3xl md:text-[61px] font-[500] text-center mb-4 text-[#0E424E]">
@@ -377,7 +397,7 @@ export default function Homepage() {
             way.
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mx-auto max-w-7xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:mx-auto px-8 md:px-0 max-w-7xl">
           <img
             src="/assets/peaceMindImg.jpg"
             alt="Peace of Mind"
@@ -385,7 +405,7 @@ export default function Homepage() {
           />
           <div className="space-y-8">
             <div className="flex gap-4">
-              <div className="bg-[#2AB7B7] rounded-[10px] h-[50px] w-[50px] flex justify-center items-center text-white">
+              <div className="bg-[#2AB7B7] px-3 md:px-0 rounded-[10px] h-[50px] w-[50px] flex justify-center items-center text-white">
                 <RiCustomerService2Line size={25} />
               </div>
               <div className="flex flex-col gap-1">
@@ -401,7 +421,7 @@ export default function Homepage() {
             </div>
 
             <div className="flex gap-4">
-              <div className="bg-[#2AB7B7] rounded-[10px] h-[50px] w-[50px] flex justify-center items-center text-white">
+              <div className="bg-[#2AB7B7] px-3 md:px-0 rounded-[10px] h-[50px] w-[50px] flex justify-center items-center text-white">
                 <IoMdPricetags size={25} />
               </div>
               <div className="flex flex-col gap-1">
@@ -418,7 +438,7 @@ export default function Homepage() {
             </div>
 
             <div className="flex gap-4">
-              <div className="bg-[#2AB7B7] rounded-[10px] h-[50px] w-[50px] flex justify-center items-center text-white">
+              <div className="bg-[#2AB7B7] px-3 md:px-0 rounded-[10px] h-[50px] w-[50px] flex justify-center items-center text-white">
                 <IoShieldHalf size={25} />
               </div>
               <div className="flex flex-col gap-1">
@@ -434,7 +454,7 @@ export default function Homepage() {
             </div>
 
             <div className="flex gap-4">
-              <div className="bg-[#2AB7B7] rounded-[10px] h-[50px] w-[50px] flex justify-center items-center text-white">
+              <div className="bg-[#2AB7B7] px-3 md:px-0 rounded-[10px] h-[50px] w-[50px] flex justify-center items-center text-white">
                 <GiPalmTree size={25} />
               </div>
               <div className="flex flex-col gap-1">
@@ -454,9 +474,9 @@ export default function Homepage() {
       </section>
 
       {/* carousel section  */}
-      <section className="relative bg-[#EAF8F8] py-[7rem]">
+      <section className="relative bg-[#EAF8F8] md:py-[7rem] px-4 py-16 md:py-0">
         <div
-          className="relative w-full max-w-7xl mx-auto overflow-hidden rounded-lg"
+          className="relative w-full max-w-7xl overflow-hidden rounded-lg"
           style={{maxHeight: 360}}
         >
           {/* Slides */}
@@ -467,7 +487,7 @@ export default function Homepage() {
             {slides.map((slide, idx) => (
               <div
                 key={idx}
-                className="min-w-full md:min-w-1/2 flex-shrink-0 flex items-center justify-center bg-white"
+                className="min-w-full md:min-w-1/2 flex-shrink-0 flex items-center justify-center"
                 style={{height: 360}}
               >
                 <img
@@ -479,7 +499,6 @@ export default function Homepage() {
               </div>
             ))}
           </div>
-
           {/* Left Arrow */}
           <button
             onClick={prevSlide}
@@ -487,7 +506,6 @@ export default function Homepage() {
           >
             <HiOutlineChevronLeft size={24} />
           </button>
-
           {/* Right Arrow */}
           <button
             onClick={nextSlide}
@@ -630,14 +648,29 @@ function Tabs({
       Array.isArray(product.tags) && product.tags.includes(tabTagMap[active]),
   );
 
+  // Responsive tab logic: show only two tabs at a time on mobile
+  let visibleTabs = tabs;
+  let tabOffset = 0;
+  if (typeof window !== 'undefined' && window.innerWidth < 768) {
+    // On mobile, show only two tabs at a time, scrollable
+    if (active === 0) tabOffset = 0;
+    else if (active === tabs.length - 1) tabOffset = tabs.length - 2;
+    else tabOffset = active - 1;
+    visibleTabs = tabs.slice(tabOffset, tabOffset + 2);
+  }
+
   return (
     <div>
-      <div className="flex mb-12 border-b border-[#135868]">
-        {tabs.map((tab: string, idx: number) => (
+      <div
+        className="flex mb-12 border-b border-[#135868] overflow-x-auto scrollbar-hide md:overflow-x-visible md:scrollbar-default gap-2 md:gap-0"
+        style={{WebkitOverflowScrolling: 'touch'}}
+      >
+        {tabs.map((tab, idx) => (
           <button
             key={tab}
             onClick={() => setActive(idx)}
-            className={`flex-1 px-4 py-2 font-[500] text-[21px] border-b-2 transition text-[#1A202C] opacity-60 ${active === idx ? 'border-[#135868] text-[#135868] opacity-100' : 'border-transparent bg-transparent'}`}
+            className={`flex-1 min-w-[48%] md:min-w-0 px-2 md:px-4 py-2 font-[500] text-[16px] md:text-[21px] border-b-2 transition text-[#1A202C] opacity-60 whitespace-nowrap ${active === idx ? 'border-[#135868] text-[#135868] opacity-100' : 'border-transparent bg-transparent'}`}
+            style={{scrollbarWidth: 'none'}}
           >
             {tab}
           </button>
@@ -645,21 +678,24 @@ function Tabs({
       </div>
       <div
         className={`grid gap-8 ${
-          tabs[active] === 'Popular' ? 'grid-cols-[2fr_1fr]' : 'grid-cols-1'
+          tabs[active] === 'Popular'
+            ? 'md:grid-cols-[2fr_1fr] grid-cols-1'
+            : 'grid-cols-1'
         }`}
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           {filteredProducts.length > 0 ? (
             filteredProducts.map((product, idx) => (
-              <OfferCard
-                key={product.id}
-                product={product}
-                onSelect={(prod) =>
-                  navigate(
-                    `/cart?title=${encodeURIComponent(prod.title)}&location=${encodeURIComponent(Array.isArray(prod.tags) ? prod.tags.find((t: string) => t.match(/,|FL|PA/)) || '' : '')}&image=${encodeURIComponent(prod.featuredImage?.url || '')}&price=${prod.priceRange.minVariantPrice.amount}`,
-                  )
-                }
-              />
+              <div key={product.id} className="md:pb-0 pb-6">
+                <OfferCard
+                  product={product}
+                  onSelect={(prod) =>
+                    navigate(
+                      `/cart?title=${encodeURIComponent(prod.title)}&location=${encodeURIComponent(Array.isArray(prod.tags) ? prod.tags.find((t: string) => t.match(/,|FL|PA/)) || '' : '')}&image=${encodeURIComponent(prod.featuredImage?.url || '')}&price=${prod.priceRange.minVariantPrice.amount}`,
+                    )
+                  }
+                />
+              </div>
             ))
           ) : (
             <div className="col-span-2 text-center text-red-600 font-bold py-12">
@@ -667,21 +703,24 @@ function Tabs({
             </div>
           )}
         </div>
+        {/* Hide sidebar card on mobile */}
         {tabs[active] === 'Popular' && (
           <div
-            className="relative bg-[#0E424E] rounded-lg shadow p-6 text-white bg-cover min-h-[400px]"
+            className="hidden md:block relative bg-[#0E424E] rounded-lg shadow p-6 text-white bg-cover min-h-[400px]"
             style={{backgroundImage: 'url(/assets/PlanImage.png)'}}
           >
-            <h4 className="font-[500] text-[47px]">Plan Less. Travel More.</h4>
+            <h4 className="font-[500] text-[24px] md:text-[47px]">
+              Plan Less. Travel More.
+            </h4>
             <Link
               to={'/discover-offers'}
-              className="absolute bottom-4 left-4 bg-[#2AB7B7] text-white px-6 py-2 rounded shadow font-semibold hover:bg-[#229a9a] transition mt-4 cursor-pointer"
+              className="absolute bottom-4 left-4 bg-[#2AB7B7] text-white px-4 md:px-6 py-2 rounded shadow font-semibold hover:bg-[#229a9a] transition mt-4 cursor-pointer text-[16px] md:text-[20px]"
             >
               Discover Offers
             </Link>
             <Link
               to={'/contact-us'}
-              className="absolute bottom-4 right-4 underline text-white px-6 py-2 font-semibold transition cursor-pointer"
+              className="absolute bottom-4 right-4 underline text-white px-4 md:px-6 py-2 font-semibold transition cursor-pointer text-[16px] md:text-[20px]"
             >
               Contact Us
             </Link>

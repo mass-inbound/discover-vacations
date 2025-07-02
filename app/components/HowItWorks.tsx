@@ -105,12 +105,6 @@ export default function HowItWorks() {
                 Booking Portal, where reserving your trip is quick, easy, and
                 secure.
               </p>
-              {/* Wave Pattern below the last card */}
-              <img
-                src="/assets/wavePattern.png"
-                alt="Wave Pattern"
-                className="absolute -right-1 -bottom-10 w-48 md:w-72 opacity-90 pointer-events-none"
-              />
             </div>
           </div>
         </div>

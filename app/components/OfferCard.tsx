@@ -86,7 +86,7 @@ export function OfferCard({
           </span>
         </div>
         <span className="text-[#676767] font-[400] text-[13px]">
-          not included taxes + fees
+           
         </span>
       </div>
       <form

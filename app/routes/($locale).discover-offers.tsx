@@ -314,6 +314,7 @@ export default function DiscoverOfferPage() {
           color: 'white',
           textAlign: 'center',
         }}
+        className="px-4 md:px-0"
       >
         <div className="flex flex-col items-center">
           <p className="font-[500] text-[14px]">Plan Less, Experience More</p>
@@ -329,12 +330,15 @@ export default function DiscoverOfferPage() {
             real value, trusted accommodations, and an easy path to booking.
           </p>
           New locations are added regularly, so check back often — or catch the
-          wave with the destination that's calling you now.
+          wave with the destination that’s calling you now.
         </div>
       </div>
 
       {/* Main discover offers  */}
-      <div className="max-w-[1400px] my-7 mx-auto" ref={mainDivRef}>
+      <div
+        className="max-w-[1400px] my-7 mx-auto px-4 md:px-0"
+        ref={mainDivRef}
+      >
         {/* Sort by */}
         <div className="flex gap-2 items-center justify-end relative">
           <p className="font-[400] text-[18px] text-[#0E424E]">Sort by</p>
@@ -349,9 +353,9 @@ export default function DiscoverOfferPage() {
           </select>
         </div>
 
-        <div className="flex gap-14 my-14">
+        <div className="flex flex-col md:flex-row gap-14 my-14">
           {/* Filters */}
-          <div className="w-[400px] p-6 border border-[#E5E5E5] rounded-[10px] shadow-md">
+          <div className="hidden md:block w-[400px] p-6 border border-[#E5E5E5] rounded-[10px] shadow-md">
             {/* Destination Filter */}
             <div className="mb-6">
               <h2 className="text-[#0E424E] text-[18px] font-[500] mb-4">
@@ -492,22 +496,24 @@ export default function DiscoverOfferPage() {
           </div>
 
           {/* Product Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full px-1 sm:px-0">
             {products.length === 0 && (
               <div className="col-span-2 text-center text-red-600 font-bold py-12">
                 No offers found for selected filters.
               </div>
             )}
+
             {products.map((product: any) => (
-              <OfferCard
-                key={product.id}
-                product={product}
-                onSelect={(prod) =>
-                  navigate(
-                    `/cart?title=${encodeURIComponent(prod.title)}&location=${encodeURIComponent(prod.tags?.find((t: string) => t.match(/,|FL|PA/)) || '')}&image=${encodeURIComponent(prod.featuredImage?.url || '')}&price=${prod.priceRange.minVariantPrice.amount}`,
-                  )
-                }
-              />
+              <div key={product.id} className="py-8 md:py-0">
+                <OfferCard
+                  product={product}
+                  onSelect={(prod) =>
+                    navigate(
+                      `/cart?title=${encodeURIComponent(prod.title)}&location=${encodeURIComponent(prod.tags?.find((t: string) => t.match(/,|FL|PA/)) || '')}&image=${encodeURIComponent(prod.featuredImage?.url || '')}&price=${prod.priceRange.minVariantPrice.amount}`,
+                    )
+                  }
+                />
+              </div>
             ))}
           </div>
         </div>
