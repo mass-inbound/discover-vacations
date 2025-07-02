@@ -27,7 +27,7 @@ export default function ProductDetail() {
           </h1>
           <p className="max-w-3xl font-[400] text-[13px] md:text-[16px] text-center">
             Discover all-season vacation offers in the heart of the Poconos.
-            Whether it’s a romantic cabin, a spa weekend, or a mountain
+            Whether it's a romantic cabin, a spa weekend, or a mountain
             adventure, enjoy a smooth booking process and exceptional value.
           </p>
         </div>
@@ -124,7 +124,7 @@ function Tabs() {
 
               {/* Details button */}
               <Link
-                to="/detail/destinations/orlando"
+                to="/products/poconos"
                 className="absolute left-4 bottom-3 text-[#26A5A5] bg-white px-4 py-1 text-[16px] font-medium z-10 rounded"
               >
                 Details

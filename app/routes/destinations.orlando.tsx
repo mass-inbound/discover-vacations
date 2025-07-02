@@ -124,7 +124,7 @@ function Tabs() {
 
               {/* Details button */}
               <Link
-                to="/detail/destinations/orlando"
+                to="/products/orlando"
                 className="absolute left-4 bottom-3 text-[#26A5A5] bg-white px-4 py-1 text-[16px] font-medium z-10 rounded"
               >
                 Details
