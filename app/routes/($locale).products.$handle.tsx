@@ -393,12 +393,21 @@ function Tabs() {
   const tabContents = [
     <div key="overview" className="bg-gray-100 p-4 md:p-8 text-center flex flex-col gap-4 rounded">
       <h1 className="text-[#0E424E] font-[500] text-[24px] md:text-[36px]">
-        🌾 Magical Orlando Getaway – 4 Days / 3 Nights
+        🌾 Discover Orlando – 4 Days / 3 Nights + Bonus Vacation Gift
       </h1>
       <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] max-w-[95%] md:max-w-[80%] mx-auto">
-        Experience the MAGIC of Orlando with a 4 Days / 3 Nights stay for two
-        adults — and receive a Bonus Vacation Gift to enjoy even more travel
-        adventures in the future!
+      Start your <span className='font-bold'>My Discover Vacation</span> in the heart of Orlando with 4 days and 3 nights of fun, sun, and memory-making. Ideal for two adults or a family of four (two adults + up to two children).
+      </p>
+      <p className='text-[#0E424E] text-[16px] md:text-[20px] font-[400] max-w-[95%] md:max-w-[80%] mx-auto mt-2'>
+      As our thank-you, you&apos;ll also receive a Bonus Vacation Gift — your choice of:
+      </p>
+      <ul className="list-disc list-inside text-[#0E424E] text-[14px] md:text-[18px] font-[400]">
+        <li>A Cruise Getaway (4–7 nights)</li>
+        <li>A 7-Night Resort Condo Stay</li>
+        <li>A Hotel Escape + $100 Hotel Perks Card</li>
+      </ul>
+      <p className='text-[#0E424E] text-[16px] font-bold md:text-[20px] font-[400] max-w-[95%] md:max-w-[80%] mx-auto'>
+      Catch the Wave. Make it yours. Make it easy. That&apos;s My Discover Vacation.
       </p>
     </div>,
     <div key="included" className="bg-gray-100 p-4 md:p-8 text-center flex flex-col gap-4 rounded">
