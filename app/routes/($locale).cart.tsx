@@ -604,7 +604,7 @@ export default function Cart() {
               <>
                 {/* Clear Cart Button */}
                 {allLineIds.length > 0 && (
-                  <form method="post" className="flex justify-end mb-4">
+                  <form method="post" className="flex justify-end my-2">
                     <input type="hidden" name="action" value="remove" />
                     {allLineIds.map((id: string) => (
                       <input key={id} type="hidden" name="lineIds" value={id} />
@@ -747,11 +747,11 @@ export default function Cart() {
                   </span>
                   <span>Choice {String.fromCharCode(65 + idx)}</span>
                 </div>
-                <div className="bg-gray-100 flex items-center justify-center p-5 min-h-[180px]">
+                <div className="bg-gray-100 flex items-center justify-center min-h-[150px]">
                   <img
                     src={product.featuredImage?.url || '/assets/orlando.jpg'}
                     alt={product.title}
-                    className="w-full h-[120px] object-cover rounded"
+                    className="w-full h-full object-cover"
                   />
                 </div>
                 <div className="p-4">
