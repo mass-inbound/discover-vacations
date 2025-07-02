@@ -186,6 +186,7 @@ export default function Homepage() {
       <section
         className="relative h-[calc(100vh-100px)] flex items-center justify-center bg-cover bg-center"
         style={{backgroundImage: 'url(/assets/hero-new.png)'}}
+        style={{backgroundImage: 'url(/assets/hero-new.png)'}}
       >
         {/* Overlay */}
         <div className="absolute inset-0 bg-black/40 z-0" />

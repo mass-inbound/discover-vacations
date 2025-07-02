@@ -19,7 +19,7 @@ export default function AboutUs() {
         <div className="absolute inset-0 flex flex-col md:flex-row items-end md:items-center justify-center w-full h-full px-6 md:px-4">
           {/* Family Image Card - perfectly centered, fixed aspect, strong shadow, overlaps white section */}
           <div
-            className="hidden md:block flex-shrink-0 z-20 relative bg-white rounded-[18px] shadow-2xl overflow-hidden flex items-center justify-center"
+            className="md:block flex-shrink-0 z-20 relative bg-white rounded-[18px] shadow-2xl overflow-hidden flex items-center justify-center"
             style={{
               width: '90%',
               maxWidth: 420,

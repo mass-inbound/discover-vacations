@@ -14,11 +14,11 @@ export default function ContactUs() {
     <>
       <div>
         <SectionHeroBanner
-          tagline="General Inquiry"
-          title="Ask Discover
-We're here to help you Discover more, stress less."
-          description="Ask away — your My Discover Vacation starts here.
-Whether you're planning a trip, managing a reservation, or just need a few details clarified, our team is ready to help. Fill out the form below and we'll get back to you within one business day."
+          tagline="Ask Discover"
+          title="CONTACT US"
+          description="We’re here to help you Discover more, stress less. Ask away — your My Discover Vacation starts here. Whether you’re planning a trip, managing a reservation, or just need a few details clarified, our team is ready to help.
+
+Fill out the form below and we’ll get back to you within one business day."
           image="/assets/beach3.png"
         />
         <div
@@ -32,10 +32,14 @@ Whether you're planning a trip, managing a reservation, or just need a few detai
           >
             <div>
               <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-1">
-                General Inquire Form
+                General Inquiry Form
               </h2>
               <p className="text-gray-500 mb-4 text-sm sm:text-base">
-                Please fill out to form for sending your message.
+                For general questions or non-urgent help, please use our{' '}
+                <span className="font-bold">
+                  Ask Discover and one of our agents will reach out to you
+                  shortly.
+                </span>
               </p>
               <div className="flex flex-col md:flex-row gap-4">
                 <input
@@ -89,7 +93,15 @@ Whether you're planning a trip, managing a reservation, or just need a few detai
                 >
                   By submitting this form, you consent to be contacted by
                   Discover Vacations via phone, email, or SMS. Standard
-                  messaging rates may apply.
+                  messaging rates may apply. Please read our{' '}
+                  <a href="/" style={{textDecoration: 'underline'}}>
+                    Terms & Conditions
+                  </a>{' '}
+                  and{' '}
+                  <a href="/" style={{textDecoration: 'underline'}}>
+                    Privacy Policy
+                  </a>
+                  .
                 </label>
               </div>
             </div>
@@ -127,15 +139,15 @@ Whether you're planning a trip, managing a reservation, or just need a few detai
                 <br />
                 Fort Lauderdale, FL 33306
               </div>
-              <a
-                href="https://maps.google.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-2 w-full border rounded-md py-2 font-medium text-center transition-all duration-150"
-                style={{borderColor: green, color: green, background: 'white'}}
-              >
-                Get Directions
-              </a>
+              {/* <a
+              href="https://maps.google.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 w-full border rounded-md py-2 font-medium text-center transition-all duration-150"
+              style={{borderColor: green, color: green, background: 'white'}}
+            >
+              Get Directions
+            </a> */}
             </div>
             {/* Email Card */}
             <div className="flex flex-col gap-2 mb-2">
@@ -174,7 +186,7 @@ Whether you're planning a trip, managing a reservation, or just need a few detai
                   className="bg-gray-300 text-gray-500 cursor-not-allowed px-6 py-2 rounded-lg font-semibold flex items-center gap-2 opacity-60"
                   disabled
                 >
-                  Live Chat
+                  COMING SOON
                 </button>
                 <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-max bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 pointer-events-none transition">
                   Coming Soon

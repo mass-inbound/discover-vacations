@@ -70,8 +70,8 @@ export function OfferCard({
           </li>
         ))}
       </ul>
-      <div className="bg-[#FBE7C0] rounded-[8px] px-3 py-1 mx-4 flex gap-2 items-center justify-center">
-        <FaGift />
+      <div className="bg-[#f2b233] rounded-[8px] px-3 py-1 mx-4 flex gap-2 items-start justify-center">
+        <FaGift className="w-6 mt-1" />
         <span className="text-[16px] font-[500] text-[#151515]">
           Includes a Bonus Gift: Your Choice Vacation Getaway
         </span>
@@ -80,6 +80,7 @@ export function OfferCard({
         <span className="text-[#676767] font-[400] text-[13px]">
           {/* You can add duration info as metafield or in description if needed */}
         </span>
+        <p className="text-[13px] text-[#676767]">4 days/3 Nights</p>
         <div className="flex items-center justify-center gap-1">
           <span className="text-[#135868] font-[500] text-[27px]">
             ${product.priceRange.minVariantPrice.amount}

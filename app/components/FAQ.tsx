@@ -159,7 +159,7 @@ export default function FAQ() {
         {faqs.map((faq, idx) => (
           <div
             key={idx}
-            className="w-full pb-2 max-w-3xl sm:rounded-lg rounded-md bg-[#F5F5F5] shadow-md mb-4 mb-12 overflow-hidden transition-all duration-300 max-w-full"
+            className="w-full max-w-3xl pb-2 rounded-md sm:rounded-lg bg-[#F5F5F5] shadow-md mb-12 overflow-hidden transition-all duration-300"
           >
             <button
               className="w-full flex items-start justify-between p-3 sm:p-4 focus:outline-none group gap-2"
