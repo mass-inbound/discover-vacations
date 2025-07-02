@@ -7,7 +7,7 @@ export default function ProductDetail() {
   return (
     <div>
       <div
-        className="w-full flex items-center justify-center"
+        className="w-full flex items-center justify-center px-2 md:px-0 py-8 md:py-0"
         style={{
           backgroundImage: `url('/assets/OrlandoBanner.png')`,
           backgroundSize: 'cover',
@@ -18,11 +18,11 @@ export default function ProductDetail() {
         }}
       >
         <div className="flex flex-col items-center">
-          <p className="font-[500] text-[14px]">
+          <p className="font-[500] text-[12px] md:text-[14px]">
             Sunshine, Theme Parks, and Family Fun
           </p>
-          <h1 className="font-[800] text-[46px]"> OFFERS IN ORLANDO, FL</h1>
-          <p className="max-w-3xl font-[400] text-[16px] text-center">
+          <h1 className="font-[800] text-[28px] md:text-[46px]"> OFFERS IN ORLANDO, FL</h1>
+          <p className="max-w-3xl font-[400] text-[13px] md:text-[16px] text-center">
             Explore our Orlando packages designed for families, couples, and
             adventurers. From world-famous attractions to relaxing resorts, find
             a getaway that fits your style, starting at an unbeatable price.
@@ -31,15 +31,16 @@ export default function ProductDetail() {
       </div>
 
       <section className="relative overflow-x-hidden py-20 mt-5 bg-[#EAF8F84D]">
-        <img
-          src="/assets/starPattern.png"
-          alt=""
-          className="absolute top-5 -left-8 w-[247px] opacity-30"
-        />
+      <img
+  src="/assets/starPattern.png"
+  alt=""
+  className="absolute top-5 w-[30%] -left-8 md:w-[247px] opacity-30 scale-x-[-1]"
+/>
+
         <img
           src="/assets/shipPattern.png"
           alt=""
-          className="absolute top-10 -right-12 opacity-30 w-[280px]"
+          className="hidden md:block absolute top-10 -right-12 opacity-30 w-[280px]"
         />
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-3xl md:text-[61px] font-[500] text-center mb-4 text-[#0E424E]">
@@ -59,7 +60,7 @@ export default function ProductDetail() {
           </button>
         </div>
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2">
-          <img src="/assets/wavePattern.png" alt="" className="w-[176px]" />
+          <img src="/assets/wavePattern.png" alt="" className="hidden md:block w-[176px]" />
         </div>
       </section>
     </div>
@@ -71,12 +72,13 @@ function Tabs() {
   const tabs = ['Popular', 'Hotels', 'Cruise', 'Exclusive Deals'];
   return (
     <div>
-      <div className="flex mb-12 border-b border-[#135868]">
+      <div className="flex mb-12 border-b border-[#135868] overflow-x-auto scrollbar-hide md:overflow-x-visible md:scrollbar-default gap-2 md:gap-0" style={{WebkitOverflowScrolling: 'touch'}}>
         {tabs.map((tab, idx) => (
           <button
             key={tab}
             onClick={() => setActive(idx)}
-            className={`flex-1 px-4 py-2 font-[500] text-[21px] border-b-2 transition text-[#1A202C] opacity-60 ${active === idx ? 'border-[#135868] text-[#135868] opacity-100' : 'border-transparent bg-transparent'}`}
+            className={`flex-1 min-w-[48%] md:min-w-0 px-2 md:px-4 py-2 font-[500] text-[16px] md:text-[21px] border-b-2 transition text-[#1A202C] opacity-60 whitespace-nowrap ${active === idx ? 'border-[#135868] text-[#135868] opacity-100' : 'border-transparent bg-transparent'}`}
+            style={{scrollbarWidth: 'none'}}
           >
             {tab}
           </button>
@@ -87,7 +89,7 @@ function Tabs() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Card design  */}
           <div className="relative bg-white rounded-lg shadow flex flex-col">
-            <div className="absolute -top-7 left-1 flex items-center justify-center gap-1 bg-[#F2B233] text-[#FEFEFE] px-2 py-1 text-[14px] font-[400] rounded">
+            <div className="absolute -top-7 left-1 flex items-center justify-center gap-1 bg-[#F2B233] text-[#FEFEFE] px-2 py-1 text-[12px] md:text-[14px] font-[400] rounded">
               <IoDiamond /> <span>Exclusive Offer</span>
             </div>
 

@@ -74,7 +74,7 @@ export default function AboutUs() {
         <img
           src="/assets/treebgIcon.png"
           alt="Tree"
-          className="absolute -right-4 -bottom-90 md:-right-4 md:-bottom-60 opacity-50 pointer-events-none select-none z-10"
+          className="absolute -right-0 -bottom-90 md:-right-4 md:-bottom-60 opacity-50 pointer-events-none select-none z-10"
           style={{ width: '10vw', minWidth: 100, maxWidth: 140 }}
         />
       </div>
@@ -173,7 +173,7 @@ export default function AboutUs() {
           src="/assets/shipPattern.png" 
           alt="Ship" 
           style={{ width: '15vw', minWidth: 240, maxWidth: 280 }}
-          className="absolute bottom-130 -right-15 md:-right-20 md:bottom-66 w-40 opacity-30 pointer-events-none select-none z-0" 
+          className="absolute bottom-130 -right-0 md:-right-20 md:bottom-66 w-40 opacity-30 pointer-events-none select-none z-0" 
         />
 
         {/* Who We Are */}

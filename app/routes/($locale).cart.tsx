@@ -149,7 +149,7 @@ export default function Cart() {
           </span>
         </div>
         <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-0 ">
             {/* General Information Form */}
             <form
               method="post"
@@ -267,17 +267,11 @@ export default function Cart() {
                 name="checkOut"
                 value={checkOut ? checkOut.toISOString() : ''}
               />
-              <button
-                type="submit"
-                className="w-full bg-[#2AB7B7] text-white rounded-lg py-3 mt-auto font-semibold flex items-center justify-center gap-2 text-base"
-              >
-                <BsCreditCard2BackFill size={20} />
-                Proceed to Payment
-              </button>
+             
             </form>
 
             {/* Date Picker & Toggle */}
-            <div className="bg-[#164C51] rounded-b-xl md:rounded-r-xl md:rounded-bl-none shadow-xl p-4 sm:p-6 md:p-8 flex flex-col items-center text-white min-h-[300px] md:min-h-[500px] w-full">
+            <div className="bg-[#164C51] rounded md:rounded-b-xl md:rounded-r-xl md:rounded-bl-none shadow-xl p-4 sm:p-6 md:p-8 flex flex-col items-center text-white min-h-[300px] md:min-h-[500px] w-full">
               <div className="flex items-center justify-between mb-12 w-full">
                 <span className="font-medium text-lg">
                   Do you know your dates?
@@ -406,6 +400,13 @@ export default function Cart() {
                   <span className="text-xl font-semibold"></span>
                 </div>
               )}
+               <button
+                type="submit"
+                className="w-full bg-[#2AB7B7] text-white rounded-lg py-3 mt-auto font-semibold flex items-center justify-center gap-2 text-base"
+              >
+                <BsCreditCard2BackFill size={20} />
+                Proceed to Payment
+              </button>
             </div>
           </div>
 

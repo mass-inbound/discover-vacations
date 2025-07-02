@@ -134,16 +134,33 @@ export default function Product() {
   const navigate = useNavigate();
 
   return (
-    <div className="mx-auto mt-20">
-      <div className="grid grid-cols-[1.5fr_1fr] min-h-[528px] max-w-7xl mx-auto">
+    <div className="mx-auto md:mt-20">
+      {/* Offer Expires Section */}
+      
+      <div className="md:grid grid-cols-[1.5fr_1fr] min-h-[528px] max-w-7xl mx-auto">
         <div className="h-full">
           <img
             src={mainImage}
             alt={mainImageAlt}
-            className="h-full w-full object-cover rounded-[10px]"
+            className="md:h-full h-[500px] w-full object-cover"
           />
         </div>
-        <div className="bg-[#F5F5F5] p-8">
+        <div className='px-4 md:px-0 md:relative'>
+        <div className="bg-[#2ab7b7] md:absolute md:-top-10.5 md:w-full mt-8 md:mt-0 py-2 flex items-center justify-center rounded-t-lg">
+
+        <span className="font-semibold text-[#135868] text-[18px] mr-4">Offer Expires:</span>
+        <span className="font-mono text-[#135868] text-[18px] flex items-center gap-1">
+          <span>00</span>
+          <span className="text-[12px] mx-1">HR</span>
+          <span>:</span>
+          <span>00</span>
+          <span className="text-[12px] mx-1">MIN</span>
+          <span>:</span>
+          <span>00</span>
+          <span className="text-[12px] mx-1">SEC</span>
+        </span>
+      </div>
+        <div className="bg-[#F5F5F5] p-8 md:h-full">
           <h1 className="uppercase font-[800] text-[24px]">{product.title}</h1>
           <p className="font-[400] text-[20px] text-[#070707] opacity-70">
             {product.vendor || ''}
@@ -195,24 +212,31 @@ export default function Product() {
             <span className="text-[16px] font-[600]">Save My Deal Now</span>
           </button>
         </div>
+        </div>
       </div>
       {/* tab section  */}
       <div className="my-8 mx-auto max-w-7xl">
         <Tabs />
       </div>
       {/* Vacation Booking curly line  */}
-      <section className="relative py-20 bg-white ">
-        {/* Decorative tree icon */}
-        <img
-          src="/assets/treebgIcon.png"
-          alt="Tree"
-          className="absolute left-1/4 top-1/10 w-40 opacity-60 pointer-events-none select-none"
-        />
+
+      <div className="py-14 px-8">
         <div className="relative z-8 max-w-5xl mx-auto text-center">
+          {/* Tree Icon BG behind heading */}
+          <img
+            src="/assets/treebgIcon.png"
+            alt="Tree Icon"
+            className="hidden md:block absolute left-[90px] top-[30px] w-42 h-52 opacity-80 -z-10 pointer-events-none"
+          />
+          <img
+            src="/assets/treebgIcon.png"
+            alt="Tree Icon"
+            className="block md:hidden absolute left-1 top-[18px] w-42 h-52 opacity-80 -z-10 pointer-events-none"
+          />
           <p className="text-[16px] font-[500] text-[#208989]">
             Plan Less. Enjoy More.
           </p>
-          <h2 className="text-3xl md:text-[47px] font-[500] text-[#0E424E] my-5">
+          <h2 className="text-3xl md:text-[47px] font-[500] text-[#0E424E] my-5 relative">
             Vacation Booking, Simplified
           </h2>
           <p className="text-[#1A202C] mb-[3.5rem] max-w-2xl mx-auto font-[400] text-[20px]">
@@ -230,13 +254,20 @@ export default function Product() {
 
               </h3>
               <p className="text-[#151515] text-[14px] font-[400]">
-                Browse your exclusive offer and add it to your cart — real value, no hidden fees.
+                Choose a day trip based on your location and interests.
               </p>
             </div>
+            {/* After first card: horizontal for desktop, vertical for mobile */}
             <img
               src="/assets/curlyLine.png"
               alt="Curly Line"
               className="hidden md:block mt-5"
+            />
+            {/* Mobile vertical curly line after first card */}
+            <img
+              src="/assets/curlyLine-vertical.png"
+              alt="Curly Line"
+              className="block md:hidden my-8 h-24 w-auto mx-auto pb-6"
             />
             <div className="relative flex flex-col items-center bg-transparent min-w-[250px]">
               <div className="w-[106px] h-[106px] bg-[#DFF4F4] rounded-[30px] flex items-center justify-center shadow-lg">
@@ -251,14 +282,21 @@ export default function Product() {
 
               </h3>
               <p className="text-[#151515] text-[14px] font-[400]">
-              Know your dates? Select them on the calendar before checkout.
-              Not ready yet? No problem — purchase now and choose your dates anytime in the Booking Hub.
+                Know your dates? Select them on the calendar before checkout.
+Not ready yet? No problem — purchase now and choose your dates anytime in the Booking Hub.
               </p>
             </div>
+            {/* After second card: horizontal for desktop, vertical for mobile */}
             <img
               src="/assets/curlyLine.png"
               alt="Curly Line"
               className="hidden md:block mt-5"
+            />
+            {/* Mobile vertical curly line after second card */}
+            <img
+              src="/assets/curlyLine-vertical.png"
+              alt="Curly Line"
+              className="block md:hidden my-8 h-24 w-auto mx-auto pb-6"
             />
             <div className="relative flex flex-col items-center bg-transparent min-w-[250px]">
               <div className="w-[106px] h-[106px] bg-[#DFF4F4] rounded-[30px] flex items-center justify-center shadow-lg">
@@ -270,20 +308,25 @@ export default function Product() {
               </div>
               <h3 className="font-semibold text-[24px] my-3 text-[#135868]">
                 Book Your Getaway
-
               </h3>
               <p className="text-[#151515] text-[14px] font-[400]">
                 Complete your purchase and get instant access to your personal Booking Portal, where reserving your trip is quick, easy, and secure.
-
               </p>
+              {/* Wave Pattern below the last card */}
+              <img
+                src="/assets/wavePattern.png"
+                alt="Wave Pattern"
+                className="absolute -right-1 -bottom-10 w-48 md:w-72 opacity-90 pointer-events-none"
+              />
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    
       {/* carousel  */}
-      <section className="relative bg-[#EAF8F8] py-[7rem]">
+      <section className="relative bg-[#EAF8F8] md:py-[7rem] px-4 py-16 md:py-0">
         <div
-          className="relative w-full max-w-7xl mx-auto overflow-hidden rounded-lg"
+          className="relative w-full max-w-7xl overflow-hidden rounded-lg"
           style={{maxHeight: 360}}
         >
           {/* Slides */}
@@ -348,37 +391,37 @@ function Tabs() {
 
   // Define the content for each tab
   const tabContents = [
-    <div className="bg-gray-100 p-8 text-center flex flex-col gap-4 rounded">
-      <h1 className="text-[#0E424E] font-[500] text-[36px]">
+    <div key="overview" className="bg-gray-100 p-4 md:p-8 text-center flex flex-col gap-4 rounded">
+      <h1 className="text-[#0E424E] font-[500] text-[24px] md:text-[36px]">
         🌾 Magical Orlando Getaway – 4 Days / 3 Nights
       </h1>
-      <p className="text-[#0E424E] text-[20px] font-[400] max-w-[80%] mx-auto">
+      <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] max-w-[95%] md:max-w-[80%] mx-auto">
         Experience the MAGIC of Orlando with a 4 Days / 3 Nights stay for two
         adults — and receive a Bonus Vacation Gift to enjoy even more travel
         adventures in the future!
       </p>
     </div>,
-    <div className="bg-gray-100 p-8 text-center flex flex-col gap-4 rounded">
-      <h2 className="text-[#0E424E] font-[500] text-[36px]">What's Included</h2>
-      <ul className="list-disc list-inside text-[#0E424E] text-[20px] font-[400]">
+    <div key="included" className="bg-gray-100 p-4 md:p-8 text-center flex flex-col gap-4 rounded">
+      <h2 className="text-[#0E424E] font-[500] text-[24px] md:text-[36px]">What&apos;s Included</h2>
+      <ul className="list-disc list-inside text-[#0E424E] text-[16px] md:text-[20px] font-[400]">
         <li>3 nights hotel accommodations for two adults</li>
         <li>Exclusive perks during your stay</li>
         <li>Bonus vacation gift</li>
       </ul>
     </div>,
-    <div className="bg-gray-100 p-8 text-center flex flex-col gap-4 rounded">
-      <h2 className="text-[#0E424E] font-[500] text-[36px] mb-2">
+    <div key="attractions" className="bg-gray-100 p-4 md:p-8 text-center flex flex-col gap-4 rounded">
+      <h2 className="text-[#0E424E] font-[500] text-[24px] md:text-[36px] mb-2">
         Nearby Attractions
       </h2>
-      <div className="flex gap-16 justify-center mx-auto max-w-3xl">
-        <ul className="list-disc list-inside text-[#0E424E] text-[20px] font-[400] text-left">
+      <div className="flex flex-col md:flex-row gap-8 md:gap-16 justify-center mx-auto max-w-3xl">
+        <ul className="list-disc list-inside text-[#0E424E] text-[16px] md:text-[20px] font-[400] text-left">
           <li>Universal Studios</li>
           <li>Walt Disney World</li>
           <li>Volcano Bay</li> 
           <li>Universal Citywalk</li>
           <li>SeaWorld Orlando</li>
         </ul>
-        <ul className="list-disc list-inside text-[#0E424E] text-[20px] font-[400] text-left">
+        <ul className="list-disc list-inside text-[#0E424E] text-[16px] md:text-[20px] font-[400] text-left">
           <li>Old Town Theme Park</li>
           <li>Pirates Dinner Adventure</li>
           <li>Buccaneer Adventure Park</li>
@@ -387,9 +430,9 @@ function Tabs() {
         </ul>
       </div>
     </div>,
-    <div className="bg-gray-100 p-8 text-center flex flex-col gap-4 rounded">
-      <h1 className="text-[#0E424E] font-[500] text-[36px]">Travel Notes</h1>
-      <p className="text-[#0E424E] text-[20px] font-[400] max-w-[80%] mx-auto">
+    <div key="notes" className="bg-gray-100 p-4 md:p-8 text-center flex flex-col gap-4 rounded">
+      <h1 className="text-[#0E424E] font-[500] text-[24px] md:text-[36px]">Travel Notes</h1>
+      <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] max-w-[95%] md:max-w-[80%] mx-auto">
         *Travel for the Orlando getaway must be completed within 12 months of
         purchase. Bonus travel must be registered within 6 months of issue and
         completed within 18 months. Government taxes, fees, upgrades, and resort
@@ -397,7 +440,7 @@ function Tabs() {
         government taxes, resort fees, and optional upgrades
       </p>
     </div>,
-    <div className="grid grid-cols-1 sm:grid-cols-3">
+    <div key="gift" className="grid grid-cols-1 sm:grid-cols-3">
       <div className="rounded-[10px]">
         <div className="bg-[#F2B233] py-1 text-white font-[500] text-[21px] flex justify-center items-center gap-3 rounded-t-[10px]">
           <span>
@@ -405,8 +448,8 @@ function Tabs() {
           </span>
           <span>Choice A</span>
         </div>
-        <div className="bg-gray-100 flex items-center justify-center p-5 rounded-b-[10px] min-h-[280px]">
-          <p className="font-[400] text-[20px] text-[#0E424E] text-center px-6">
+        <div className="bg-gray-100 flex items-center justify-center p-5 rounded-b-[10px] min-h-[180px] md:min-h-[280px]">
+          <p className="font-[400] text-[16px] md:text-[20px] text-[#0E424E] text-center px-6">
             4,5 or 7- Night Cruise aboard Carnival, NCL or Royal Caribbean for
             two adults.
           </p>
@@ -417,18 +460,19 @@ function Tabs() {
 
   return (
     <div>
-      <div className="flex mb-12 border-b border-[#135868]">
+      <div className="flex mb-12 border-b border-[#135868] overflow-x-auto scrollbar-hide md:overflow-x-visible md:scrollbar-default gap-2 md:gap-0" style={{WebkitOverflowScrolling: 'touch'}}>
         {tabs.map((tab, idx) => (
           <button
             key={tab}
             onClick={() => setActive(idx)}
-            className={`flex-1 px-4 py-2 font-[500] text-[21px] border-b-2 transition text-[#1A202C] opacity-60 ${active === idx ? 'border-[#135868] text-[#135868] opacity-100' : 'border-transparent bg-transparent'}`}
+            className={`flex-1 min-w-[48%] md:min-w-0 px-2 md:px-4 py-2 font-[500] text-[16px] md:text-[21px] border-b-2 transition text-[#1A202C] opacity-60 whitespace-nowrap ${active === idx ? 'border-[#135868] text-[#135868] opacity-100' : 'border-transparent bg-transparent'}`}
+            style={{scrollbarWidth: 'none'}}
           >
             {tab}
           </button>
         ))}
       </div>
-      <div>{tabContents[active]}</div>,
+      <div>{tabContents[active]}</div>
     </div>
   );
 }
