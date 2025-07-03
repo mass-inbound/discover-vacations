@@ -38,7 +38,54 @@ export async function loader(args: LoaderFunctionArgs) {
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
 
-  return {...deferredData, ...criticalData};
+  const {context} = args;
+  // Fetch upsell products
+  const UPSELL_PRODUCTS_QUERY = `#graphql
+    fragment MoneyProductItem on MoneyV2 {
+      amount
+      currencyCode
+    }
+    fragment ProductItem on Product {
+      id
+      handle
+      title
+      description
+      featuredImage {
+        id
+        altText
+        url
+        width
+        height
+      }
+      priceRange {
+        minVariantPrice {
+          ...MoneyProductItem
+        }
+        maxVariantPrice {
+          ...MoneyProductItem
+        }
+      }
+      tags
+      variants(first: 1) {
+        nodes {
+          id
+        }
+      }
+    }
+    query UpsellProducts($query: String!) {
+      products(first: 6, query: $query) {
+        nodes {
+          ...ProductItem
+        }
+      }
+    }
+  `;
+  const upsellRes = await context.storefront.query(UPSELL_PRODUCTS_QUERY, {
+    variables: {query: 'tag:upsell'},
+  });
+  const upsellProducts = upsellRes?.products?.nodes || [];
+
+  return {...deferredData, ...criticalData, upsellProducts};
 }
 
 /**
@@ -89,7 +136,7 @@ function loadDeferredData({context, params}: LoaderFunctionArgs) {
 }
 
 export default function Product() {
-  const {product} = useLoaderData<typeof loader>();
+  const {product, upsellProducts} = useLoaderData<typeof loader>();
   const images = product.images?.nodes || [];
   const mainImage =
     product.selectedOrFirstAvailableVariant?.image?.url ||
@@ -253,7 +300,7 @@ export default function Product() {
       </div>
       {/* tab section  */}
       <div className="my-8 mx-auto max-w-7xl">
-        <Tabs />
+        <Tabs upsellProducts={upsellProducts} />
       </div>
       {/* Vacation Booking curly line  */}
 
@@ -368,7 +415,7 @@ export default function Product() {
   );
 }
 
-function Tabs() {
+function Tabs({upsellProducts}: {upsellProducts: any[]}) {
   const [active, setActive] = useState(0);
   const tabs = [
     'Overview',
@@ -459,21 +506,38 @@ function Tabs() {
         government taxes, resort fees, and optional upgrades
       </p>
     </div>,
-    <div key="gift" className="grid grid-cols-1 sm:grid-cols-3">
-      <div className="rounded-[10px]">
-        <div className="bg-[#F2B233] py-1 text-white font-[500] text-[21px] flex justify-center items-center gap-3 rounded-t-[10px]">
-          <span>
-            <FaGift />
-          </span>
-          <span>Choice A</span>
+    <div key="gift" className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+      {upsellProducts.length > 0 ? (
+        upsellProducts.map((product: any, idx: number) => (
+          <div
+            key={product.id}
+            className="rounded-[10px] bg-white shadow flex flex-col"
+          >
+            <div className="bg-[#F2B233] py-1 text-[#071F24] font-[500] text-[21px] flex justify-center items-center gap-3 rounded-t-[10px]">
+              <span>
+                <FaGift />
+              </span>
+              <span>{product.title}</span>
+            </div>
+            <div className="relative bg-gray-100 min-h-[180px] md:min-h-[280px] overflow-hidden flex items-center justify-center">
+              <img
+                src={product.featuredImage?.url || '/assets/orlando.jpg'}
+                alt={product.title}
+                className="w-full h-full object-cover absolute inset-0"
+              />
+              <div className="absolute bottom-0 w-full bg-white/20 backdrop-blur-md py-4 px-2">
+                <p className="font-[400] text-[16px] text-[#FEFEFE] text-center">
+                  {product.description?.split('\n')[0]}
+                </p>
+              </div>
+            </div>
+          </div>
+        ))
+      ) : (
+        <div className="col-span-3 text-center text-gray-500 py-12">
+          No upsell gifts available.
         </div>
-        <div className="bg-gray-100 flex items-center justify-center p-5 rounded-b-[10px] min-h-[180px] md:min-h-[280px]">
-          <p className="font-[400] text-[16px] md:text-[20px] text-[#0E424E] text-center px-6">
-            4,5 or 7- Night Cruise aboard Carnival, NCL or Royal Caribbean for
-            two adults.
-          </p>
-        </div>
-      </div>
+      )}
     </div>,
   ];
 

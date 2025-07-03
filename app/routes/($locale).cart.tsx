@@ -88,8 +88,8 @@ export async function action({request, context}: ActionFunctionArgs) {
 
 export async function loader({context}: LoaderFunctionArgs) {
   const {cart, storefront} = context;
-  // Fetch choice products (tag: 'choice')
-  const CHOICE_PRODUCTS_QUERY = `#graphql
+  // Fetch upsell products (tag: 'upsell')
+  const UPSELL_PRODUCTS_QUERY = `#graphql
     fragment MoneyProductItem on MoneyV2 {
       amount
       currencyCode
@@ -121,7 +121,7 @@ export async function loader({context}: LoaderFunctionArgs) {
         }
       }
     }
-    query ChoiceProducts($query: String!) {
+    query UpsellProducts($query: String!) {
       products(first: 6, query: $query) {
         nodes {
           ...ProductItem
@@ -129,16 +129,16 @@ export async function loader({context}: LoaderFunctionArgs) {
       }
     }
   `;
-  const choiceRes = await storefront.query(CHOICE_PRODUCTS_QUERY, {
-    variables: {query: 'tag:choice'},
+  const upsellRes = await storefront.query(UPSELL_PRODUCTS_QUERY, {
+    variables: {query: 'tag:upsell'},
   });
-  const choiceProducts = choiceRes?.products?.nodes || [];
+  const upsellProducts = upsellRes?.products?.nodes || [];
   const cartData = await cart.get();
-  return {cart: cartData, choiceProducts};
+  return {cart: cartData, upsellProducts};
 }
 
 export default function Cart() {
-  const {cart, choiceProducts} = useLoaderData<typeof loader>();
+  const {cart, upsellProducts} = useLoaderData<typeof loader>();
   const location = useLocation();
 
   // Helper to extract offer from cart lines
@@ -243,7 +243,7 @@ export default function Cart() {
   const allLineIds = cart?.lines?.nodes?.map((line: any) => line.id) || [];
 
   // Helper: get all choice products in cart
-  function getChoiceProductsInCart(cart: any, choiceProducts: any[]) {
+  function getUpsellProductsInCart(cart: any, upsellProducts: any[]) {
     if (!cart?.lines?.nodes?.length) return [];
     return cart.lines.nodes.filter((line: any) => {
       const attrs = Object.fromEntries(
@@ -252,11 +252,11 @@ export default function Cart() {
           attr.value,
         ]),
       );
-      return choiceProducts.some((prod) => prod.title === attrs['Offer Title']);
+      return upsellProducts.some((prod) => prod.title === attrs['Offer Title']);
     });
   }
 
-  const choiceProductsInCart = getChoiceProductsInCart(cart, choiceProducts);
+  const upsellProductsInCart = getUpsellProductsInCart(cart, upsellProducts);
 
   console.log(cartOffer, 'cartOffer');
   return (
@@ -682,13 +682,13 @@ export default function Cart() {
                   <FaGift />
                   Choice of Your Next Vacation Getaway
                 </button>
-                {/* Show selected choice products in cart */}
-                {choiceProductsInCart.length > 0 && (
+                {/* Show selected upsell products in cart */}
+                {upsellProductsInCart.length > 0 && (
                   <div className="mx-8 my-2 flex flex-col gap-2">
                     <h4 className="text-[#0E424E] font-semibold text-lg mb-2">
                       Your Selected Bonus Vacation(s):
                     </h4>
-                    {choiceProductsInCart.map((line: any, idx: number) => {
+                    {upsellProductsInCart.map((line: any, idx: number) => {
                       const attrs = Object.fromEntries(
                         (line.attributes || []).map(
                           (attr: {key: string; value: string}) => [
@@ -747,33 +747,40 @@ export default function Cart() {
         <div className="h-[1px] bg-gray-300"></div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 my-10 gap-6">
-          {choiceProducts.length > 0 ? (
-            choiceProducts.map((product: any, idx: number) => (
-              <div key={product.id} className="rounded-[10px] bg-white shadow">
-                <div className="bg-[#F2B233] py-1 text-white font-[500] text-[21px] flex justify-center items-center gap-3 rounded-t-[10px]">
+          {upsellProducts.length > 0 ? (
+            upsellProducts.map((product: any, idx: number) => (
+              <div
+                key={product.id}
+                className="rounded-[10px] bg-white shadow flex flex-col"
+              >
+                <div className="bg-[#F2B233] py-1 text-[#071F24] font-[500] text-[21px] flex justify-center items-center gap-3 rounded-t-[10px]">
                   <span>
                     <FaGift />
                   </span>
-                  <span>Choice {String.fromCharCode(65 + idx)}</span>
+                  {/* <span>Choice {String.fromCharCode(65 + idx)}</span> */}
+                  <span>{product.title}</span>
                 </div>
-                <div className="bg-gray-100 flex items-center justify-center min-h-[150px]">
+                <div className="relative bg-gray-100 min-h-[280px] overflow-hidden">
                   <img
                     src={product.featuredImage?.url || '/assets/orlando.jpg'}
                     alt={product.title}
-                    className="w-full h-full object-cover"
+                    className="absolute inset-0 w-full h-full object-cover"
                   />
+                  <div className="absolute bottom-0 w-full bg-white/20 backdrop-blur-md py-4 px-2">
+                    {/* <h3 className="text-lg font-semibold text-[#0E424E] mb-1 text-center">
+                      {product.title}
+                    </h3> */}
+                    <p className="font-[400] text-[16px] text-[#FEFEFE] text-center">
+                      {product.description?.split('\n')[0]}
+                    </p>
+                  </div>
                 </div>
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold text-[#0E424E] mb-2 text-center">
-                    {product.title}
-                  </h3>
-                  <p className="font-[400] text-[16px] text-[#0E424E] text-center mb-2">
-                    {product.description?.split('\n')[0]}
-                  </p>
+
+                <div className="">
                   <form
                     method="post"
                     action="/cart"
-                    className="flex flex-col items-center mt-2"
+                    className="flex flex-col items-center"
                   >
                     <input
                       type="hidden"
@@ -823,10 +830,10 @@ export default function Cart() {
                     />
                     <button
                       type="submit"
-                      className="bg-[#F2B233] text-white rounded-lg py-2 px-4 font-semibold flex items-center gap-2 mt-2"
+                      className="bg-[#F2B233] w-full text-[#071F24] rounded-b-lg py-2 px-4 font-semibold flex items-center justify-center gap-2"
                       disabled={!product.variants.nodes[0]?.id}
                     >
-                      <BsPlusCircleFill /> Select
+                      Select <BsPlusCircleFill />
                     </button>
                   </form>
                 </div>
