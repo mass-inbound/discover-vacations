@@ -42,6 +42,7 @@ export async function action({request, context}: ActionFunctionArgs) {
   }
   // Get all form fields
   const variantId = formData.get('variantId');
+
   const quantity = 1;
   // Add to cart if variantId is present
   let result;
@@ -81,6 +82,8 @@ export async function action({request, context}: ActionFunctionArgs) {
         ],
       },
     ]);
+    const headers = cart.setCartId(result.cart.id);
+    return redirect('/cart', {headers});
   }
   // Redirect to cart page (not checkout)
   return redirect('/cart');
@@ -165,6 +168,7 @@ export default function Cart() {
   }
 
   const cartOffer = getOfferFromCart(cart);
+  console.log(cartOffer, cart, 'cartOffer');
 
   // Form state
   const [form, setForm] = useState({
@@ -258,7 +262,6 @@ export default function Cart() {
 
   const upsellProductsInCart = getUpsellProductsInCart(cart, upsellProducts);
 
-  console.log(cartOffer, 'cartOffer');
   return (
     <div className="min-h-screen ">
       <div className="py-8 px-2 sm:px-4 md:px-8 flex flex-col items-start mx-auto max-w-7xl w-full">
