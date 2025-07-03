@@ -287,17 +287,47 @@ export default function Product() {
                 Need Help? Contact Us
               </p>
             </Link>
-            <button
-              className="bg-[#2AB7B7] rounded flex gap-2 items-center justify-center text-white px-4 py-2 hover:bg-[#229a9a]"
-              onClick={() =>
-                navigate(
-                  `/cart?title=${encodeURIComponent(product.title)}&location=${encodeURIComponent(product.tags?.find((t: string) => t.match(/,|FL|PA/)) || '')}&image=${encodeURIComponent(mainImage)}&price=${price}`,
-                )
-              }
+            <form
+              method="post"
+              action="/cart"
+              className="w-full flex items-center"
             >
-              <BiCart size={25} />
-              <span className="text-[16px] font-[600]">Save My Deal Now</span>
-            </button>
+              <input
+                type="hidden"
+                name="variantId"
+                value={product.selectedOrFirstAvailableVariant?.id}
+              />
+              <input type="hidden" name="offerTitle" value={product.title} />
+              <input type="hidden" name="offerImage" value={mainImage} />
+              <input type="hidden" name="offerPrice" value={price} />
+              <input
+                type="hidden"
+                name="offerDescription"
+                value={product.description || ''}
+              />
+              <input
+                type="hidden"
+                name="offerLocation"
+                value={
+                  Array.isArray(product.tags)
+                    ? product.tags.find((t: string) => t.match(/,|FL|PA/)) || ''
+                    : ''
+                }
+              />
+              <input
+                type="hidden"
+                name="offerNights"
+                value={product.nights || 3}
+              />
+              <input type="hidden" name="offerDays" value={product.days || 4} />
+              <button
+                type="submit"
+                className="bg-[#2AB7B7] rounded flex gap-2 items-center justify-center text-white px-4 py-2 hover:bg-[#229a9a]"
+              >
+                <BiCart size={25} />
+                <span className="text-[16px] font-[600]">Save My Deal Now</span>
+              </button>
+            </form>
           </div>
         </div>
       </div>
