@@ -607,7 +607,7 @@ export default function Cart() {
               <div className="flex flex-col items-center justify-center h-full py-12">
                 <button
                   className="bg-[#2AB7B7] text-white px-8 py-3 rounded-lg text-lg font-semibold shadow hover:bg-[#229a9a] transition"
-                  onClick={() => (window.location.href = '/')}
+                  onClick={() => (window.location.href = '/discover-offers')}
                 >
                   Find Destination
                 </button>
