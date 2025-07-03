@@ -12,13 +12,14 @@ import {ProductPrice} from '~/components/ProductPrice';
 import {ProductImage} from '~/components/ProductImage';
 import {ProductForm} from '~/components/ProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {BiCart} from 'react-icons/bi';
 import {FaCheck, FaGift} from 'react-icons/fa';
 import {FaLocationDot} from 'react-icons/fa6';
 import {HiOutlineChevronLeft, HiOutlineChevronRight} from 'react-icons/hi';
 import {IoDiamond} from 'react-icons/io5';
 import {useNavigate} from 'react-router';
+import FooterCarousel from '~/components/FooterCarousel';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [
@@ -89,21 +90,34 @@ function loadDeferredData({context, params}: LoaderFunctionArgs) {
 
 export default function Product() {
   const {product} = useLoaderData<typeof loader>();
+  const images = product.images?.nodes || [];
   const mainImage =
     product.selectedOrFirstAvailableVariant?.image?.url ||
     '/assets/orlando.jpg';
   const mainImageAlt =
     product.selectedOrFirstAvailableVariant?.image?.altText || product.title;
   const price = product.selectedOrFirstAvailableVariant?.price?.amount || '0';
-  const slides = [
-    {src: mainImage, alt: mainImageAlt},
-    {src: '/assets/carouselImage1.jpg', alt: 'Carousel 1'},
-    {src: '/assets/carouselImage2.jpg', alt: 'Carousel 2'},
-  ];
+
+  // Use all product images, fallback to variant image if none
+  const slides =
+    images.length > 0
+      ? images.map((img: {url: string; altText?: string}) => ({
+          src: img.url,
+          alt: img.altText || product.title,
+        }))
+      : [{src: mainImage, alt: mainImageAlt}];
+
   const [current, setCurrent] = useState(0);
   const length = slides.length;
-  const prevSlide = () => setCurrent(current === 0 ? length - 1 : current - 1);
-  const nextSlide = () => setCurrent(current === length - 1 ? 0 : current + 1);
+
+  // Auto-scroll effect
+  useEffect(() => {
+    if (length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrent((prev) => (prev === length - 1 ? 0 : prev + 1));
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [length]);
 
   // Parse description for bullet points (split by newlines)
   const bullets = product.description
@@ -138,12 +152,32 @@ export default function Product() {
       {/* Offer Expires Section */}
 
       <div className="md:grid grid-cols-[1.5fr_1fr] min-h-[528px] max-w-7xl mx-auto">
-        <div className="h-full">
-          <img
-            src={mainImage}
-            alt={mainImageAlt}
-            className="md:h-full h-[500px] w-full object-cover"
-          />
+        <div className="h-full relative">
+          {/* Carousel with indicators at top left */}
+          <div className="relative w-full h-full flex items-center justify-center">
+            {/* Indicator Dots Top Left */}
+            <div className="absolute top-4 left-4 flex gap-3 z-10">
+              {slides.map((_: unknown, idx: number) => (
+                <span
+                  key={idx}
+                  className={
+                    current === idx
+                      ? 'w-8 h-4 rounded-md inline-block bg-[#C6F0F0] border border-[#C6F0F0]'
+                      : 'w-4 h-4 rounded-full inline-block bg-white border border-[#C6F0F0]'
+                  }
+                />
+              ))}
+            </div>
+            {/* Carousel Image */}
+            <div className="w-full h-full flex items-center justify-center">
+              <img
+                src={slides[current].src}
+                alt={slides[current].alt}
+                className="md:h-full h-[500px] w-full object-cover rounded-lg"
+                style={{transition: 'opacity 0.3s'}}
+              />
+            </div>
+          </div>
         </div>
         <div className="px-4 md:px-0 md:relative">
           <div className="bg-[#2ab7b7] md:absolute md:-top-10.5 md:w-full mt-8 md:mt-0 py-2 flex items-center justify-center rounded-t-lg">
@@ -329,57 +363,7 @@ export default function Product() {
       </div>
 
       {/* carousel  */}
-      <section className="relative bg-[#EAF8F8] md:py-[7rem] px-4 py-16">
-        <div
-          className="relative w-full max-w-7xl overflow-hidden rounded-lg"
-          style={{maxHeight: 360}}
-        >
-          {/* Slides */}
-          <div
-            className="flex transition-transform duration-500 gap-8"
-            style={{transform: `translateX(-${current * 100}%)`}}
-          >
-            {slides.map((slide, idx) => (
-              <div
-                key={idx}
-                className="min-w-full md:min-w-1/2 flex-shrink-0 flex items-center justify-center"
-                style={{height: 360}}
-              >
-                <img
-                  src={slide.src}
-                  alt={slide.alt}
-                  className="object-cover w-full h-full rounded-lg"
-                  style={{maxHeight: 360, maxWidth: 640}}
-                />
-              </div>
-            ))}
-          </div>
-          {/* Left Arrow */}
-          <button
-            onClick={prevSlide}
-            className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-2 shadow focus:outline-none z-10"
-          >
-            <HiOutlineChevronLeft size={24} />
-          </button>
-          {/* Right Arrow */}
-          <button
-            onClick={nextSlide}
-            className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-2 shadow focus:outline-none z-10"
-          >
-            <HiOutlineChevronRight size={24} />
-          </button>
-        </div>
-        {/* Indicator Dots */}
-        <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex space-x-2 z-8">
-          {slides.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrent(idx)}
-              className={`w-3 h-3 rounded-full focus:outline-none transition-opacity duration-300 ${current === idx ? 'bg-[#2AB7B7] opacity-100' : 'bg-gray-300 opacity-50'}`}
-            />
-          ))}
-        </div>
-      </section>
+      <FooterCarousel />
     </div>
   );
 }
@@ -404,18 +388,23 @@ function Tabs() {
         🌾 Discover Orlando – 4 Days / 3 Nights + Bonus Vacation Gift
       </h1>
       <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] max-w-[95%] md:max-w-[80%] mx-auto">
-      Start your <span className='font-bold'>My Discover Vacation</span> in the heart of Orlando with 4 days and 3 nights of fun, sun, and memory-making. Ideal for two adults or a family of four (two adults + up to two children).
+        Start your <span className="font-bold">My Discover Vacation</span> in
+        the heart of Orlando with 4 days and 3 nights of fun, sun, and
+        memory-making. Ideal for two adults or a family of four (two adults + up
+        to two children).
       </p>
-      <p className='text-[#0E424E] text-[16px] md:text-[20px] font-[400] max-w-[95%] md:max-w-[80%] mx-auto mt-2'>
-      As our thank-you, you&apos;ll also receive a Bonus Vacation Gift — your choice of:
+      <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] max-w-[95%] md:max-w-[80%] mx-auto mt-2">
+        As our thank-you, you&apos;ll also receive a Bonus Vacation Gift — your
+        choice of:
       </p>
       <ul className="list-disc list-inside text-[#0E424E] text-[14px] md:text-[18px] font-[400]">
         <li>A Cruise Getaway (4–7 nights)</li>
         <li>A 7-Night Resort Condo Stay</li>
         <li>A Hotel Escape + $100 Hotel Perks Card</li>
       </ul>
-      <p className='text-[#0E424E] text-[16px] font-bold md:text-[20px] font-[400] max-w-[95%] md:max-w-[80%] mx-auto'>
-      Catch the Wave. Make it yours. Make it easy. That&apos;s My Discover Vacation.
+      <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] max-w-[95%] md:max-w-[80%] mx-auto">
+        Catch the Wave. Make it yours. Make it easy. That&apos;s My Discover
+        Vacation.
       </p>
     </div>,
     <div
@@ -558,6 +547,15 @@ const PRODUCT_FRAGMENT = `#graphql
     encodedVariantExistence
     encodedVariantAvailability
     tags
+    images(first: 10) {
+      nodes {
+        id
+        url
+        altText
+        width
+        height
+      }
+    }
     options {
       name
       optionValues {
