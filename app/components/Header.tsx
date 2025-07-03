@@ -264,6 +264,13 @@ export function Header({
               >
                 How it Works
               </NavLink>
+              <NavLink
+                to="/about-us"
+                className="text-[#151515] text-[16px] font-[400] hover:underline"
+                onClick={() => setShowMobileMenu(false)}
+              >
+                About Us
+              </NavLink>
               {/* Help Dropdown */}
               <div>
                 <button

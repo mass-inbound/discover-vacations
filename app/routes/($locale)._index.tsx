@@ -408,12 +408,12 @@ export default function Homepage() {
           <h2 className="text-3xl md:text-[61px] font-[500] text-center mb-4 text-[#0E424E]">
             Peace of Mind, Included
           </h2>
-          <div className="flex items-center justify-center gap-3 mb-6">
+          {/* <div className="flex items-center justify-center gap-3 mb-6">
             <FaGift size={48} className="text-[#2AB7B7]" />
             <span className="text-[#135868] text-[22px] font-semibold">
               Includes a bonus gift
             </span>
-          </div>
+          </div> */}
           <p className="font-[400] text-[20px] text-[#676767] mx-auto max-w-3xl text-center mb-10">
             Your vacation should be stress-free from start to finish. That's why
             we've built in support, security, and convenience every step of the
