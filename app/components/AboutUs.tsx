@@ -43,7 +43,7 @@ export default function AboutUs() {
               minHeight: 0,
             }}
           >
-            <div className="mb-2 text-[#8DD3C7] text-base font-semibold tracking-wider">
+            <div className="mb-2 text-[#2AB7B7] text-base font-semibold tracking-wider">
               About Us
             </div>
             <h1
@@ -59,7 +59,7 @@ export default function AboutUs() {
               More For Less.
             </h1>
             <p
-              className="text-white text-base leading-relaxed"
+              className="text-[#101010] text-base leading-relaxed"
               style={{
                 textShadow: '0 2px 8px rgba(0,0,0,0.4)',
               }}
@@ -91,7 +91,7 @@ export default function AboutUs() {
       </div>
       {/* Mission and Values Section */}
       <div className="max-w-4xl mx-auto md:mt-24 mt-54 text-center px-6 md:px-8">
-        <h4 className="text-[#8DD3C7] text-xs md:text-lg font-semibold mb-3 tracking-widest uppercase">
+        <h4 className="text-[#2AB7B7] text-xs md:text-lg font-semibold mb-3 tracking-widest uppercase">
           OUR MISSION
         </h4>
         <p className="text-gray-600 mb-12 text-base leading-relaxed max-w-3xl mx-auto">
@@ -99,7 +99,7 @@ export default function AboutUs() {
           experiences through transparent offers, flexible support, and
           unmatched customer service — all backed by a team you can trust.
         </p>
-        <h4 className="text-[#8DD3C7] text-xs md:text-lg font-semibold mb-3 tracking-widest uppercase">
+        <h4 className="text-[#2AB7B7] text-xs md:text-lg font-semibold mb-3 tracking-widest uppercase">
           OUR VALUES
         </h4>
         <div className="text-gray-500 text-base md:text-lg leading-relaxed max-w-3xl mx-auto space-y-4">
@@ -133,7 +133,7 @@ export default function AboutUs() {
           <div className="bg-[#EAF8F8] rounded-2xl p-12 grid grid-cols-1 md:grid-cols-2 gap-12 mb-16 shadow-sm">
             {/* Feature 1 */}
             <div className="flex flex-col items-center text-center">
-              <div className="bg-[#8DD3C7] rounded-full w-16 h-16 flex items-center justify-center mb-4">
+              <div className="bg-[#2AB7B7] rounded-full w-16 h-16 flex items-center justify-center mb-4">
                 <FaTag className="text-white text-xl" />
               </div>
               <h3 className="font-semibold text-lg text-gray-800 mb-3">
@@ -146,7 +146,7 @@ export default function AboutUs() {
             </div>
             {/* Feature 2 */}
             <div className="flex flex-col items-center text-center">
-              <div className="bg-[#8DD3C7] rounded-full w-16 h-16 flex items-center justify-center mb-4">
+              <div className="bg-[#2AB7B7] rounded-full w-16 h-16 flex items-center justify-center mb-4">
                 <FaCalendarAlt className="text-white text-xl" />
               </div>
               <h3 className="font-semibold text-lg text-gray-800 mb-3">
@@ -159,7 +159,7 @@ export default function AboutUs() {
             </div>
             {/* Feature 3 */}
             <div className="flex flex-col items-center text-center">
-              <div className="bg-[#8DD3C7] rounded-full w-16 h-16 flex items-center justify-center mb-4">
+              <div className="bg-[#2AB7B7] rounded-full w-16 h-16 flex items-center justify-center mb-4">
                 <FaGift className="text-white text-xl" />
               </div>
               <h3 className="font-semibold text-lg text-gray-800 mb-3">
@@ -172,7 +172,7 @@ export default function AboutUs() {
             </div>
             {/* Feature 4 */}
             <div className="flex flex-col items-center text-center">
-              <div className="bg-[#8DD3C7] rounded-full w-16 h-16 flex items-center justify-center mb-4">
+              <div className="bg-[#2AB7B7] rounded-full w-16 h-16 flex items-center justify-center mb-4">
                 <FaLaptop className="text-white text-xl" />
               </div>
               <h3 className="font-semibold text-lg text-gray-800 mb-3">
@@ -229,7 +229,7 @@ export default function AboutUs() {
             </p>
           </div>
 
-          <p className="text-xs text-center text-gray-400 max-w-3xl mx-auto mt-8">
+          <p className="text-xs text-center text-[#1A202C] max-w-3xl mx-auto mt-8">
             Discover Vacations operates under authorized Seller of Travel
             registrations: Florida ST-17213, California CST 2025290-40,
             Washington UBI 602 005 020, and Hawaii TAR-5681.
