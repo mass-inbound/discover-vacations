@@ -94,7 +94,7 @@ export default function Policy() {
         <br />
         <br />
         <div>
-          <Link to="/policies">← Back to Policies</Link>
+          <Link to="/">← Back</Link>
         </div>
         <br />
         <h1>{data.page.title}</h1>
@@ -110,7 +110,7 @@ export default function Policy() {
         <br />
         <br />
         <div>
-          <Link to="/policies">← Back to Policies</Link>
+          <Link to="/">← Back</Link>
         </div>
         <br />
         <h1>{data.policy.title}</h1>

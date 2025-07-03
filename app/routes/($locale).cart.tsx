@@ -3,6 +3,7 @@ import {
   useLoaderData,
   useLocation,
   redirect,
+  Link,
 } from 'react-router';
 import type {CartQueryDataReturn} from '@shopify/hydrogen';
 import {CartForm} from '@shopify/hydrogen';
@@ -359,10 +360,18 @@ export default function Cart() {
                 have provided above, regardless of whether my telephone number
                 is on any Do Not Call registry. My consent is not a condition of
                 purchase. By clicking Continue Booking, I confirm that I&apos;m
-                over age 25, and agree to the Privacy Policy and Terms &
-                Conditions, both of which I agree I have read, understand and
-                agree to. As an alternate to the above consent, click here for
-                other ways to take advantage of this promotion.
+                over age 25, and agree to the{' '}
+                <Link to={'/policies/privacy-policy'} className="underline">
+                  {' '}
+                  Privacy Policy
+                </Link>{' '}
+                and
+                <Link to={'/policies/terms-conditions'} className="underline">
+                  Terms & Conditions
+                </Link>{' '}
+                , both of which I agree I have read, understand and agree to. As
+                an alternate to the above consent, click here for other ways to
+                take advantage of this promotion.
               </div>
               <div className="flex items-center mt-2">
                 <input
