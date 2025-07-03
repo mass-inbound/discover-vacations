@@ -368,10 +368,10 @@ export default function Cart() {
                   {' '}
                   Privacy Policy
                 </Link>{' '}
-                and
+                and{' '}
                 <Link to={'/policies/terms-conditions'} className="underline">
                   Terms & Conditions
-                </Link>{' '}
+                </Link>
                 , both of which I agree I have read, understand and agree to. As
                 an alternate to the above consent, click here for other ways to
                 take advantage of this promotion.
@@ -614,23 +614,28 @@ export default function Cart() {
               </div>
             ) : (
               <>
-                {/* Clear Cart Button */}
-                {allLineIds.length > 0 && (
-                  <form method="post" className="flex justify-end my-2">
-                    <input type="hidden" name="action" value="remove" />
-                    {allLineIds.map((id: string) => (
-                      <input key={id} type="hidden" name="lineIds" value={id} />
-                    ))}
-                    <button
-                      type="submit"
-                      className="bg-red-500 text-white px-4 py-2 rounded-lg font-semibold shadow hover:bg-red-600 transition"
-                      style={{marginLeft: 'auto'}}
-                    >
-                      Clear Cart
-                    </button>
-                  </form>
-                )}
                 <div className="relative">
+                  {/* Clear Cart Button */}
+                  {allLineIds.length > 0 && (
+                    <form method="post" className="absolute right-2 top-2 z-10">
+                      <input type="hidden" name="action" value="remove" />
+                      {allLineIds.map((id: string) => (
+                        <input
+                          key={id}
+                          type="hidden"
+                          name="lineIds"
+                          value={id}
+                        />
+                      ))}
+                      <button
+                        type="submit"
+                        className="bg-red-500 text-white px-4 py-2 rounded-lg font-semibold shadow hover:bg-red-600 transition"
+                        style={{marginLeft: 'auto'}}
+                      >
+                        Clear Cart
+                      </button>
+                    </form>
+                  )}
                   {/* Image */}
                   <img
                     src={cartOffer?.image ?? '/assets/orlando.jpg'}
@@ -681,13 +686,16 @@ export default function Cart() {
                     </>
                   )}
                 </ul>
-                <button className="bg-[#F2B233] text-white rounded-lg py-2 px-4 mx-8 my-2 font-semibold flex items-center gap-2 max-w-[80%]">
-                  <FaGift />
-                  Choice of Your Next Vacation Getaway
-                </button>
+                <div className="bg-[#f2b233] rounded-[8px] px-3 py-1 mx-6 mt-4 flex gap-2 items-start justify-center">
+                  <FaGift className="min-w-4 mt-1" />
+                  <span className="text-[16px] font-[400] text-[#08252C]">
+                    Includes a Bonus Gift:Your Choice Vacation Getaway (valued
+                    at $300+)
+                  </span>
+                </div>
                 {/* Show selected upsell products in cart */}
                 {upsellProductsInCart.length > 0 && (
-                  <div className="mx-8 my-2 flex flex-col gap-2">
+                  <div className="mx-8 mb-2 mt-5 flex flex-col gap-2">
                     <h4 className="text-[#0E424E] font-semibold text-lg mb-2">
                       Your Selected Bonus Vacation(s):
                     </h4>
@@ -720,7 +728,7 @@ export default function Cart() {
                 )}
                 <button
                   type="button"
-                  className="text-[#0E424E] underline text-[16px] font-[600] mt-4 mx-8"
+                  className="text-[#0E424E] underline text-[16px] font-[600] mt-5 mx-8"
                   onClick={() => {
                     /* handle contact us click */
                   }}

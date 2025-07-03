@@ -258,7 +258,8 @@ export default function Product() {
                   ${price}
                 </span>
                 <span className="text-[#135868] font-[500] text-[12px]">
-                  per <br /> family of four
+                  per couple or
+                  <br /> family of four
                 </span>
               </div>
               <span className="text-[#0E424E] font-[400] text-[13px]"></span>
