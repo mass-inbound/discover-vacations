@@ -106,7 +106,7 @@ export function Header({
         isScrolled
           ? 'bg-[rgba(255,255,255,0.70)] shadow-lg backdrop-blur-[4px] fixed top-4 left-8 right-8 h-[68px] rounded-[10px]'
           : 'bg-white shadow-sm w-full sticky top-0 h-[100px]'
-      }  z-9 transition-all duration-300`}
+      }  z-50 transition-all duration-300`}
     >
       <div className="max-w-8xl mx-auto md:px-12 px-3 flex items-center justify-between h-full">
         {/* Logo */}

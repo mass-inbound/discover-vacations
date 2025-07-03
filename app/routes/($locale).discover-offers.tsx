@@ -209,18 +209,18 @@ export default function DiscoverOfferPage() {
     params.set('sort', sort);
     navigate(`?${params.toString()}`, {replace: true});
     // Scroll to main offers div after filter change
-    setTimeout(() => {
-      if (mainDivRef.current) {
-        const topOffset = 120; // height of the navbar
-        const elementPosition = mainDivRef.current.getBoundingClientRect().top;
-        const offsetPosition = window.scrollY + elementPosition - topOffset;
+    // setTimeout(() => {
+    //   if (mainDivRef.current) {
+    //     const topOffset = 120; // height of the navbar
+    //     const elementPosition = mainDivRef.current.getBoundingClientRect().top;
+    //     const offsetPosition = window.scrollY + elementPosition - topOffset;
 
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: 'smooth',
-        });
-      }
-    }, 400);
+    //     window.scrollTo({
+    //       top: offsetPosition,
+    //       behavior: 'smooth',
+    //     });
+    //   }
+    // }, 400);
     // eslint-disable-next-line
   }, [
     selectedDestinations,
