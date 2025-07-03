@@ -1,5 +1,5 @@
 import {redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {useLoaderData, type MetaFunction} from 'react-router';
+import {Link, useLoaderData, type MetaFunction} from 'react-router';
 import {
   getSelectedProductOptions,
   Analytics,
@@ -275,15 +275,18 @@ export default function Product() {
                 );
               })}
             </ul>
-            <div className="max-w-[100%] bg-[#F2B233] rounded-[8px] px-3 py-1 flex gap-2 items-center justify-center">
-              <FaGift className="text-white" />
-              <span className="text-[16px] font-[500] text-white w-full">
-                Includes a Bonus Gift: Your Choice Vacation Getaway
+            <div className="bg-[#f2b233] rounded-[8px] px-3 py-1 mx-4 flex gap-2 items-start justify-center">
+              <FaGift className="min-w-4 mt-1" />
+              <span className="text-[16px] font-[400] text-[#08252C]">
+                Includes a Bonus Gift:Your Choice Vacation Getaway (valued at
+                $300+)
               </span>
             </div>
-            <p className="underline my-8 cursor-pointer">
-              Need Help? Contact Us
-            </p>
+            <Link to="/contact-us">
+              <p className="underline my-8 cursor-pointer">
+                Need Help? Contact Us
+              </p>
+            </Link>
             <button
               className="bg-[#2AB7B7] rounded flex gap-2 items-center justify-center text-white px-4 py-2 hover:bg-[#229a9a]"
               onClick={() =>

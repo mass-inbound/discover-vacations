@@ -106,9 +106,12 @@ export default function ProductDetail() {
         </div>
 
         <div className="flex justify-center mt-[4rem] mb-8">
-          <button className="text-[#2AB7B7] shadow-lg bg-white px-4 py-2 text-[16px] font-[500] rounded-md">
+          <Link
+            to={'/discover-offers'}
+            className="text-[#2AB7B7] shadow-lg bg-white px-4 py-2 text-[16px] font-[500] rounded-md border border-transparent hover:border-[#2AB7B7]"
+          >
             Show more offers
-          </button>
+          </Link>
         </div>
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2">
           <img
