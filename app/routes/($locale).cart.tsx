@@ -262,6 +262,9 @@ export default function Cart() {
 
   const upsellProductsInCart = getUpsellProductsInCart(cart, upsellProducts);
 
+  const selectedBonus = upsellProductsInCart[0];
+  const selectedBonusVariantId = selectedBonus?.merchandise?.id;
+
   return (
     <div className="min-h-screen ">
       <div className="py-8 px-2 sm:px-4 md:px-8 flex flex-col items-start mx-auto max-w-7xl w-full">
@@ -706,7 +709,7 @@ export default function Cart() {
                       return (
                         <div
                           key={line.id}
-                          className="flex items-center gap-4 bg-[#FBE7C0] rounded-lg p-2"
+                          className="flex items-center gap-4 bg-[#FBE7C0] rounded-lg p-2 relative"
                         >
                           <img
                             src={attrs['Offer Image'] || '/assets/orlando.jpg'}
@@ -716,6 +719,25 @@ export default function Cart() {
                           <span className="text-[#0E424E] font-medium">
                             {attrs['Offer Title']}
                           </span>
+                          {/* Remove (X) button */}
+                          <form
+                            method="post"
+                            className="absolute top-2 right-2"
+                          >
+                            <input type="hidden" name="action" value="remove" />
+                            <input
+                              type="hidden"
+                              name="lineIds"
+                              value={line.id}
+                            />
+                            <button
+                              type="submit"
+                              className="bg-red-400 text-white hover:bg-red-500 text-lg font-bold px-2 rounded"
+                              title="Remove"
+                            >
+                              ×
+                            </button>
+                          </form>
                         </div>
                       );
                     })}
@@ -834,13 +856,36 @@ export default function Cart() {
                       name="offerDays"
                       value={product.days || 4}
                     />
-                    <button
-                      type="submit"
-                      className="bg-[#F2B233] w-full text-[#071F24] rounded-b-lg py-2 px-4 font-semibold flex items-center justify-center gap-2"
-                      disabled={!product.variants.nodes[0]?.id}
-                    >
-                      Select <BsPlusCircleFill />
-                    </button>
+                    {selectedBonus &&
+                    selectedBonusVariantId === product.variants.nodes[0]?.id ? (
+                      <button
+                        type="button"
+                        className="w-full text-[#071F24] rounded-b-lg py-2 px-4 font-semibold flex items-center justify-center gap-2 bg-[#F2B233] opacity-50 cursor-not-allowed"
+                        disabled
+                      >
+                        Selected <BsPlusCircleFill />
+                      </button>
+                    ) : (
+                      <button
+                        type="submit"
+                        className={`w-full text-[#071F24] rounded-b-lg py-2 px-4 font-semibold flex items-center justify-center gap-2 bg-[#F2B233] ${
+                          !product.variants.nodes[0]?.id ||
+                          (selectedBonus &&
+                            selectedBonusVariantId !==
+                              product.variants.nodes[0]?.id)
+                            ? 'opacity-70 pointer-events-none'
+                            : ''
+                        }`}
+                        disabled={
+                          !product.variants.nodes[0]?.id ||
+                          (selectedBonus &&
+                            selectedBonusVariantId !==
+                              product.variants.nodes[0]?.id)
+                        }
+                      >
+                        Select <BsPlusCircleFill />
+                      </button>
+                    )}
                   </form>
                 </div>
               </div>
