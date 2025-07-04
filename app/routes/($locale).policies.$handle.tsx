@@ -90,15 +90,18 @@ export default function Policy() {
   // Render Shopify Page if present
   if ('page' in data && data.page) {
     return (
-      <div className="policy">
+      <div className="policy max-w-7xl mx-auto px-4 sm:px-10">
         <br />
         <br />
         <div>
           <Link to="/">← Back</Link>
         </div>
         <br />
-        <h1>{data.page.title}</h1>
-        <div dangerouslySetInnerHTML={{__html: data.page.body}} />
+        <h1 className="font-600 text-xl">{data.page.title}</h1>
+        <div
+          dangerouslySetInnerHTML={{__html: data.page.body}}
+          className="border-2 border-gray-400 p-4 text-justify mt-4 mb-8 rounded-lg shadow-2xl"
+        />
       </div>
     );
   }

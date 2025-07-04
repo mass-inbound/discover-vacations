@@ -18,22 +18,23 @@ export function Footer({
 }: FooterProps) {
   return (
     <Suspense>
-       <section
-        className="relative flex flex-col md:flex-row justify-between bg-cover bg-center h-[760px]"
+      <section
+        className="relative flex flex-col md:flex-row justify-between bg-cover bg-center h-[760px] border-b border-gray-500"
         style={{
           backgroundImage: 'url(/assets/readyPlanImg.jpg)',
         }}
       >
         <div className="md:flex-1" />
         <div className="flex-1 flex flex-col justify-center items-start gap-2 px-8 py-16 md:py-0 md:pr-20 z-8">
-          <div className="inline-block px-5 py-2 mb-4 bg-[#EAF8F8] text-[#0E424E] text-[21px] font-[500] rounded-[10px] uppercase tracking-wider">
+          <div className="inline-block px-5 py-2 mb-4 bg-[#EAF8F8] opacity-70 text-[#0E424E] text-[21px] font-[500] rounded-[10px] uppercase tracking-wider">
             CATCH THE WAVE, DISCOVER MORE FOR LESS
           </div>
-          <h2 className="text-4xl md:text-[48px] font-[500] text-white mb-4 drop-shadow-lg">
-          Ready to Discover Your Next Vacation? 
+          <h2 className="text-4xl sm:max-w-xl md:text-[48px] font-[500] text-white mb-4 drop-shadow-lg leading-16">
+            Ready to Discover Your Next Vacation?
           </h2>
           <p className="text-white text-start text-[20px] font-[400] max-w-xl mb-6 drop-shadow">
-          Browse our Value Added offers and Discover your Vacation in just a few clicks!
+            Browse our Value Added offers and Discover your Vacation in just a
+            few clicks!
           </p>
           <div className="flex gap-8  justify-end">
             <Link
@@ -50,7 +51,8 @@ export function Footer({
             </Link>
           </div>
         </div>
-      </section> 
+        <div className="absolute bottom-0 left-0 w-full h-3 bg-gradient-to-t from-white/80 to-transparent blur-md pointer-events-none z-10" />
+      </section>
       <Await resolve={footerPromise}>
         {(footer) => (
           <footer className="bg-[#0E424E] text-white pt-12 pb-4">
@@ -117,15 +119,15 @@ export function Footer({
                 <h4 className="font-bold mb-6 text-lg">Help</h4>
                 <ul className="space-y-4 text-sm opacity-90">
                   <li>
-                    <a href="#" className="hover:underline">
+                    <Link to="/policies/#" className="hover:underline">
                       Refund & Cancellation Policy
-                    </a>
+                    </Link>
                   </li>
-                  <li>
+                  {/* <li>
                     <a href="#" className="hover:underline">
                       TCPA Policy
                     </a>
-                  </li>
+                  </li> */}
                   <li>
                     <Link to="/contact-us" className="hover:underline">
                       Contact Us
@@ -145,7 +147,7 @@ export function Footer({
                     <MdEmail className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2AB7B7] text-lg" />
                     <input
                       type="email"
-                      placeholder="youremail@gmail.com"
+                      placeholder="youremail@email.com"
                       className="pl-10 pr-3 py-2 rounded bg-[#EAF8F8] text-[#0E424E] w-full outline-none"
                     />
                   </div>
@@ -158,7 +160,7 @@ export function Footer({
                 </form>
               </div>
             </div>
-            <div className="border-t border-white/20 mt-10 pt-4 flex flex-col md:flex-row items-center justify-between max-w-7xl mx-auto px-4 text-xs opacity-80">
+            <div className="border-t border-white/20 mt-10 mb-10 sm:mb-0 pt-4 flex flex-col md:flex-row items-center justify-between max-w-7xl mx-auto px-4 text-xs opacity-80">
               <span>©2024 My Discover Vacations. All rights reserved</span>
               <div className="flex gap-4 mt-2 md:mt-0">
                 <Link to="/policies/privacy-policy" className="hover:underline">
