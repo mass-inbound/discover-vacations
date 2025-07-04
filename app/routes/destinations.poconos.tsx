@@ -1,8 +1,11 @@
 import {useState} from 'react';
 import {FaCheck, FaGift} from 'react-icons/fa6';
 import {IoDiamond} from 'react-icons/io5';
-import {Link, useLoaderData} from 'react-router';
+import {Link, useLoaderData, useRouteLoaderData} from 'react-router';
 import {OfferCard} from '~/components/OfferCard';
+import {Suspense} from 'react';
+import {Await} from 'react-router';
+import {useOptimisticCart} from '@shopify/hydrogen';
 
 export async function loader({context}: any) {
   const PRODUCTS_QUERY = `#graphql
@@ -53,6 +56,7 @@ export async function loader({context}: any) {
 
 export default function ProductDetail() {
   const {products} = useLoaderData<typeof loader>();
+  const rootData = useRouteLoaderData('root');
   return (
     <div>
       <div
@@ -76,7 +80,7 @@ export default function ProductDetail() {
           </h1>
           <p className="max-w-3xl font-[400] text-[13px] md:text-[16px] text-center">
             Discover all-season vacation offers in the heart of the Poconos.
-            Whether it’s a romantic cabin, a spa weekend, or a mountain
+            Whether it's a romantic cabin, a spa weekend, or a mountain
             adventure, enjoy a smooth booking process and exceptional value.
           </p>
         </div>
@@ -102,7 +106,16 @@ export default function ProductDetail() {
             Discover a collection of vacations
           </p>
           {/* Tabs */}
-          <Tabs products={products} />
+          <Suspense fallback={<div>Loading cart...</div>}>
+            <Await resolve={rootData.cart}>
+              {(originalCart) => {
+                const cart = useOptimisticCart(originalCart);
+                const cartCount = cart?.totalQuantity ?? 0;
+                const cartIsEmpty = !cartCount || cartCount === 0;
+                return <Tabs products={products} cartIsEmpty={cartIsEmpty} />;
+              }}
+            </Await>
+          </Suspense>
         </div>
 
         <div className="flex justify-center mt-[4rem] mb-8">
@@ -125,7 +138,13 @@ export default function ProductDetail() {
   );
 }
 
-function Tabs({products}: {products: any[]}) {
+function Tabs({
+  products,
+  cartIsEmpty,
+}: {
+  products: any[];
+  cartIsEmpty: boolean;
+}) {
   const [active, setActive] = useState(0);
   const tabs = ['Popular', 'Hotels', 'Cruise', 'Exclusive Deals'];
   // Map tab index to tag
@@ -160,7 +179,11 @@ function Tabs({products}: {products: any[]}) {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
-            <OfferCard key={product.id} product={product} />
+            <OfferCard
+              key={product.id}
+              product={product}
+              cartIsEmpty={cartIsEmpty}
+            />
           ))
         ) : (
           <div className="col-span-3 text-center text-gray-500 py-12">

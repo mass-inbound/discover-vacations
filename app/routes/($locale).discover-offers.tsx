@@ -1,9 +1,16 @@
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useRef, useState, Suspense} from 'react';
 import {IoDiamond} from 'react-icons/io5';
 import {FaCheck, FaGift} from 'react-icons/fa6';
-import {Link, useLoaderData, useNavigate} from 'react-router';
+import {
+  Link,
+  useLoaderData,
+  useNavigate,
+  useRouteLoaderData,
+  Await,
+} from 'react-router';
 import type {LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {OfferCard} from '~/components/OfferCard';
+import {useOptimisticCart} from '@shopify/hydrogen';
 
 // --- GraphQL fragment and query ---
 const PRODUCT_FRAGMENT = `#graphql
@@ -172,6 +179,7 @@ export default function DiscoverOfferPage() {
     useLoaderData<typeof loader>();
   const navigate = useNavigate();
   const mainDivRef = useRef<HTMLDivElement>(null);
+  const rootData = useRouteLoaderData('root');
 
   // --- Filter state (controlled by URL) ---
   const [selectedDestinations, setSelectedDestinations] = useState<string[]>(
@@ -330,7 +338,7 @@ export default function DiscoverOfferPage() {
             real value, trusted accommodations, and an easy path to booking.
           </p>
           New locations are added regularly, so check back often — or catch the
-          wave with the destination that’s calling you now.
+          wave with the destination that's calling you now.
         </div>
       </div>
 
@@ -497,24 +505,28 @@ export default function DiscoverOfferPage() {
 
           {/* Product Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full px-1 sm:px-0">
-            {products.length === 0 && (
-              <div className="col-span-2 text-center text-red-600 font-bold py-12">
-                No offers found for selected filters.
-              </div>
-            )}
-
-            {products.map((product: any) => (
-              <div key={product.id} className="py-8 md:py-0">
-                <OfferCard
-                  product={product}
-                  onSelect={(prod) =>
-                    navigate(
-                      `/cart?title=${encodeURIComponent(prod.title)}&location=${encodeURIComponent(prod.tags?.find((t: string) => t.match(/,|FL|PA/)) || '')}&image=${encodeURIComponent(prod.featuredImage?.url || '')}&price=${prod.priceRange.minVariantPrice.amount}`,
-                    )
-                  }
-                />
-              </div>
-            ))}
+            <Suspense fallback={<div>Loading cart...</div>}>
+              <Await resolve={rootData.cart}>
+                {(originalCart) => {
+                  const cart = useOptimisticCart(originalCart);
+                  const cartCount = cart?.totalQuantity ?? 0;
+                  const cartIsEmpty = !cartCount || cartCount === 0;
+                  return products.map((product: any) => (
+                    <div key={product.id} className="py-8 md:py-0">
+                      <OfferCard
+                        product={product}
+                        cartIsEmpty={cartIsEmpty}
+                        onSelect={(prod) =>
+                          navigate(
+                            `/cart?title=${encodeURIComponent(prod.title)}&location=${encodeURIComponent(prod.tags?.find((t: string) => t.match(/,|FL|PA/)) || '')}&image=${encodeURIComponent(prod.featuredImage?.url || '')}&price=${prod.priceRange.minVariantPrice.amount}`,
+                          )
+                        }
+                      />
+                    </div>
+                  ));
+                }}
+              </Await>
+            </Suspense>
           </div>
         </div>
         <div className="flex justify-center mt-[4rem] mb-8">

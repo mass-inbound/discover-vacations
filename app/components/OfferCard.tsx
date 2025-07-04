@@ -6,9 +6,11 @@ import React from 'react';
 export function OfferCard({
   product,
   onSelect,
+  cartIsEmpty = true,
 }: {
   product: any;
   onSelect?: (product: any) => void;
+  cartIsEmpty?: boolean;
 }) {
   // Parse description as bullet points
   const bullets = product.description
@@ -130,9 +132,17 @@ export function OfferCard({
         <input type="hidden" name="offerDays" value={product.days || 4} />
         <button
           type="submit"
-          className="bg-[#2AB7B7] h-[28px] w-full flex justify-center items-center rounded-b text-white font-[500] text-[12px] cursor-pointer"
+          className={`bg-[#2AB7B7] h-[28px] w-full flex justify-center items-center rounded-b text-white font-[500] text-[12px] cursor-pointer ${!cartIsEmpty ? 'pointer-events-none opacity-50' : ''}`}
+          disabled={!cartIsEmpty}
+          title={
+            !cartIsEmpty
+              ? 'Only one offer can be added to cart at a time'
+              : undefined
+          }
         >
-          Select Offer
+          {cartIsEmpty
+            ? 'Select Offer'
+            : 'Only one offer can be added to cart at a time'}
         </button>
       </form>
     </div>

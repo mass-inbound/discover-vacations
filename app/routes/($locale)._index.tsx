@@ -5,6 +5,8 @@ import {
   Link,
   type MetaFunction,
   useNavigate,
+  useRouteLoaderData,
+  useAsyncValue,
 } from 'react-router';
 import {Suspense, useRef, useEffect, useState} from 'react';
 import {Image, Money} from '@shopify/hydrogen';
@@ -12,6 +14,7 @@ import type {
   FeaturedCollectionFragment,
   RecommendedProductsQuery,
   CatalogQuery,
+  CartApiQueryFragment,
 } from 'storefrontapi.generated';
 import {ProductItem} from '~/components/ProductItem';
 import {FaChevronDown} from 'react-icons/fa';
@@ -23,6 +26,7 @@ import {GiPalmTree} from 'react-icons/gi';
 import {HiOutlineChevronLeft, HiOutlineChevronRight} from 'react-icons/hi';
 import {OfferCard} from '../components/OfferCard';
 import FooterCarousel from '~/components/FooterCarousel';
+import {useOptimisticCart} from '@shopify/hydrogen';
 
 export const meta: MetaFunction = () => {
   return [{title: 'Hydrogen | Home'}];
@@ -152,6 +156,7 @@ export default function Homepage() {
   const navigate = useNavigate();
   const data = useLoaderData<typeof loader>();
   const bookingRef = useRef<HTMLDivElement>(null);
+  const rootData = useRouteLoaderData('root');
 
   const handleScroll = () => {
     const offset = 130; // height of your fixed navbar
@@ -345,15 +350,28 @@ export default function Homepage() {
             Discover a collection of vacations
           </p>
           {/* Tabs */}
-          {data.homepageProducts && data.homepageProducts.length > 0 ? (
-            <Tabs products={data.homepageProducts} />
-          ) : (
-            <div className="text-center text-red-600 font-bold py-12">
-              No products found for the Home page collection.
-              <br />
-              {/* You can check your server logs for more info. */}
-            </div>
-          )}
+          <Suspense fallback={<div>Loading cart...</div>}>
+            <Await resolve={rootData.cart}>
+              {(originalCart) => {
+                const cart = useOptimisticCart(originalCart);
+                const cartCount = cart?.totalQuantity ?? 0;
+                const cartIsEmpty = !cartCount || cartCount === 0;
+                return data.homepageProducts &&
+                  data.homepageProducts.length > 0 ? (
+                  <Tabs
+                    products={data.homepageProducts}
+                    cartIsEmpty={cartIsEmpty}
+                  />
+                ) : (
+                  <div className="text-center text-red-600 font-bold py-12">
+                    No products found for the Home page collection.
+                    <br />
+                    {/* You can check your server logs for more info. */}
+                  </div>
+                );
+              }}
+            </Await>
+          </Suspense>
         </div>
 
         <div className="flex justify-center mt-[4rem] mb-8">
@@ -523,6 +541,7 @@ function RecommendedProducts({
 // Simple Tabs implementation for demo
 function Tabs({
   products,
+  cartIsEmpty,
 }: {
   products: Array<{
     id: string;
@@ -536,6 +555,7 @@ function Tabs({
       maxVariantPrice: {amount: string};
     };
   }>;
+  cartIsEmpty: boolean;
 }) {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
@@ -596,6 +616,7 @@ function Tabs({
               <div key={product.id} className="md:pb-0 pb-6">
                 <OfferCard
                   product={product}
+                  cartIsEmpty={cartIsEmpty}
                   onSelect={(prod) =>
                     navigate(
                       `/cart?title=${encodeURIComponent(prod.title)}&location=${encodeURIComponent(Array.isArray(prod.tags) ? prod.tags.find((t: string) => t.match(/,|FL|PA/)) || '' : '')}&image=${encodeURIComponent(prod.featuredImage?.url || '')}&price=${prod.priceRange.minVariantPrice.amount}`,
