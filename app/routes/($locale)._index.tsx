@@ -467,6 +467,7 @@ export default function Homepage() {
       </section>
 
       {/* carousel section  */}
+      <FooterCarousel />
     </div>
   );
 }

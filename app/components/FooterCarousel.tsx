@@ -44,7 +44,7 @@ export default function FooterCarousel() {
       >
         {/* Slides */}
         <div
-          className="flex transition-transform duration-500 gap-8"
+          className="flex transition-transform duration-500"
           style={{
             transform: `translateX(-${currentPage * 100}%)`,
           }}
@@ -58,8 +58,8 @@ export default function FooterCarousel() {
               <img
                 src={slide.src}
                 alt={slide.alt}
-                className="object-cover w-full h-full rounded-lg"
-                style={{maxHeight: 360, maxWidth: 640}}
+                className="object-cover w-full h-full rounded-lg max-w-[320px] sm:max-w-[610px]"
+                style={{maxHeight: 360}}
               />
             </div>
           ))}
@@ -67,14 +67,14 @@ export default function FooterCarousel() {
         {/* Left Arrow */}
         <button
           onClick={prevSlide}
-          className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-2 shadow focus:outline-none z-10"
+          className="absolute top-[60%] left-2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-2 shadow-md focus:outline-none z-10"
         >
           <HiOutlineChevronLeft size={24} />
         </button>
         {/* Right Arrow */}
         <button
           onClick={nextSlide}
-          className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-2 shadow focus:outline-none z-10"
+          className="absolute top-[60%] right-2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-2 shadow-md focus:outline-none z-10"
         >
           <HiOutlineChevronRight size={24} />
         </button>
