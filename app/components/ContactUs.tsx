@@ -107,8 +107,8 @@ Fill out the form below and we’ll get back to you within one business day."
             </div>
             <button
               type="submit"
-              className="mt-2 font-semibold py-2 px-8 rounded-md shadow-md transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-green-200 self-start w-full sm:w-auto text-base"
-              style={{background: green, color: 'white'}}
+              className="mt-2 font-semibold py-2 px-8 rounded-md shadow-md transition-all duration-150 bg-[#2AB7B7] focus:outline-none focus:ring-2 focus:ring-green-200 self-start w-full sm:w-auto text-base"
+              style={{color: 'white'}}
             >
               Submit
             </button>
@@ -125,10 +125,7 @@ Fill out the form below and we’ll get back to you within one business day."
           >
             {/* Address Card */}
             <div className="flex flex-col gap-2 mb-2">
-              <div
-                className="flex items-center gap-2 mb-1 text-green-500"
-                style={{color: green}}
-              >
+              <div className="flex items-center gap-2 mb-1 text-[#2AB7B7]">
                 <FaLocationDot size={20} />
                 <span className="font-semibold text-gray-700">Address</span>
               </div>
@@ -151,10 +148,7 @@ Fill out the form below and we’ll get back to you within one business day."
             </div>
             {/* Email Card */}
             <div className="flex flex-col gap-2 mb-2">
-              <div
-                className="flex items-center gap-2 mb-1 text-green-500"
-                style={{color: green}}
-              >
+              <div className="flex items-center gap-2 mb-1 text-[#2AB7B7]">
                 <FaEnvelope size={18} />
                 <span className="font-semibold text-gray-700">Email</span>
               </div>
@@ -163,18 +157,15 @@ Fill out the form below and we’ll get back to you within one business day."
               </div>
               <a
                 href="mailto:customercare@mydiscovervacations.com"
-                className="mt-2 w-full border rounded-md py-2 font-medium text-center transition-all duration-150"
-                style={{borderColor: green, color: green, background: 'white'}}
+                className="mt-2 w-full rounded-md py-2 font-medium text-center transition-all duration-150 border border-[#2AB7B7] text-[#2AB7B7]"
+                style={{background: 'white'}}
               >
                 Email Us
               </a>
             </div>
             {/* Live Chat Card */}
             <div className="flex flex-col gap-2">
-              <div
-                className="flex items-center gap-2 mb-1 text-green-500"
-                style={{color: green}}
-              >
+              <div className="flex items-center gap-2 mb-1 text-[#2AB7B7]">
                 <FaComments size={18} />
                 <span className="font-semibold text-gray-700">Live Chat</span>
               </div>
