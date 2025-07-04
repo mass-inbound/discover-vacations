@@ -142,6 +142,7 @@ export async function loader({context}: LoaderFunctionArgs) {
 
 export default function Cart() {
   const {cart, upsellProducts} = useLoaderData<typeof loader>();
+  // console.log('cart==>', cart);
   const location = useLocation();
 
   // Helper to extract offer from cart lines
@@ -156,19 +157,18 @@ export default function Cart() {
       ]),
     );
     return {
-      title: attrs['Offer Title'] || 'Magical Orlando Getaway',
-      location: attrs['Offer Location'] || 'Orlando, FL',
-      image: attrs['Offer Image'] || '/assets/orlando.jpg',
-      price: attrs['Offer Price'] || 49,
-      nights: attrs['offerNights'] || 3,
-      days: attrs['offerDays'] || 4,
+      title: attrs['Offer Title'] || 'Title N/A',
+      location: attrs['Offer Location'] || 'Location N/a',
+      image: attrs['Offer Image'] || 'Image N/A',
+      price: attrs['Offer Price'] || 'N/A',
+      nights: attrs['offerNights'] || 'N/A',
+      days: attrs['offerDays'] || 'N/A',
       description: attrs['offerDescription'] || '',
       expiresAt: attrs['Offer Expires At'] || null,
     };
   }
 
   const cartOffer = getOfferFromCart(cart);
-  console.log(cartOffer, cart, 'cartOffer');
 
   // Form state
   const [form, setForm] = useState({
@@ -659,15 +659,13 @@ export default function Cart() {
                     {cartOffer?.days ?? 4} Days / {cartOffer?.nights ?? 3}{' '}
                     Nights
                   </span>
-                  <span className="text-[28px] text-[#0E424E]">
+                  <span className="text-[28px] text-[#0E424E] flex gap-2">
                     ${cartOffer?.price ?? 49}{' '}
-                    <span className="text-base font-normal">
+                    <span className="text-base font-normal flex flex-col leading-5">
                       {' '}
-                      per couple or upto a family of four
+                      <span>per couple or </span>{' '}
+                      <span>upto a family of four</span>
                     </span>
-                  </span>
-                  <span className="text-xs text-gray-400">
-                    not included taxes + fees
                   </span>
                 </div>
                 <ul className="text-sm text-[#135868] mx-8 my-2 space-y-2">
@@ -679,10 +677,7 @@ export default function Cart() {
                       ))
                   ) : (
                     <>
-                      <li>
-                        ✔ 3 nights hotel accommodations in Magical Orlando per
-                        couple or up to a family of 4
-                      </li>
+                      <li>✔ Destination detail</li>
                     </>
                   )}
                 </ul>
