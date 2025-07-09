@@ -79,8 +79,29 @@ export async function action({request, context}: ActionFunctionArgs) {
             value: String(formData.get('offerDescription') || ''),
           },
           {key: 'Offer Expires At', value: expiresAt},
+          {
+            key: 'TCPA Status',
+            value: String(
+              formData.get('consent') ? 'Approved' : 'Not Approved',
+            ),
+          },
         ],
       },
+    ]);
+    // Add cart-level attributes for Shopify Admin visibility
+    await cart.updateAttributes([
+      {key: 'First Name', value: String(formData.get('firstName') || '')},
+      {key: 'Last Name', value: String(formData.get('lastName') || '')},
+      {key: 'Email', value: String(formData.get('email') || '')},
+      {key: 'Phone', value: String(formData.get('phone') || '')},
+      {key: 'Adults', value: String(formData.get('adults') || '')},
+      {key: 'Kids', value: String(formData.get('kids') || '')},
+      {
+        key: 'Consent',
+        value: String(formData.get('consent') ? 'Approved' : 'Not Approved'),
+      },
+      {key: 'Check In', value: String(formData.get('checkIn') || '')},
+      {key: 'Check Out', value: String(formData.get('checkOut') || '')},
     ]);
     const headers = cart.setCartId(result.cart.id);
     return redirect('/cart', {headers});
