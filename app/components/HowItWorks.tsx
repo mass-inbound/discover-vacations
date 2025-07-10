@@ -31,7 +31,7 @@ export default function HowItWorks() {
             Vacation Booking, Simplified
           </h2>
           <p className="text-[#1A202C] mb-[3.5rem] max-w-2xl mx-auto font-[400] text-[20px]">
-            Curated offers. Real value. Flexible dates and room options to fit
+            Exclusive offers. Real value. Flexible dates and room options to fit
             your travel plans — without overcomplicating the process.
           </p>
           <div className="flex flex-col md:flex-row items-start justify-center relative">
