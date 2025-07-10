@@ -26,73 +26,79 @@ export function OfferCard({
       key={product.id}
     >
       {isExclusive && (
-        <div className="absolute -top-7 left-1 flex items-center justify-center gap-1 bg-[#F2B233] text-[#FEFEFE] px-2 py-1 text-[14px] font-[400] rounded">
+        <div className="absolute -top-7 left-3 flex items-center justify-center gap-1 bg-[#F2B233] text-[#FEFEFE] px-2 py-1 text-[14px] font-[400] rounded-t-[10px]">
           <IoDiamond /> <span>Exclusive Offer</span>
         </div>
       )}
-      <div className="relative w-full h-[280px] rounded-t mb-4 overflow-hidden">
-        {/* Discount polygon badge */}
-        <img
-          src="/assets/polygonDiscount.svg"
-          alt="Discount"
-          className="absolute top-0 right-0 z-8"
-        />
-        <span className="absolute top-8 rotate-45 right-2 z-8 text-white text-[18px] font-[500]">
-          82% OFF
-        </span>
-        {/* Destination image */}
-        {product.featuredImage ? (
+      <Link
+        to={`/products/${product.handle}`}
+        className="cursor-pointer hover:shadow-xl transition duration-200"
+      >
+        <div className="relative w-full h-[280px] rounded-t-[10px] mb-4 overflow-hidden">
+          {/* Discount polygon badge */}
           <img
-            src={product.featuredImage.url}
-            alt={product.featuredImage.altText || product.title}
-            className="w-full h-full object-cover"
+            src="/assets/polygonDiscount.svg"
+            alt="Discount"
+            className="absolute top-0 right-0 z-8"
           />
-        ) : (
-          <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-            No Image
-          </div>
-        )}
-        {/* Destination title */}
-        <h4 className="absolute top-3 left-4 font-bold text-white text-[20px] z-10">
-          {product.title}
-        </h4>
-        {/* Details button */}
-        <Link
-          to={`/products/${product.handle}`}
-          className="absolute left-4 bottom-3 text-[#26A5A5] bg-white px-4 py-1 text-[16px] font-medium z-10 rounded border border-transparent hover:border-[#26A5A5] transition"
-        >
-          Details
-        </Link>
-      </div>
-      <ul className="text-sm text-[#000] mb-4 list-disc list-inside pl-4 space-y-2">
-        {bullets.map((b: string, i: number) => (
-          <li key={i} className="flex gap-2 items-center">
-            <FaCheck className="text-amber-400" />{' '}
-            <span className="max-w-[85%]">{b}</span>
-          </li>
-        ))}
-      </ul>
-      <div className="bg-[#f2b233] rounded-[8px] px-3 py-1 mx-4 flex gap-2 items-start justify-center">
-        <FaGift className="min-w-4 mt-1" />
-        <span className="text-[16px] font-[400] text-[#08252C]">
-          Includes a Bonus Gift:Your Choice Vacation Getaway (valued at $300+)
-        </span>
-      </div>
-      <div className="mt-8 p-4 bg-[#F5F5F5] flex flex-col gap-1 items-center justify-center border-t border-gray-300">
-        <span className="text-[#676767] font-[400] text-[13px]">
-          {/* You can add duration info as metafield or in description if needed */}
-        </span>
-        <p className="text-[13px] text-[#676767]">4 days/3 Nights</p>
-        <div className="flex items-center justify-center gap-1">
-          <span className="text-[#135868] font-[500] text-[27px]">
-            ${product.priceRange.minVariantPrice.amount}
+          <span className="absolute top-4 right-4 z-8 text-white text-[21px] font-[700] leading-6">
+            82% <br />
+            OFF
           </span>
-          <span className="text-[#135868] font-[500] text-[12px]">
-            per couple or <br /> family of four
+          {/* Destination image */}
+          {product.featuredImage ? (
+            <img
+              src={product.featuredImage.url}
+              alt={product.featuredImage.altText || product.title}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+              No Image
+            </div>
+          )}
+          {/* Destination title */}
+          <h4 className="absolute top-5 left-5 font-[700] text-white text-[22px] z-10 drop-shadow-2xl">
+            {product.title}
+          </h4>
+          {/* Details button */}
+          <Link
+            to={`/products/${product.handle}`}
+            className="absolute left-5 bottom-3 text-[#26A5A5] bg-white px-5 py-1 text-[16px] font-[500] z-10 rounded border border-transparent hover:border-[#26A5A5] transition"
+          >
+            Details
+          </Link>
+        </div>
+        <ul className="text-4 font-[400] tracking-wide text-[#000] mb-4 list-disc list-inside pl-4 space-y-2">
+          {bullets.map((b: string, i: number) => (
+            <li key={i} className="flex gap-2 items-center">
+              <FaCheck className="text-amber-400" />{' '}
+              <span className="max-w-[85%]">{b}</span>
+            </li>
+          ))}
+        </ul>
+        <div className="bg-gradient-to-r from-[#f2b233] to-[#FFE7B8] rounded-[8px] px-3 py-1 mx-4 flex gap-2 items-start justify-center">
+          <FaGift className="min-w-4 mt-1" />
+          <span className="text-[16px] font-[400] text-[#08252C]">
+            Includes a Bonus Gift:Your Choice Vacation Getaway (valued at $300+)
           </span>
         </div>
-        <span className="text-[#676767] font-[400] text-[13px]"></span>
-      </div>
+        <div className="mt-8 p-4 bg-[#F5F5F5] flex flex-col gap-1 items-center justify-center border-t border-gray-300">
+          <span className="text-[#676767] font-[400] text-[13px]">
+            {/* You can add duration info as metafield or in description if needed */}
+          </span>
+          <p className="text-[13px] text-[#676767]">4 days/3 Nights</p>
+          <div className="flex items-center justify-center gap-1">
+            <span className="text-[#135868] font-[500] text-[27px]">
+              ${Math.round(product.priceRange.minVariantPrice.amount)}
+            </span>
+            <span className="text-[#135868] font-[500] text-[12px]">
+              per couple or <br /> family of four
+            </span>
+          </div>
+          <span className="text-[#676767] font-[400] text-[13px]"></span>
+        </div>
+      </Link>
       <form
         method="post"
         className="w-full flex justify-center items-center"
@@ -132,7 +138,7 @@ export function OfferCard({
         <input type="hidden" name="offerDays" value={product.days || 4} />
         <button
           type="submit"
-          className={`bg-[#2AB7B7] h-[28px] w-full flex justify-center items-center rounded-b text-white font-[500] text-[12px] cursor-pointer ${!cartIsEmpty ? 'pointer-events-none opacity-50' : ''}`}
+          className={`bg-[#2AB7B7] h-[43px] hover:bg-[#229a9a] duration-200 w-full flex justify-center items-center rounded-b-[10px] text-white font-[500] text-[16px] cursor-pointer ${!cartIsEmpty ? 'pointer-events-none opacity-50' : ''}`}
           disabled={!cartIsEmpty}
           title={
             !cartIsEmpty

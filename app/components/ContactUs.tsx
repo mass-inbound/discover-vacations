@@ -12,7 +12,7 @@ export default function ContactUs() {
 
   return (
     <>
-      <div>
+      <div className="bg-white">
         <SectionHeroBanner
           tagline="Ask Discover"
           title="CONTACT US"
@@ -27,14 +27,14 @@ Fill out the form below and we’ll get back to you within one business day."
         >
           {/* Left: Form */}
           <form
-            className="flex-1 bg-white rounded-xl shadow-lg p-4 sm:p-6 md:p-8 flex flex-col gap-4 min-w-[0] animate-fade-in justify-between w-full max-w-full"
+            className="flex-1 bg-gray-100 rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6 md:p-8 flex flex-col gap-4 min-w-[0] animate-fade-in justify-between w-full max-w-full"
             style={{minHeight: 520}}
           >
             <div>
-              <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-1">
+              <h2 className="text-xl sm:text-[21px] font-[500] text-[#071F24] mb-1">
                 General Inquiry Form
               </h2>
-              <p className="text-gray-500 mb-4 text-sm sm:text-base">
+              <p className="text-[#111] mb-4 text-sm sm:text-[13px] font-[400] opacity-70">
                 For general questions or non-urgent help, please use our{' '}
                 <span className="font-bold">
                   Ask Discover and one of our agents will reach out to you
@@ -45,24 +45,24 @@ Fill out the form below and we’ll get back to you within one business day."
                 <input
                   type="text"
                   placeholder="First Name"
-                  className="flex-1 rounded-md border border-gray-200 bg-gray-50 px-3 py-2 sm:px-4 sm:py-3 text-gray-800 focus:ring-2 focus:ring-green-200 focus:bg-white transition text-sm sm:text-base"
+                  className="flex-1 rounded-[10px] border border-gray-100 shadow-lg bg-gray-50 px-3 py-2 sm:px-4 sm:py-3 text-gray-800 focus:ring-2 focus:ring-green-200 focus:bg-white transition text-sm sm:text-base"
                 />
                 <input
                   type="text"
                   placeholder="Last Name"
-                  className="flex-1 rounded-md border border-gray-200 bg-gray-50 px-3 py-2 sm:px-4 sm:py-3 text-gray-800 focus:ring-2 focus:ring-green-200 focus:bg-white transition text-sm sm:text-base mt-2 md:mt-0"
+                  className="flex-1 rounded-[10px] border border-gray-100 shadow-lg bg-gray-50 px-3 py-2 sm:px-4 sm:py-3 text-gray-800 focus:ring-2 focus:ring-green-200 focus:bg-white transition text-sm sm:text-base mt-2 md:mt-0"
                 />
               </div>
               <div className="flex flex-col md:flex-row gap-4 mt-4">
                 <input
                   type="email"
                   placeholder="Email"
-                  className="flex-1 rounded-md border border-gray-200 bg-gray-50 px-3 py-2 sm:px-4 sm:py-3 text-gray-800 focus:ring-2 focus:ring-green-200 focus:bg-white transition text-sm sm:text-base"
+                  className="flex-1 rounded-[10px] border border-gray-100 shadow-lg bg-gray-50 px-3 py-2 sm:px-4 sm:py-3 text-gray-800 focus:ring-2 focus:ring-green-200 focus:bg-white transition text-sm sm:text-base"
                 />
                 <input
                   type="tel"
                   placeholder="Phone Number"
-                  className="flex-1 rounded-md border border-gray-200 bg-gray-50 px-3 py-2 sm:px-4 sm:py-3 text-gray-800 focus:ring-2 focus:ring-green-200 focus:bg-white transition text-sm sm:text-base mt-2 md:mt-0"
+                  className="flex-1 rounded-[10px] border border-gray-100 shadow-lg bg-gray-50 px-3 py-2 sm:px-4 sm:py-3 text-gray-800 focus:ring-2 focus:ring-green-200 focus:bg-white transition text-sm sm:text-base mt-2 md:mt-0"
                 />
               </div>
               <div className="mt-4">
@@ -76,7 +76,7 @@ Fill out the form below and we’ll get back to you within one business day."
                   id="message"
                   placeholder="Please write here."
                   rows={5}
-                  className="w-full rounded-md border border-gray-200 bg-gray-50 px-3 py-2 sm:px-4 sm:py-3 text-gray-800 focus:ring-2 focus:ring-green-200 focus:bg-white transition resize-none text-sm sm:text-base"
+                  className="w-full rounded-[10px] border border-gray-100 shadow-lg bg-gray-50 px-3 py-2 sm:px-4 sm:py-3 text-gray-800 focus:ring-2 focus:ring-green-200 focus:bg-white transition resize-none text-sm sm:text-base"
                 />
               </div>
               <div className="flex items-start gap-2 mt-2">
@@ -107,7 +107,7 @@ Fill out the form below and we’ll get back to you within one business day."
             </div>
             <button
               type="submit"
-              className="mt-2 font-semibold py-2 px-8 rounded-md shadow-md transition-all duration-150 bg-[#2AB7B7] focus:outline-none focus:ring-2 focus:ring-green-200 self-start w-full sm:w-auto text-base"
+              className="mt-2 font-semibold py-3 px-8 rounded-[10px] shadow-md transition-all duration-150 bg-[#2AB7B7] focus:outline-none focus:ring-2 focus:ring-green-200 self-start w-full text-base sm:text-[16px] sm:font-[600] hover:bg-[#1a8f8f] "
               style={{color: 'white'}}
             >
               Submit
@@ -115,19 +115,18 @@ Fill out the form below and we’ll get back to you within one business day."
           </form>
           {/* Right: Contact Cards */}
           <div
-            className="flex flex-col gap-6 flex-1 min-w-[0] max-w-full md:max-w-sm justify-between mt-8 md:mt-0 w-full"
+            className="flex flex-col flex-1 min-w-[0] max-w-full md:max-w-sm justify-between mt-8 md:mt-0 w-full"
             style={{
-              background: greyBg,
-              borderRadius: '0.75rem',
-              padding: '2rem 1.5rem',
               minHeight: 520,
             }}
           >
             {/* Address Card */}
-            <div className="flex flex-col gap-2 mb-2">
+            <div className="flex flex-col gap-2 mb-2 bg-[#F5F5F5] rounded-[10px] px-4 py-8 shadow-lg border border-gray-200">
               <div className="flex items-center gap-2 mb-1 text-[#2AB7B7]">
                 <FaLocationDot size={20} />
-                <span className="font-semibold text-gray-700">Address</span>
+                <span className="font-[400] text-[20px] text-[#0E424E]">
+                  Address
+                </span>
               </div>
               <div className="text-gray-700 text-sm leading-tight mb-2">
                 2881 F.Oakland Park Blvd
@@ -147,27 +146,28 @@ Fill out the form below and we’ll get back to you within one business day."
             </a> */}
             </div>
             {/* Email Card */}
-            <div className="flex flex-col gap-2 mb-2">
+            <div className="flex flex-col gap-2 mb-2 bg-[#F5F5F5] rounded-[10px] px-4 py-8 shadow-lg border border-gray-200">
               <div className="flex items-center gap-2 mb-1 text-[#2AB7B7]">
                 <FaEnvelope size={18} />
-                <span className="font-semibold text-gray-700">Email</span>
+                <span className="font-[400] text-5 text-[#0E424E]">Email</span>
               </div>
               <div className="text-gray-700 text-sm mb-2">
                 customercare@mydiscovervacations.com
               </div>
               <a
                 href="mailto:customercare@mydiscovervacations.com"
-                className="mt-2 w-full rounded-md py-2 font-medium text-center transition-all duration-150 border border-[#2AB7B7] text-[#2AB7B7]"
-                style={{background: 'white'}}
+                className="mt-2 max-w-[50%] rounded-[10px] py-2 font-medium text-center transition-all duration-150 border border-[#2AB7B7] text-[#2AB7B7] hover:bg-[#2AB7B7] hover:text-white"
               >
                 Email Us
               </a>
             </div>
             {/* Live Chat Card */}
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 mb-2 bg-[#F5F5F5] rounded-[10px] px-4 py-8 shadow-lg border border-gray-200">
               <div className="flex items-center gap-2 mb-1 text-[#2AB7B7]">
                 <FaComments size={18} />
-                <span className="font-semibold text-gray-700">Live Chat</span>
+                <span className="font-[400] text-5 text-[#0E424E]">
+                  Live Chat
+                </span>
               </div>
               <div className="text-gray-700 text-sm mb-2">
                 Team is available Mon-Sat 9am - 6pm EST.

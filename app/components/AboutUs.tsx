@@ -43,27 +43,15 @@ export default function AboutUs() {
               minHeight: 0,
             }}
           >
-            <div className="mb-2 text-[#2AB7B7] text-base font-semibold tracking-wider">
+            <div className="mb-2 text-[#2AB7B7] text-[30px] font-[500] tracking-wider">
               About Us
             </div>
-            <h1
-              className="mb-8 text-5xl font-bold leading-tight text-white"
-              style={{
-                color: 'white',
-                textShadow:
-                  '0 2px 12px rgba(0,0,0,0.5), 0 1px 2px rgba(0,0,0,0.3)',
-              }}
-            >
+            <h1 className="mb-8 text-5xl font-bold leading-tight text-white">
               Catch The Wave. Discover
               <br />
               More For Less.
             </h1>
-            <p
-              className="text-[#101010] text-base leading-relaxed"
-              style={{
-                textShadow: '0 2px 8px rgba(0,0,0,0.4)',
-              }}
-            >
+            <p className="text-[#101010] text-[20px] font-[400]">
               At Discover Vacations, we believe planning your next getaway
               should be as exciting as the trip itself. That&apos;s why
               we&apos;ve built a smarter, simpler way to access vacation
