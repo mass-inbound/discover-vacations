@@ -3,8 +3,8 @@ import {HiOutlineChevronLeft, HiOutlineChevronRight} from 'react-icons/hi';
 
 export default function FooterCarousel() {
   const slides = [
-    {src: '/assets/1.jpg', alt: 'View 1'},
-    {src: '/assets/2.jpg', alt: 'View 2'},
+    // {src: '/assets/1.jpg', alt: 'View 1'},
+    // {src: '/assets/2.jpg', alt: 'View 2'},
     {src: '/assets/3.jpg', alt: 'View 3'},
     {src: '/assets/4.jpg', alt: 'View 4'},
     {src: '/assets/5.jpg', alt: 'View 5'},

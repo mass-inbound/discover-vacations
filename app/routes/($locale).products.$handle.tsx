@@ -1,5 +1,5 @@
 import {redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {Link, useLoaderData, type MetaFunction} from 'react-router';
+import {Link, useLoaderData, useParams, type MetaFunction} from 'react-router';
 import {
   getSelectedProductOptions,
   Analytics,
@@ -23,6 +23,7 @@ import FooterCarousel from '~/components/FooterCarousel';
 import {Suspense} from 'react';
 import {Await} from 'react-router';
 import {useOptimisticCart} from '@shopify/hydrogen';
+import cartIcon from '/assets/icon-cart.svg';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [
@@ -246,20 +247,20 @@ export default function Product() {
               <span className="text-[12px] mx-1">SEC</span>
             </span>
           </div>
-          <div className="bg-[#F5F5F5] p-8 md:h-full">
+          <div className="bg-[#F5F5F5] py-8 px-10 md:h-full">
             <h1 className="uppercase font-[800] text-[24px]">
               {product.title}
             </h1>
             <p className="font-[400] text-[20px] text-[#070707] opacity-70">
               {product.vendor || ''}
             </p>
-            <div className="bg-white rounded-[10px] my-4 p-3 flex flex-col items-center">
+            <div className="bg-white rounded-[10px] my-4 p-3 flex flex-col items-center mb-8">
               <span className="text-[#0E424E] font-[400] text-[13px]">
                 3 night/4 days
               </span>
               <div className="flex items-center justify-center gap-1">
                 <span className="text-[#135868] font-[500] text-[27px]">
-                  ${price}
+                  ${Math.round(price)}
                 </span>
                 <span className="text-[#135868] font-[500] text-[12px]">
                   per couple or
@@ -280,18 +281,18 @@ export default function Product() {
                 );
               })}
             </ul>
-            <div className="bg-[#f2b233] rounded-[8px] px-3 py-1 mx-4 flex gap-2 items-start justify-center">
+            <div className="bg-gradient-to-r from-[#f2b233] to-[#FFE7B8] rounded-[8px] px-3 py-1 mb-10 flex gap-2 items-start justify-center">
               <FaGift className="min-w-4 mt-1" />
               <span className="text-[16px] font-[400] text-[#08252C]">
                 Includes a Bonus Gift:Your Choice Vacation Getaway (valued at
                 $300+)
               </span>
             </div>
-            <Link to="/contact-us">
+            {/* <Link to="/contact-us">
               <p className="underline my-8 cursor-pointer">
                 Need Help? Contact Us
               </p>
-            </Link>
+            </Link> */}
             <Suspense fallback={<div>Loading cart...</div>}>
               <Await resolve={rootData.cart}>
                 {(originalCart) => {
@@ -348,7 +349,7 @@ export default function Product() {
                       />
                       <button
                         type="submit"
-                        className={`bg-[#2AB7B7] rounded flex gap-2 items-center justify-center text-white px-4 py-2 hover:bg-[#229a9a] ${!cartIsEmpty ? 'pointer-events-none opacity-70' : ''}`}
+                        className={`bg-gradient-to-r from-[#2AB7B7] to-[#196C6C] rounded w-full flex gap-2 items-center justify-center text-white px-4 py-2 hover:bg-[#229a9a] ${!cartIsEmpty ? 'pointer-events-none opacity-70' : ''}`}
                         disabled={!cartIsEmpty}
                         title={
                           !cartIsEmpty
@@ -356,7 +357,7 @@ export default function Product() {
                             : undefined
                         }
                       >
-                        <BiCart size={25} />
+                        <img src={cartIcon} alt="" className="size-6" />
                         <span className="text-[16px] font-[600]">
                           {cartIsEmpty
                             ? 'Save My Deal Now'
@@ -377,18 +378,18 @@ export default function Product() {
       </div>
       {/* Vacation Booking curly line  */}
 
-      <div className="py-14 px-8">
+      <div className="relative py-8 px-4 md:py-14 md:px-8">
         <div className="relative z-8 max-w-5xl mx-auto text-center">
           {/* Tree Icon BG behind heading */}
           <img
             src="/assets/treebgIcon.png"
             alt="Tree Icon"
-            className="hidden md:block absolute left-[90px] top-[30px] w-42 h-52 opacity-80 -z-10 pointer-events-none"
+            className="hidden md:block absolute left-[90px] top-[30px] w-[145px] h-auto opacity-80 -z-10 pointer-events-none"
           />
           <img
             src="/assets/treebgIcon.png"
             alt="Tree Icon"
-            className="block md:hidden absolute left-1 top-[18px] w-42 h-52 opacity-80 -z-10 pointer-events-none"
+            className="block md:hidden absolute left-1 top-[18px] w-[145px] h-auto opacity-80 -z-10 pointer-events-none"
           />
           <p className="text-[16px] font-[500] text-[#208989]">
             Plan Less. Enjoy More.
@@ -396,7 +397,7 @@ export default function Product() {
           <h2 className="text-3xl md:text-[47px] font-[500] text-[#0E424E] my-5 relative">
             Vacation Booking, Simplified
           </h2>
-          <p className="text-[#1A202C] mb-[3.5rem] max-w-2xl mx-auto font-[400] text-[20px]">
+          <p className="text-[#1A202C] mb-[3.5rem] max-w-2xl mx-auto font-[400] text-[25px]">
             Curated offers. Real value. Flexible dates and room options to fit
             your travel plans — without overcomplicating the process.
           </p>
@@ -407,10 +408,10 @@ export default function Product() {
               <div className="w-[106px] h-[106px] bg-[#DFF4F4] rounded-[30px] flex items-center justify-center shadow-lg">
                 <FaLocationDot size={40} fill="#135868" />
               </div>
-              <h3 className="font-semibold text-[24px] my-3 text-[#135868]">
+              <h3 className="font-[500] text-[27px] my-5 text-[#135868]">
                 Discover Your Next Vacation
               </h3>
-              <p className="text-[#151515] text-[14px] font-[400]">
+              <p className="text-[#151515] text-[20px] font-[400] opacity-90 text-center">
                 Choose a day trip based on your location and interests.
               </p>
             </div>
@@ -418,13 +419,13 @@ export default function Product() {
             <img
               src="/assets/curlyLine.png"
               alt="Curly Line"
-              className="hidden md:block mt-5"
+              className="hidden md:block mt-8"
             />
             {/* Mobile vertical curly line after first card */}
             <img
               src="/assets/curlyLine-vertical.png"
               alt="Curly Line"
-              className="block md:hidden my-8 h-24 w-auto mx-auto pb-6"
+              className="block md:hidden my-6 h-16 w-auto mx-auto pb-4"
             />
             <div className="relative flex flex-col items-center bg-transparent min-w-[250px]">
               <div className="w-[106px] h-[106px] bg-[#DFF4F4] rounded-[30px] flex items-center justify-center shadow-lg">
@@ -434,10 +435,10 @@ export default function Product() {
                   className="w-10 h-10"
                 />
               </div>
-              <h3 className="font-semibold text-[24px] my-3 text-[#135868]">
+              <h3 className="font-[500] text-[27px] my-5 text-[#135868]">
                 Pick a Date
               </h3>
-              <p className="text-[#151515] text-[14px] font-[400]">
+              <p className="text-[#151515] text-[20px] font-[400] opacity-90 text-center">
                 Know your dates? Select them on the calendar before checkout.
                 Not ready yet? No problem — purchase now and choose your dates
                 anytime in the Booking Hub.
@@ -447,13 +448,13 @@ export default function Product() {
             <img
               src="/assets/curlyLine.png"
               alt="Curly Line"
-              className="hidden md:block mt-5"
+              className="hidden md:block mt-8"
             />
             {/* Mobile vertical curly line after second card */}
             <img
               src="/assets/curlyLine-vertical.png"
               alt="Curly Line"
-              className="block md:hidden my-8 h-24 w-auto mx-auto pb-6"
+              className="block md:hidden my-6 h-16 w-auto mx-auto pb-4"
             />
             <div className="relative flex flex-col items-center bg-transparent min-w-[250px]">
               <div className="w-[106px] h-[106px] bg-[#DFF4F4] rounded-[30px] flex items-center justify-center shadow-lg">
@@ -463,23 +464,23 @@ export default function Product() {
                   className="w-10 h-10"
                 />
               </div>
-              <h3 className="font-semibold text-[24px] my-3 text-[#135868]">
+              <h3 className="font-[500] text-[27px] my-5 text-[#135868]">
                 Book Your Getaway
               </h3>
-              <p className="text-[#151515] text-[14px] font-[400]">
+              <p className="text-[#151515] text-[20px] font-[400] opacity-90 text-center">
                 Complete your purchase and get instant access to your personal
                 Booking Portal, where reserving your trip is quick, easy, and
                 secure.
               </p>
-              {/* Wave Pattern below the last card */}
-              <img
-                src="/assets/wavePattern.png"
-                alt="Wave Pattern"
-                className="absolute -right-1 -bottom-10 w-48 md:w-72 opacity-90 pointer-events-none"
-              />
             </div>
           </div>
         </div>
+        {/* Wave Pattern below the last card */}
+        <img
+          src="/assets/wavePattern.png"
+          alt="Wave Pattern"
+          className="md:block hidden absolute right-0 bottom-0 w-48 md:w-[186px] opacity-50 pointer-events-none"
+        />
       </div>
 
       {/* carousel  */}
@@ -489,7 +490,9 @@ export default function Product() {
 }
 
 function Tabs({upsellProducts}: {upsellProducts: any[]}) {
+  const {handle} = useParams<{handle: string}>(); // Extract the handle from the URL
   const [active, setActive] = useState(0);
+
   const tabs = [
     'Overview',
     `What's Included`,
@@ -498,20 +501,21 @@ function Tabs({upsellProducts}: {upsellProducts: any[]}) {
     'Gift Details',
   ];
 
-  // Define the content for each tab
+  // Define dynamic content based on the handle
   const tabContents = [
     <div
       key="overview"
       className="bg-gray-100 p-4 md:p-8 text-center flex flex-col gap-4 rounded"
     >
       <h1 className="text-[#0E424E] font-[500] text-[24px] md:text-[36px]">
-        🌾 Discover Orlando – 4 Days / 3 Nights + Bonus Vacation Gift
+        {handle === 'orlando'
+          ? '🌾 Discover Orlando – 4 Days / 3 Nights + Bonus Vacation Gift'
+          : '🌾 Poconos Mountain Getaway – 4 Days / 3 Nights'}
       </h1>
       <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] max-w-[95%] md:max-w-[80%] mx-auto">
-        Start your <span className="font-bold">My Discover Vacation</span> in
-        the heart of Orlando with 4 days and 3 nights of fun, sun, and
-        memory-making. Ideal for two adults or a family of four (two adults + up
-        to two children).
+        {handle === 'orlando'
+          ? 'Start your My Discover Vacation in the heart of Orlando with 4 days and 3 nights of fun, sun, and memory-making.'
+          : 'Escape to the peaceful beauty of the Pocono Mountains with a 4-Day / 3-Night vacation designed for two adults. Cozy accommodations at participating hotels provide the perfect setting for a relaxing weekend, nature exploration, or a scenic escape.'}
       </p>
       <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] max-w-[95%] md:max-w-[80%] mx-auto mt-2">
         As our thank-you, you&apos;ll also receive a Bonus Vacation Gift — your
@@ -535,9 +539,19 @@ function Tabs({upsellProducts}: {upsellProducts: any[]}) {
         What&apos;s Included
       </h2>
       <ul className="list-disc list-inside text-[#0E424E] text-[16px] md:text-[20px] font-[400]">
-        <li>3 nights hotel accommodations for two adults</li>
-        <li>Exclusive perks during your stay</li>
-        <li>Bonus vacation gift</li>
+        {handle === 'orlando' ? (
+          <>
+            <li>3 nights hotel accommodations for two adults</li>
+            <li>Exclusive perks during your stay</li>
+            <li>Bonus vacation gift</li>
+          </>
+        ) : (
+          <>
+            <li>4 Days / 3 Nights of hotel accommodations for two adults</li>
+            <li>Packages starting at just $49 per couple</li>
+            <li>Bonus vacation gift of your choice</li>
+          </>
+        )}
       </ul>
     </div>,
     <div
@@ -548,19 +562,24 @@ function Tabs({upsellProducts}: {upsellProducts: any[]}) {
         Nearby Attractions
       </h2>
       <div className="flex flex-col md:flex-row gap-8 md:gap-16 justify-center mx-auto max-w-3xl">
-        <ul className="list-disc list-inside text-[#0E424E] text-[16px] md:text-[20px] font-[400] text-left">
-          <li>Universal Studios</li>
-          <li>Walt Disney World</li>
-          <li>Volcano Bay</li>
-          <li>Universal Citywalk</li>
-          <li>SeaWorld Orlando</li>
-        </ul>
-        <ul className="list-disc list-inside text-[#0E424E] text-[16px] md:text-[20px] font-[400] text-left">
-          <li>Old Town Theme Park</li>
-          <li>Pirates Dinner Adventure</li>
-          <li>Buccaneer Adventure Park</li>
-          <li>Pineapple Pete Kids Park</li>
-          <li>Rocky Falls Adventure Golf</li>
+        <ul className="list-disc list-inside text-[#0E424E] text-[16px] md:text-[20px] font-[400] text-center">
+          {handle === 'orlando' ? (
+            <>
+              <li>Universal Studios</li>
+              <li>Walt Disney World</li>
+              <li>Volcano Bay</li>
+              <li>Universal Citywalk</li>
+              <li>SeaWorld Orlando</li>
+            </>
+          ) : (
+            <>
+              <li>Bushkill Falls</li>
+              <li>Camelback Resort & Aquatopia / Mountain Adventures</li>
+              <li>Kalahari Resorts & Conventions Poconos</li>
+              <li>Claws ’N’ Paws Wild Animal Park</li>
+              <li>Jim Thorpe</li>
+            </>
+          )}
         </ul>
       </div>
     </div>,
@@ -572,11 +591,9 @@ function Tabs({upsellProducts}: {upsellProducts: any[]}) {
         Travel Notes
       </h1>
       <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] max-w-[95%] md:max-w-[80%] mx-auto">
-        *Travel for the Orlando getaway must be completed within 12 months of
-        purchase. Bonus travel must be registered within 6 months of issue and
-        completed within 18 months. Government taxes, fees, upgrades, and resort
-        charges vary by destination and selection. Travelers are responsible for
-        government taxes, resort fees, and optional upgrades
+        {handle === 'orlando'
+          ? '*Travel for the Orlando getaway must be completed within 12 months of purchase.'
+          : '*Travel for the Poconos getaway must be completed within 12 months of purchase.'}
       </p>
     </div>,
     <div key="gift" className="grid grid-cols-1 sm:grid-cols-3 gap-6">
@@ -624,7 +641,11 @@ function Tabs({upsellProducts}: {upsellProducts: any[]}) {
           <button
             key={tab}
             onClick={() => setActive(idx)}
-            className={`flex-1 min-w-[48%] md:min-w-0 px-2 md:px-4 py-2 font-[500] text-[16px] md:text-[21px] border-b-2 transition text-[#1A202C] opacity-60 whitespace-nowrap ${active === idx ? 'border-[#135868] text-[#135868] opacity-100' : 'border-transparent bg-transparent'}`}
+            className={`flex-1 min-w-[48%] md:min-w-0 px-2 md:px-4 py-2 font-[500] text-[16px] md:text-[21px] border-b-2 transition text-[#1A202C] opacity-60 whitespace-nowrap ${
+              active === idx
+                ? 'border-[#135868] text-[#135868] opacity-100'
+                : 'border-transparent bg-transparent'
+            }`}
             style={{scrollbarWidth: 'none'}}
           >
             {tab}

@@ -119,15 +119,26 @@ export function Footer({
                 <h4 className="font-bold mb-6 text-lg">Help</h4>
                 <ul className="space-y-4 text-sm opacity-90">
                   <li>
-                    <Link to="/policies/#" className="hover:underline">
+                    <Link
+                      to="/policies/refund-cancellation-policy"
+                      className="hover:underline"
+                    >
                       Refund & Cancellation Policy
                     </Link>
                   </li>
-                  {/* <li>
-                    <a href="#" className="hover:underline">
+                  <li>
+                    <a href="/policies/tcpa-policy" className="hover:underline">
                       TCPA Policy
                     </a>
-                  </li> */}
+                  </li>
+                  <li>
+                    <a
+                      href="/policies/cookie-policy"
+                      className="hover:underline"
+                    >
+                      Cookie Policy
+                    </a>
+                  </li>
                   <li>
                     <Link to="/contact-us" className="hover:underline">
                       Contact Us
@@ -160,9 +171,9 @@ export function Footer({
                 </form>
               </div>
             </div>
-            <div className="border-t border-white/20 mt-10 mb-10 sm:mb-0 pt-4 flex flex-col md:flex-row items-center justify-between max-w-7xl mx-auto px-4 text-xs opacity-80">
+            <div className="border-t border-white/20 mt-10 mb-10 sm:mb-0 pt-4 md:pb-6 flex flex-col md:flex-row items-center justify-between max-w-7xl mx-auto px-4 text-xs opacity-80">
               <span>©2024 My Discover Vacations. All rights reserved</span>
-              <div className="flex gap-4 mt-2 md:mt-0">
+              <div className="flex gap-12 mt-2 md:mt-0">
                 <Link to="/policies/privacy-policy" className="hover:underline">
                   Privacy & Policy
                 </Link>

@@ -11,6 +11,8 @@ const SHOPIFY_PAGE_HANDLES = [
   'terms-conditions',
   'privacy-policy',
   'refund-cancellation-policy',
+  'tcpa-policy',
+  'cookie-policy',
 ];
 
 const PAGE_QUERY = `#graphql
@@ -90,7 +92,7 @@ export default function Policy() {
   // Render Shopify Page if present
   if ('page' in data && data.page) {
     return (
-      <div className="policy max-w-7xl mx-auto px-4 sm:px-10">
+      <div className="policy max-w-7xl mx-auto px-4 sm:px-10 mb-[7rem]">
         <br />
         <br />
         <div>

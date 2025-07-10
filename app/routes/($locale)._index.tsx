@@ -324,7 +324,7 @@ export default function Homepage() {
         <img
           src="/assets/wavePattern.png"
           alt="Wave Pattern"
-          className="md:block hidden absolute -right-1 -bottom-8 w-48 md:w-[186px] opacity-50 pointer-events-none"
+          className="md:block hidden absolute right-0 -bottom-8 w-48 md:w-[186px] opacity-50 pointer-events-none"
         />
       </div>
       {/* Find Your Next Escape Section */}
@@ -399,7 +399,7 @@ export default function Homepage() {
               Includes a bonus gift
             </span>
           </div> */}
-          <p className="font-[400] text-[20px] text-[#676767] mx-auto max-w-3xl text-center mb-10">
+          <p className="font-[400] text-[20px] text-[#151515] mx-auto max-w-3xl text-center mb-10">
             Your vacation should be stress-free from start to finish. That's why
             we've built in support, security, and convenience every step of the
             way.
@@ -559,13 +559,13 @@ function Tabs({
 }) {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
-  const tabs = ['Popular', 'Hotels', 'Cruise', 'Exclusive Deals'];
+  const tabs = ['Popular', 'Orlando, FL', 'Poconos, PA', 'Exclusive Deals'];
 
   // Map tab index to tag
   const tabTagMap: Record<number, string> = {
     0: 'Popular',
-    1: 'Hotels',
-    2: 'Cruise',
+    1: 'Orlando',
+    2: 'Poconos',
     3: 'Exclusive',
   };
 
