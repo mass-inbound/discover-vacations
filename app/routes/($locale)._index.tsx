@@ -174,7 +174,7 @@ export default function Homepage() {
       {/* Hero Section */}
       <section
         className="relative h-[calc(100vh-100px)] flex items-center justify-center bg-cover bg-center"
-        style={{backgroundImage: 'url(/assets/hero-new.png)'}}
+        style={{backgroundImage: 'url(/assets/HeroImage2.jpg)'}}
       >
         {/* Overlay */}
         <div className="absolute inset-0 bg-black/40 z-0" />
@@ -210,7 +210,7 @@ export default function Homepage() {
         <img
           src="/assets/heroImageLogo.png"
           alt="Logo"
-          className="absolute right-8 bottom-8 w-32 h-auto z-20"
+          className="absolute right-8 bottom-8 w-32 md:w-[225px] h-auto z-20"
         />
         {/* Scroll Button */}
         <button
@@ -223,18 +223,18 @@ export default function Homepage() {
       </section>
 
       {/* Vacation Booking, Simplified Section */}
-      <div className="py-8 px-4 md:py-14 md:px-8">
+      <div className="relative py-8 px-4 md:py-14 md:px-8">
         <div className="relative z-8 max-w-5xl mx-auto text-center">
           {/* Tree Icon BG behind heading */}
           <img
             src="/assets/treebgIcon.png"
             alt="Tree Icon"
-            className="hidden md:block absolute left-[90px] top-[30px] w-42 h-52 opacity-80 -z-10 pointer-events-none"
+            className="hidden md:block absolute left-[90px] top-[30px] w-[145px] h-auto opacity-80 -z-10 pointer-events-none"
           />
           <img
             src="/assets/treebgIcon.png"
             alt="Tree Icon"
-            className="block md:hidden absolute left-1 top-[18px] w-42 h-52 opacity-80 -z-10 pointer-events-none"
+            className="block md:hidden absolute left-1 top-[18px] w-[145px] h-auto opacity-80 -z-10 pointer-events-none"
           />
           <p className="text-[16px] font-[500] text-[#208989]">
             Plan Less. Enjoy More.
@@ -242,7 +242,7 @@ export default function Homepage() {
           <h2 className="text-3xl md:text-[47px] font-[500] text-[#0E424E] my-5 relative">
             Vacation Booking, Simplified
           </h2>
-          <p className="text-[#1A202C] mb-[3.5rem] max-w-2xl mx-auto font-[400] text-[20px] opacity-80">
+          <p className="text-[#1A202C] mb-[3.5rem] max-w-2xl mx-auto font-[400] text-[25px]">
             Curated offers. Real value. Flexible dates and room options to fit
             your travel plans — without overcomplicating the process.
           </p>
@@ -253,10 +253,10 @@ export default function Homepage() {
               <div className="w-[106px] h-[106px] bg-[#DFF4F4] rounded-[30px] flex items-center justify-center shadow-lg">
                 <FaLocationDot size={40} fill="#135868" />
               </div>
-              <h3 className="font-semibold text-[24px] my-3 text-[#135868]">
+              <h3 className="font-[500] text-[27px] my-5 text-[#135868]">
                 Discover Your Next Vacation
               </h3>
-              <p className="text-[#151515] text-[14px] font-[400] opacity-80">
+              <p className="text-[#151515] text-[20px] font-[400] opacity-90 text-center">
                 Choose a day trip based on your location and interests.
               </p>
             </div>
@@ -280,10 +280,10 @@ export default function Homepage() {
                   className="w-10 h-10"
                 />
               </div>
-              <h3 className="font-semibold text-[24px] my-3 text-[#135868]">
+              <h3 className="font-[500] text-[27px] my-5 text-[#135868]">
                 Pick a Date
               </h3>
-              <p className="text-[#151515] text-[14px] font-[400] opacity-80">
+              <p className="text-[#151515] text-[20px] font-[400] opacity-90 text-center">
                 Know your dates? Select them on the calendar before checkout.
                 Not ready yet? No problem — purchase now and choose your dates
                 anytime in the Booking Hub.
@@ -309,28 +309,28 @@ export default function Homepage() {
                   className="w-10 h-10"
                 />
               </div>
-              <h3 className="font-semibold text-[24px] my-3 text-[#135868]">
+              <h3 className="font-[500] text-[27px] my-5 text-[#135868]">
                 Book Your Getaway
               </h3>
-              <p className="text-[#151515] text-[14px] font-[400] opacity-80">
+              <p className="text-[#151515] text-[20px] font-[400] opacity-90 text-center">
                 Complete your purchase and get instant access to your personal
                 Booking Portal, where reserving your trip is quick, easy, and
                 secure.
               </p>
-              {/* Wave Pattern below the last card */}
-              <img
-                src="/assets/wavePattern.png"
-                alt="Wave Pattern"
-                className="md:block hidden absolute -right-1 -bottom-10 w-48 md:w-72 opacity-90 pointer-events-none"
-              />
             </div>
           </div>
         </div>
+        {/* Wave Pattern below the last card */}
+        <img
+          src="/assets/wavePattern.png"
+          alt="Wave Pattern"
+          className="md:block hidden absolute -right-1 -bottom-8 w-48 md:w-[186px] opacity-50 pointer-events-none"
+        />
       </div>
       {/* Find Your Next Escape Section */}
       <section
         ref={bookingRef}
-        className="relative overflow-x-hidden py-10 md:py-20 mt-5 bg-[#EAF8F84D]"
+        className="relative overflow-x-hidden py-10 md:pb-20 md:pt-25 mt-5 bg-[#EAF8F84D]"
       >
         <img
           src="/assets/starPattern.png"
@@ -340,13 +340,13 @@ export default function Homepage() {
         <img
           src="/assets/shipPattern.png"
           alt=""
-          className="md:block hidden absolute top-10 -right-12 opacity-30 w-[280px]"
+          className="md:block hidden absolute top-15 -right-20 opacity-30 w-[280px]"
         />
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-3xl md:text-[61px] font-[500] text-center mb-4 text-[#0E424E]">
             Discover Your Next Vacation{' '}
           </h2>
-          <p className="font-[400] text-[20px] text-[#676767] mx-auto max-w-3xl text-center mb-10 ">
+          <p className="font-[400] text-[20px] text-[#101010] mx-auto max-w-3xl text-center mb-10 ">
             Discover a collection of vacations
           </p>
           {/* Tabs */}

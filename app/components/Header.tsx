@@ -9,6 +9,7 @@ import type {HeaderQuery, CartApiQueryFragment} from 'storefrontapi.generated';
 import {useAside} from '~/components/Aside';
 import {FaLocationDot} from 'react-icons/fa6';
 import {HiChevronDown, HiMenu, HiX} from 'react-icons/hi';
+import CartIcon from '/assets/icon-cart.svg';
 
 interface HeaderProps {
   header: HeaderQuery;
@@ -114,7 +115,7 @@ export function Header({
           <img
             src="/assets/navLogo.png"
             alt="Discover Vacations"
-            className="w-[100px] md:w-[170px]"
+            className="w-[130px] md:w-[230px]"
           />
         </NavLink>
         {/* Desktop Nav */}
@@ -334,21 +335,9 @@ function CartBadge({count}: {count: number | null}) {
       //     url: window.location.href || '',
       //   } as CartViewPayload);
       // }}
-      className="relative flex items-center text-white font-[500] text-[14px]"
+      className="relative flex gap-2 items-center text-white font-[500] text-[14px]"
     >
-      <svg
-        className="w-6 h-6 mr-1"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        viewBox="0 0 24 24"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.35 2.7A2 2 0 0 0 7.48 19h9.04a2 2 0 0 0 1.83-1.3L21 13M7 13V6a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v7"
-        />
-      </svg>
+      <img src={CartIcon} alt="" className="w-[20px]" />
       Cart {count === null ? <span>&nbsp;</span> : count}
     </NavLink>
   );
