@@ -691,7 +691,7 @@ export default function Cart() {
                     Nights
                   </span>
                   <span className="text-[28px] text-[#0E424E] flex gap-2">
-                    ${cartOffer?.price ?? 49}{' '}
+                    ${Math.round(cartOffer?.price ?? 49)}{' '}
                     <span className="text-base font-normal flex flex-col leading-5">
                       {' '}
                       <span>per couple or </span>{' '}
