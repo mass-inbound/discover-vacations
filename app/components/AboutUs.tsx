@@ -12,14 +12,14 @@ export default function AboutUs() {
         <img
           src="/assets/beach4.png"
           alt="Beach background"
-          className="absolute inset-0 w-full h-[320px] md:h-[313px] object-cover object-center z-0"
+          className="absolute inset-0 w-full h-[320px] md:h-[313px] object-cover object-center z-5 md:z-0"
           draggable={false}
         />
         {/* Flex container for centering */}
         <div className="absolute inset-0 flex flex-col md:flex-row items-end md:items-center justify-center w-full h-full px-6 md:px-4">
           {/* Family Image Card - perfectly centered, fixed aspect, strong shadow, overlaps white section */}
           <div
-            className="md:block flex-shrink-0 z-20 relative bg-white rounded-[18px] shadow-2xl overflow-hidden flex items-center justify-center"
+            className="md:block flex-shrink-0 z-0 md:z-20 relative bg-white rounded-[18px] shadow-2xl overflow-hidden flex items-center justify-center"
             style={{
               width: '90%',
               maxWidth: 420,
@@ -31,12 +31,12 @@ export default function AboutUs() {
             <img
               src="/assets/family1.jpg"
               alt="Family on the beach"
-              className="object-cover w-full h-full rounded-[18px]"
+              className="hidden md:block object-cover w-full h-full rounded-[18px]"
             />
           </div>
           {/* About Us Text - vertically centered, right aligned, not taller than family image */}
           <div
-            className="z-30 flex flex-col justify-center text-left bg-transparent md:ml-12 mt-59 md:mt-24"
+            className="z-30 flex flex-col justify-center text-left bg-transparent md:ml-12 mt-59 md:mt-30"
             style={{
               width: '100%',
               maxWidth: 480,
@@ -46,12 +46,12 @@ export default function AboutUs() {
             <div className="mb-2 text-[#2AB7B7] text-[30px] font-[500] tracking-wider">
               About Us
             </div>
-            <h1 className="mb-8 text-5xl font-bold leading-tight text-white">
+            <h1 className="mb-10 pb-4 text-5xl font-bold leading-12 text-white">
               Catch The Wave. Discover
               <br />
               More For Less.
             </h1>
-            <p className="text-[#101010] text-[20px] font-[400]">
+            <p className="text-[#101010] text-[18px] font-[400] md:pt-6">
               At Discover Vacations, we believe planning your next getaway
               should be as exciting as the trip itself. That&apos;s why
               we&apos;ve built a smarter, simpler way to access vacation
@@ -73,12 +73,12 @@ export default function AboutUs() {
         <img
           src="/assets/treebgIcon.png"
           alt="Tree"
-          className="absolute right-0 bottom-0 opacity-50 pointer-events-none select-none z-10"
+          className="absolute right-0 -bottom-100 opacity-50 pointer-events-none select-none z-10"
           style={{width: '10vw', minWidth: 80, maxWidth: 140}}
         />
       </div>
       {/* Mission and Values Section */}
-      <div className="max-w-4xl mx-auto md:mt-24 mt-54 text-center px-6 md:px-8">
+      <div className="max-w-4xl mx-auto md:mt-24 mt-100 text-center px-6 md:px-8">
         <h4 className="text-[#2AB7B7] text-xs md:text-lg font-semibold mb-3 tracking-widest uppercase">
           OUR MISSION
         </h4>

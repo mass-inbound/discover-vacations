@@ -208,11 +208,11 @@ export function Header({
             <CartToggle cart={cart} />
           </div>
           <button className="p-2" onClick={() => setShowMobileMenu((v) => !v)}>
-            {showMobileMenu ? (
+            {/* {showMobileMenu ? (
               <HiX className="w-7 h-7" />
-            ) : (
-              <HiMenu className="w-7 h-7" />
-            )}
+            ) : ( */}
+            <HiMenu className="w-7 h-7" />
+            {/* )} */}
           </button>
           {/* Always show cart button on mobile */}
         </div>
@@ -220,7 +220,9 @@ export function Header({
       {/* Mobile Drawer */}
       {showMobileMenu && (
         <div ref={mobileMenuRef} className="fixed inset-0 bg-black/40 z-50">
-          <div className="fixed top-0 left-0 w-72 h-full bg-white shadow-lg p-6 flex flex-col gap-6 animate-slideIn">
+          <div
+            className={`fixed ${isScrolled ? '-top-4 -left-8' : 'top-0 left-0'} w-72 min-h-screen bg-white shadow-lg p-6 flex flex-col gap-6 animate-slideIn`}
+          >
             <button
               className="self-end mb-4"
               onClick={() => setShowMobileMenu(false)}
