@@ -47,9 +47,7 @@ export default function DetailsOrlandoView() {
                 per <br /> family of four
               </span>
             </div>
-            <span className="text-[#0E424E] font-[400] text-[13px]">
-               
-            </span>
+            <span className="text-[#0E424E] font-[400] text-[13px]"></span>
           </div>
           <ul className="text-sm text-[#000] my-4 list-disc list-inside space-y-2">
             <li className="flex gap-2 items-center">
@@ -68,7 +66,7 @@ export default function DetailsOrlandoView() {
           <div className="max-w-[80%] bg-[#F2B233] rounded-[8px] px-3 py-1 flex gap-2 items-center justify-center">
             <FaGift className="text-white" />
             <span className="text-[16px] font-[500] text-white">
-            Includes a Bonus Gift: Your Choice Vacation Getaway
+              Includes a Bonus Gift: Your Choice Vacation Getaway
             </span>
           </div>
           <p className="underline my-8 cursor-pointer">Need Help? Contact Us</p>
@@ -100,7 +98,8 @@ export default function DetailsOrlandoView() {
             Vacation Booking, Simplified
           </h2>
           <p className="text-[#1A202C] mb-[3.5rem] max-w-2xl mx-auto font-[400] text-[20px]">
-           Curated offers. Real value. Flexible dates and room options to fit your travel plans — without overcomplicating the process.
+            Exclusive offers. Real value. Flexible dates and room options to fit
+            your travel plans — without overcomplicating the process.
           </p>
           <div className="flex flex-col md:flex-row items-start justify-center relative">
             {/* Curly line connecting icons */}
@@ -111,10 +110,10 @@ export default function DetailsOrlandoView() {
               </div>
               <h3 className="font-semibold text-[24px] my-3 text-[#135868]">
                 Discover Your Next Vacation
-
               </h3>
               <p className="text-[#151515] text-[14px] font-[400]">
-                Browse your exclusive offer and add it to your cart — real value, no hidden fees.
+                Browse your exclusive offer and add it to your cart — real
+                value, no hidden fees.
               </p>
             </div>
             <img
@@ -132,11 +131,11 @@ export default function DetailsOrlandoView() {
               </div>
               <h3 className="font-semibold text-[24px] my-3 text-[#135868]">
                 Pick a Date
-
               </h3>
               <p className="text-[#151515] text-[14px] font-[400]">
                 Know your dates? Select them on the calendar before checkout.
-Not ready yet? No problem — purchase now and choose your dates anytime in the Booking Hub.
+                Not ready yet? No problem — purchase now and choose your dates
+                anytime in the Booking Hub.
               </p>
             </div>
             <img
@@ -154,11 +153,11 @@ Not ready yet? No problem — purchase now and choose your dates anytime in the 
               </div>
               <h3 className="font-semibold text-[24px] my-3 text-[#135868]">
                 Book Your Getaway
-
               </h3>
               <p className="text-[#151515] text-[14px] font-[400]">
-                Complete your purchase and get instant access to your personal Booking Portal, where reserving your trip is quick, easy, and secure.
-
+                Complete your purchase and get instant access to your personal
+                Booking Portal, where reserving your trip is quick, easy, and
+                secure.
               </p>
             </div>
           </div>
