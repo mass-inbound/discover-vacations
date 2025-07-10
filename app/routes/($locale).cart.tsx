@@ -228,7 +228,14 @@ export default function Cart() {
       setCheckIn(day);
       setCheckOut(null);
     } else if (day > checkIn) {
-      setCheckOut(day);
+      const diffInDays = Math.ceil(
+        (day.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24),
+      );
+      if (diffInDays <= 3) {
+        setCheckOut(day);
+      } else {
+        alert('You cannot select more than 4 days.');
+      }
     } else {
       // clicked before existing checkIn
       setCheckIn(day);
@@ -296,7 +303,7 @@ export default function Cart() {
           </span>
         </div>
         <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-0 ">
+          <div className="grid grid-cols-1 md:grid-cols-[1.5fr_1fr] gap-0 ">
             {/* General Information Form */}
             <form
               method="post"
@@ -582,13 +589,13 @@ export default function Cart() {
                   <span className="text-xl font-semibold"></span>
                 </div>
               )}
-              {/* <button
+              <button
                 type="submit"
                 className="w-full bg-[#2AB7B7] text-white rounded-lg py-3 mt-auto font-semibold flex items-center justify-center gap-2 text-base"
               >
                 <BsCreditCard2BackFill size={20} />
                 Proceed to Payment
-              </button> */}
+              </button>
               {cart?.checkoutUrl && (
                 <div className="flex justify-end mt-8">
                   <a
@@ -764,16 +771,14 @@ export default function Cart() {
                     })}
                   </div>
                 )}
-                <button
+                {/* <button
                   type="button"
                   className="text-[#0E424E] underline text-[16px] font-[600] mt-5 mx-8"
                   onClick={() => {
-                    /* handle contact us click */
                   }}
                 >
                   Need Help? Contact Us
-                </button>
-                {/* Proceed to Checkout Button */}
+                </button> */}
               </>
             )}
           </div>
