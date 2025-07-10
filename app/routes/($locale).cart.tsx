@@ -589,13 +589,13 @@ export default function Cart() {
                   <span className="text-xl font-semibold"></span>
                 </div>
               )}
-              <button
+              {/* <button
                 type="submit"
                 className="w-full bg-[#2AB7B7] text-white rounded-lg py-3 mt-auto font-semibold flex items-center justify-center gap-2 text-base"
               >
                 <BsCreditCard2BackFill size={20} />
                 Proceed to Payment
-              </button>
+              </button> */}
               {cart?.checkoutUrl && (
                 <div className="flex justify-end mt-8">
                   <a
@@ -712,7 +712,7 @@ export default function Cart() {
                     </>
                   )}
                 </ul>
-                <div className="bg-[#f2b233] rounded-[8px] px-3 py-1 mx-6 mt-4 flex gap-2 items-start justify-center">
+                <div className="bg-gradient-to-r from-[#f2b233] to-[#FFE7B8] rounded-[8px] px-3 py-1 mx-6 mt-4 flex gap-2 items-start justify-center">
                   <FaGift className="min-w-4 mt-1" />
                   <span className="text-[16px] font-[400] text-[#08252C]">
                     Includes a Bonus Gift:Your Choice Vacation Getaway (valued

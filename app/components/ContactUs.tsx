@@ -125,7 +125,7 @@ Fill out the form below and we’ll get back to you within one business day."
               <div className="flex items-center gap-2 mb-1 text-[#2AB7B7]">
                 <FaLocationDot size={20} />
                 <span className="font-[400] text-[20px] text-[#0E424E]">
-                  Address
+                  Corporate Address
                 </span>
               </div>
               <div className="text-gray-700 text-sm leading-tight mb-2">
