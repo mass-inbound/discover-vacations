@@ -46,7 +46,7 @@ export default function AboutUs() {
             <div className="mb-2 text-[#2AB7B7] text-[30px] font-[500] tracking-wider">
               About Us
             </div>
-            <h1 className="mb-10 pb-4 text-5xl font-bold leading-12 text-white">
+            <h1 className="mb-10 pb-4 text-5xl font-bold leading-12 text-gray-800 sm:text-white">
               Catch The Wave. Discover
               <br />
               More For Less.
@@ -67,7 +67,7 @@ export default function AboutUs() {
         <img
           src="/assets/starPattern.png"
           alt="Stars"
-          className="absolute left-0 bottom-0 opacity-50 pointer-events-none select-none z-10"
+          className="absolute left-0 -bottom-40 opacity-50 pointer-events-none select-none z-10"
           style={{width: '8vw', minWidth: 60, maxWidth: 120}}
         />
         <img
