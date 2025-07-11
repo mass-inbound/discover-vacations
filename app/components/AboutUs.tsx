@@ -43,15 +43,15 @@ export default function AboutUs() {
               minHeight: 0,
             }}
           >
-            <div className="mb-2 text-[#2AB7B7] text-[30px] font-[500] tracking-wider">
+            <div className="mb-2 text-[#2AB7B7] text-[30px] font-[500] tracking-wider font-plusjakarta">
               About Us
             </div>
-            <h1 className="mb-10 pb-4 text-5xl font-bold leading-12 text-gray-800 sm:text-white">
+            <h1 className="mb-10 md:mb-5 pb-4 md:pb-0 text-5xl font-bold leading-12 text-gray-800 sm:text-white font-brush">
               Catch The Wave. Discover
               <br />
               More For Less.
             </h1>
-            <p className="text-[#101010] text-[18px] font-[400] md:pt-6">
+            <p className="text-[#101010] text-[18px] font-[400] md:pt-10 font-avenir">
               At Discover Vacations, we believe planning your next getaway
               should be as exciting as the trip itself. That&apos;s why
               we&apos;ve built a smarter, simpler way to access vacation
@@ -79,18 +79,18 @@ export default function AboutUs() {
       </div>
       {/* Mission and Values Section */}
       <div className="max-w-4xl mx-auto md:mt-24 mt-100 text-center px-6 md:px-8">
-        <h4 className="text-[#2AB7B7] text-xs md:text-lg font-semibold mb-3 tracking-widest uppercase">
+        <h4 className="text-[#2AB7B7] text-[20px] md:text-lg font-semibold mb-3 tracking-widest uppercase font-plusjakarta">
           OUR MISSION
         </h4>
-        <p className="text-gray-600 mb-12 text-base leading-relaxed max-w-3xl mx-auto">
+        <p className="text-[#070707] mb-12 text-base leading-relaxed max-w-3xl mx-auto">
           To provide travelers with high-quality, value-packed vacation
           experiences through transparent offers, flexible support, and
           unmatched customer service — all backed by a team you can trust.
         </p>
-        <h4 className="text-[#2AB7B7] text-xs md:text-lg font-semibold mb-3 tracking-widest uppercase">
+        <h4 className="text-[#2AB7B7] font-plusjakarta text-[20px] md:text-lg font-semibold mb-3 tracking-widest uppercase font-plusjakarta">
           OUR VALUES
         </h4>
-        <div className="text-gray-500 text-base md:text-lg leading-relaxed max-w-3xl mx-auto space-y-4">
+        <div className="text-[#070707] font-plusjakarta text-base md:text-lg leading-relaxed max-w-3xl mx-auto space-y-4">
           <p>
             Discover Vacations was created by a team of seasoned travel
             professionals with a shared mission: to make it easier for customers
@@ -114,7 +114,7 @@ export default function AboutUs() {
       {/* What Sets Us Apart Section */}
       <div className="relative w-full pt-24 pb-16">
         <div className="max-w-5xl mx-auto px-6 md:px-4">
-          <h2 className="text-3xl font-semibold text-center mb-12 text-[#0e424e]">
+          <h2 className="text-3xl font-semibold text-center mb-12 text-[#0e424e] font-monteserrat">
             What Sets Us Apart
           </h2>
 
@@ -186,10 +186,10 @@ export default function AboutUs() {
         />
         {/* Who We Are */}
         <div className="max-w-4xl mx-auto px-6 md:px-8">
-          <h2 className="text-3xl font-semibold text-center mb-6 text-[#0e424e]">
+          <h2 className="text-3xl font-semibold text-center mb-6 text-[#0e424e] font-monteserrat">
             Who We Are
           </h2>
-          <p className="text-center text-gray-600 mb-16 text-base leading-relaxed max-w-3xl mx-auto">
+          <p className="text-center text-[#1A202C] mb-16 text-base leading-relaxed max-w-3xl mx-auto font-plusjakarta">
             We&apos;re a team of travel professionals who&apos;ve spent decades
             helping families, couples, and explorers just like you create
             unforgettable getaways. With experience in vacation planning, resort
@@ -198,10 +198,10 @@ export default function AboutUs() {
             check in.
           </p>
           {/* Trusted and Certified */}
-          <h2 className="text-3xl font-semibold text-center mb-6 text-[#0e424e]">
+          <h2 className="text-3xl font-semibold text-center mb-6 text-[#0e424e] font-monteserrat">
             Trusted and Certified
           </h2>
-          <div className="text-center text-gray-500 text-base leading-relaxed max-w-3xl mx-auto space-y-4">
+          <div className="text-center text-[#1A202C] text-base leading-relaxed max-w-3xl mx-auto space-y-4 font-plusjakarta">
             <p>
               Discover Vacations is a registered travel provider that meets all
               required industry standards to ensure your vacation is secure and

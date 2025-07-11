@@ -256,7 +256,7 @@ export default function Homepage() {
               <h3 className="font-[500] text-[27px] my-5 text-[#135868]">
                 Discover Your Next Vacation
               </h3>
-              <p className="text-[#151515] text-[20px] font-[400] opacity-90 text-center">
+              <p className="text-[#151515] text-[20px] font-[500] opacity-90 text-center font-avenir leading-7">
                 Choose a day trip based on your location and interests.
               </p>
             </div>
@@ -283,7 +283,7 @@ export default function Homepage() {
               <h3 className="font-[500] text-[27px] my-5 text-[#135868]">
                 Pick a Date
               </h3>
-              <p className="text-[#151515] text-[20px] font-[400] opacity-90 text-center">
+              <p className="text-[#151515] text-[20px] font-avenir font-[500] opacity-90 text-center leading-7">
                 Know your dates? Select them on the calendar before checkout.
                 Not ready yet? No problem — purchase now and choose your dates
                 anytime in the Booking Hub.
@@ -312,7 +312,7 @@ export default function Homepage() {
               <h3 className="font-[500] text-[27px] my-5 text-[#135868]">
                 Book Your Getaway
               </h3>
-              <p className="text-[#151515] text-[20px] font-[400] opacity-90 text-center">
+              <p className="text-[#151515] text-[20px] font-[500] opacity-90 text-center font-avenir leading-7">
                 Complete your purchase and get instant access to your personal
                 Booking Portal, where reserving your trip is quick, easy, and
                 secure.
@@ -327,6 +327,7 @@ export default function Homepage() {
           className="md:block hidden absolute right-0 -bottom-8 w-48 md:w-[186px] opacity-50 pointer-events-none"
         />
       </div>
+
       {/* Find Your Next Escape Section */}
       <section
         ref={bookingRef}

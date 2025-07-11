@@ -8,135 +8,317 @@ const faqs = [
       "What's included to make my vacation planning effortless and worry-free?",
     summary:
       "At Discover Vacations, we've built support, convenience, and peace of mind into every step of your journey: - Real support from real people — Our team is here to help before...",
-    answer:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation',
+    answer: (
+      <>
+        At Discover Vacations, we’ve built support, convenience, and peace of
+        mind into every step of your journey:
+        <ul className="mt-2 list-disc pl-6">
+          <li>
+            Real support from real people — Our team is here to help before,
+            during, and after your trip.
+          </li>
+          <li>
+            Secure, encrypted checkout — Your payment is protected using trusted
+            technology.
+          </li>
+          <li>
+            Simple, guided booking — Select your dates, view available hotels,
+            and manage your reservation easily through our online portal.
+          </li>
+          <li>
+            Flexible travel options — Choose dates that work for you, add extra
+            nights, and upgrade accommodations when available — no pressure or
+            hidden fees.
+          </li>
+        </ul>
+      </>
+    ),
   },
   // Repeat 7 times for demo
   {
     question: 'How do I complete the purchase of My Discover Vacation?',
     summary:
       'Booking your getaway is easy and streamlined with our online portal: 1. Choose A Location: Browse your exclusive offer and add to cart. 2. Pick A Date: Select now or later...',
-    answer:
-      "Booking your getaway is easy and streamlined with our online portal:\n\n1. Choose A Location: Browse your exclusive offer and add to cart.\n2. Pick A Date: Select now or later via the portal.\n3. Book Your Vacation: Complete your purchase to access the booking portal.\n\nYou'll receive a link via email/SMS to the My Discover Booking Hub. Enter your email and Package ID to log in or visit https://mydiscovervacations.com and click the MyDiscoverVacation button.",
+    answer: (
+      <>
+        Booking your getaway is easy and streamlined with our online portal:
+        <ol className="mt-2 list-decimal pl-6">
+          <li>
+            Choose A Location: Browse your exclusive offer and add to cart.
+          </li>
+          <li>Pick A Date: Select now or later via the portal.</li>
+          <li>
+            Book Your Vacation: Complete your purchase to access the booking
+            portal.
+          </li>
+        </ol>
+        <p className="mt-2">
+          You'll receive a link via email/SMS to the My Discover Booking Hub.
+          Enter your email and Package ID to log in or visit{' '}
+          <a
+            href="https://mydiscovervacations.com"
+            className="text-blue-600 underline"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            mydiscovervacations.com
+          </a>{' '}
+          and click the MyDiscoverVacation button.
+        </p>
+      </>
+    ),
   },
   {
     question: 'How do I access the My Discover Booking Hub after purchase?',
     summary:
       "Once your purchase is complete, you'll receive a link via email or SMS to access the My Discover Booking Hub. Enter your email and Package ID to log in. Or visit...",
-    answer:
-      "Once your purchase is complete, you'll receive a link via email or SMS to access the My Discover Booking Hub. Enter your email and Package ID to log in. Or visit https://mydiscovervacations.com and click the MyDiscoverVacation button to access the portal.",
+    answer: (
+      <>
+        Once your purchase is complete, you'll receive a link via email or SMS
+        to access the My Discover Booking Hub. Enter your email and Package ID
+        to log in.
+        <br />
+        Or visit{' '}
+        <a
+          href="https://mydiscovervacations.com"
+          className="text-blue-600 underline"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          mydiscovervacations.com
+        </a>{' '}
+        and click the MyDiscoverVacation button to access the portal.
+      </>
+    ),
   },
   {
     question: 'How was I selected for this offer?',
     summary:
       'You received this exclusive offer because you are part of our valued travel community. Whether through a past travel experience or direct connection, these offers are...',
-    answer:
-      'You received this exclusive offer because you are part of our valued travel community. Whether through a past travel experience or direct connection, these offers are by invitation only and not available to the general public.',
+    answer: (
+      <>
+        You received this exclusive offer because you are part of our valued
+        travel community. Whether through a past travel experience or direct
+        connection, these offers are by invitation only and not available to the
+        general public.
+      </>
+    ),
   },
   {
     question: "What's included in this vacation package?",
     summary:
       "You'll receive 4 Days / 3 Nights hotel accommodations for two adults at a participating hotel (3 stars+). After a short presentation on vacation ownership, you'll...",
-    answer:
-      "You'll receive 4 Days / 3 Nights hotel accommodations for two adults at a participating hotel (3 stars+). After a short presentation on vacation ownership, you'll receive a Bonus Vacation Gift — your choice of:\n\n- A 4-, 5-, or 7-night cruise for two\n- A 3-night U.S. hotel stay + $100 Visa Gift Card or Attraction Tickets (Orlando or Las Vegas only)\n- A 7-night resort condo stay for up to 4 travelers",
+    answer: (
+      <>
+        You'll receive 4 Days / 3 Nights hotel accommodations for two adults at
+        a participating hotel (3 stars+). After a short presentation on vacation
+        ownership, you'll receive a Bonus Vacation Gift — your choice of:
+        <ul className="mt-2 list-disc pl-6">
+          <li>A 4-, 5-, or 7-night cruise for two</li>
+          <li>
+            A 3-night U.S. hotel stay + $100 Visa Gift Card or Attraction
+            Tickets (Orlando or Las Vegas only)
+          </li>
+          <li>A 7-night resort condo stay for up to 4 travelers</li>
+        </ul>
+      </>
+    ),
   },
   {
     question: 'How was I selected for this offer?',
     summary:
       'You received this exclusive offer because you are part of our valued travel community. Whether through a past travel experience or direct connection, these offers are...',
-    answer:
-      'You received this exclusive offer because you are part of our valued travel community. Whether through a past travel experience or direct connection, these offers are by invitation only and not available to the general public.',
+    answer: (
+      <>
+        You received this exclusive offer because you are part of our valued
+        travel community. Whether through a past travel experience or direct
+        connection, these offers are by invitation only and not available to the
+        general public.
+      </>
+    ),
   },
   {
     question: "What's included in this vacation package?",
     summary:
       "You'll receive 4 Days / 3 Nights hotel accommodations for two adults at a participating hotel (3 stars+). After a short presentation on vacation ownership, you'll...",
-    answer:
-      "You'll receive 4 Days / 3 Nights hotel accommodations for two adults at a participating hotel (3 stars+). After a short presentation on vacation ownership, you'll receive a Bonus Vacation Gift — your choice of:\n\n- A 4-, 5-, or 7-night cruise for two\n- A 3-night U.S. hotel stay + $100 Visa Gift Card or Attraction Tickets (Orlando or Las Vegas only)\n- A 7-night resort condo stay for up to 4 travelers",
+    answer: (
+      <>
+        You'll receive 4 Days / 3 Nights hotel accommodations for two adults at
+        a participating hotel (3 stars+). After a short presentation on vacation
+        ownership, you'll receive a Bonus Vacation Gift — your choice of:
+        <ul className="mt-2 list-disc pl-6">
+          <li>A 4-, 5-, or 7-night cruise for two</li>
+          <li>
+            A 3-night U.S. hotel stay + $100 Visa Gift Card or Attraction
+            Tickets (Orlando or Las Vegas only)
+          </li>
+          <li>A 7-night resort condo stay for up to 4 travelers</li>
+        </ul>
+      </>
+    ),
   },
   {
     question: 'How do I qualify for this Vacation Offer and Bonus Gift?',
     summary:
       'To receive the discounted vacation offer and bonus gift, both travelers must attend a full presentation hosted by a trusted resort partner. Both adults must be...',
-    answer:
-      'To receive the discounted vacation offer and bonus gift, both travelers must attend a full presentation hosted by a trusted resort partner. Both adults must be present to qualify.',
+    answer: (
+      <>
+        To receive the discounted vacation offer and bonus gift, both travelers
+        must attend a full presentation hosted by a trusted resort partner. Both
+        adults must be present to qualify.
+      </>
+    ),
   },
   {
     question: 'Who is eligible to book this offer?',
     summary:
       'Eligibility: Must be a U.S. or Canadian resident, employed or retired Speak English or Spanish Married/cohabiting: one must be 28+, both must attend Retirees: 55+...',
-    answer:
-      'Eligibility:\n- Must be a U.S. or Canadian resident, employed or retired\n- Speak English or Spanish\n- Married/cohabiting: one must be 28+, both must attend\n- Retirees: 55+\n- Single women: 28+, Single men: 35+\nNot eligible: full-time students, timeshare employees, or those who attended a similar presentation in the last 12 months.',
+    answer: (
+      <>
+        <ul className="mt-2 list-disc pl-6">
+          <li>Must be a U.S. or Canadian resident, employed or retired</li>
+          <li>Speak English or Spanish</li>
+          <li>Married/cohabiting: one must be 28+, both must attend</li>
+          <li>Retirees: 55+</li>
+          <li>Single women: 28+, Single men: 35+</li>
+        </ul>
+        <p className="mt-2">
+          Not eligible: full-time students, timeshare employees, or those who
+          attended a similar presentation in the last 12 months.
+        </p>
+      </>
+    ),
   },
   {
     question: 'What kind of hotel will I be staying in?',
     summary:
       'All hotels are rated 3 stars or above (e.g., Holiday Inn Express Orlando, Hampton Inn Poconos). Resort fees, parking, and taxes are extra and due at check-in....',
-    answer:
-      'All hotels are rated 3 stars or above (e.g., Holiday Inn Express Orlando, Hampton Inn Poconos). Resort fees, parking, and taxes are extra and due at check-in.',
+    answer: (
+      <>
+        All hotels are rated 3 stars or above (e.g., Holiday Inn Express
+        Orlando, Hampton Inn Poconos). Resort fees, parking, and taxes are extra
+        and due at check-in.
+      </>
+    ),
   },
   {
     question: 'How do I book my dates?',
     summary:
       "After purchase, you'll receive a confirmation email with booking access. In the portal, select preferred/alternate dates, choose a hotel, and add any upgrades....",
-    answer:
-      "After purchase, you'll receive a confirmation email with booking access. In the portal, select preferred/alternate dates, choose a hotel, and add any upgrades. A specialist will reconfirm your trip ~30 days before travel.",
+    answer: (
+      <>
+        After purchase, you'll receive a confirmation email with booking access.
+        In the portal, select preferred/alternate dates, choose a hotel, and add
+        any upgrades. A specialist will reconfirm your trip ~30 days before
+        travel.
+      </>
+    ),
   },
   {
     question: 'Can I change my reservation?',
     summary:
       'Changes made within 72 hours of arrival are subject to forfeiture. Other changes may incur a $25 fee and rate differences. No-shows or early departures void...',
-    answer:
-      'Changes made within 72 hours of arrival are subject to forfeiture. Other changes may incur a $25 fee and rate differences. No-shows or early departures void the vacation.',
+    answer: (
+      <>
+        Changes made within 72 hours of arrival are subject to forfeiture. Other
+        changes may incur a $25 fee and rate differences. No-shows or early
+        departures void the vacation.
+      </>
+    ),
   },
   {
     question: 'What fees will I pay at the hotel?',
     summary:
       'Typical hotel charges: - Parking/Valet: $10–$20 per night - Taxes: $37–$87 total - Resort fees: $15–$30/night - Credit card hold: $100–$250 for incidentals...',
-    answer:
-      'Typical hotel charges:\n- Parking/Valet: $10–$20 per night\n- Taxes: $37–$87 total\n- Resort fees: $15–$30/night\n- Credit card hold: $100–$250 for incidentals',
+    answer: (
+      <>
+        Typical hotel charges:
+        <ul className="mt-2 list-disc pl-6">
+          <li>Parking/Valet: $10–$20 per night</li>
+          <li>Taxes: $37–$87 total</li>
+          <li>Resort fees: $15–$30/night</li>
+          <li>Credit card hold: $100–$250 for incidentals</li>
+        </ul>
+      </>
+    ),
   },
   {
     question: "What's the deadline to travel?",
     summary:
       'Main trip must be completed within 12 months of purchase. Bonus Vacation must be registered within 6 months and used within 18 months....',
-    answer:
-      'Main trip must be completed within 12 months of purchase. Bonus Vacation must be registered within 6 months and used within 18 months.',
+    answer: (
+      <>
+        Main trip must be completed within 12 months of purchase. Bonus Vacation
+        must be registered within 6 months and used within 18 months.
+      </>
+    ),
   },
   {
     question: 'Do I get my deposit back?',
     summary:
       'Deposits collected during booking may be credited to attractions/activities if you attend the required presentation. Refunds are not issued unless otherwise...',
-    answer:
-      'Deposits collected during booking may be credited to attractions/activities if you attend the required presentation. Refunds are not issued unless otherwise noted.',
+    answer: (
+      <>
+        Deposits collected during booking may be credited to
+        attractions/activities if you attend the required presentation. Refunds
+        are not issued unless otherwise noted.
+      </>
+    ),
   },
   {
     question: 'Can I cancel my vacation package?',
     summary:
       'Cancel in writing within 30 days of purchase. After that, sales are final unless extended with fees. Cancel via the Ask Discover form, phone, or mail (address...',
-    answer:
-      'Cancel in writing within 30 days of purchase. After that, sales are final unless extended with fees. Cancel via the Ask Discover form, phone, or mail (address provided in the doc).',
+    answer: (
+      <>
+        Cancel in writing within 30 days of purchase. After that, sales are
+        final unless extended with fees. Cancel via the Ask Discover form,
+        phone, or mail (address provided in the doc).
+      </>
+    ),
   },
   {
     question: 'Where do I manage my reservation?',
     summary:
       'All bookings are handled at https://portal.MyDiscoverVacations.com. View your confirmation, add enhancements, and manage your trip all in one place....',
-    answer:
-      'All bookings are handled at https://portal.MyDiscoverVacations.com. View your confirmation, add enhancements, and manage your trip all in one place.',
+    answer: (
+      <>
+        All bookings are handled at{' '}
+        <a
+          href="https://portal.MyDiscoverVacations.com"
+          className="text-blue-600 underline"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          portal.MyDiscoverVacations.com
+        </a>
+        . View your confirmation, add enhancements, and manage your trip all in
+        one place.
+      </>
+    ),
   },
   {
     question: 'What if I have questions about my bonus gift or rebate?',
     summary:
       "You'll receive bonus travel information by email about 21 days before your scheduled trip....",
-    answer:
-      "You'll receive bonus travel information by email about 21 days before your scheduled trip.",
+    answer: (
+      <>
+        You'll receive bonus travel information by email about 21 days before
+        your scheduled trip.
+      </>
+    ),
   },
   {
     question: 'I have more questions. How do I get help?',
     summary:
       'For non-urgent help, use the Ask Discover form on the website. For urgent matters or travel within 5 days, call the provided number. Live Chat is coming...',
-    answer:
-      'For non-urgent help, use the Ask Discover form on the website. For urgent matters or travel within 5 days, call the provided number. Live Chat is coming soon.',
+    answer: (
+      <>
+        For non-urgent help, use the Ask Discover form on the website. For
+        urgent matters or travel within 5 days, call the provided number. Live
+        Chat is coming soon.
+      </>
+    ),
   },
 ];
 
@@ -159,7 +341,7 @@ export default function FAQ() {
         {faqs.map((faq, idx) => (
           <div
             key={idx}
-            className="w-full max-w-3xl pb-2 rounded-md sm:rounded-lg bg-[#F5F5F5] shadow-md mb-12 overflow-hidden transition-all duration-300"
+            className="mx-auto max-w-3xl pb-2 rounded-md sm:rounded-lg bg-[#F5F5F5] shadow-md mb-12 overflow-hidden transition-all duration-300"
           >
             <button
               className="w-full flex items-start justify-between p-3 sm:p-4 focus:outline-none group gap-2"
