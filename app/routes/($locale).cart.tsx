@@ -792,7 +792,7 @@ export default function Cart() {
           <h1 className="text-[#0E424E] font-[500] text-[36px]">
             Discover More — Choose Your Bonus Vacation
           </h1>
-          <p className="font-[400] text-[20px] text-[#676767]">
+          <p className="font-[400] text-[20px] text-[#101010]">
             Select your preferred gift and add it to your cart for $0.00. It
             will be confirmed during your vacation, and you&apos;ll have the
             chance to change it if you&apos;d like.

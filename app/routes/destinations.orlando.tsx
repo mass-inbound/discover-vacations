@@ -101,7 +101,7 @@ export default function ProductDetail() {
           <h2 className="text-3xl md:text-[61px] font-[500] text-center mb-4 text-[#0E424E]">
             Discover Your Next Vacation
           </h2>
-          <p className="font-[400] text-[20px] text-[#676767] mx-auto max-w-3xl text-center mb-10">
+          <p className="font-[400] text-[20px] text-[#101010] mx-auto max-w-3xl text-center mb-10">
             Discover a collection of vacations
           </p>
           {/* Tabs */}
