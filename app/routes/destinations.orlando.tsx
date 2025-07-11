@@ -95,7 +95,7 @@ export default function ProductDetail() {
         <img
           src="/assets/shipPattern.png"
           alt=""
-          className="hidden md:block absolute top-10 -right-12 opacity-30 w-[280px]"
+          className="hidden md:block absolute top-10 -right-20 opacity-30 w-[280px]"
         />
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-3xl md:text-[61px] font-[500] text-center mb-4 text-[#0E424E]">
@@ -145,13 +145,12 @@ function Tabs({
   cartIsEmpty: boolean;
 }) {
   const [active, setActive] = useState(0);
-  const tabs = ['Popular', 'Hotels', 'Cruise', 'Exclusive Deals'];
+  const tabs = ['Popular', 'Exclusive Deals'];
   // Map tab index to tag
   const tabTagMap: Record<number, string> = {
     0: 'Popular',
-    1: 'Hotels',
-    2: 'Cruise',
-    3: 'Exclusive',
+    // 1: 'Orlando',
+    1: 'Exclusive',
   };
   // Filter products for the active tab
   const filteredProducts = products.filter(

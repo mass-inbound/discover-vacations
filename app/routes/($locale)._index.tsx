@@ -418,10 +418,10 @@ export default function Homepage() {
                 <RiCustomerService2Line size={25} />
               </div>
               <div className="flex flex-col gap-1">
-                <h3 className="text-[#1A202C] font-[600] text-[22px]">
+                <h3 className="text-[#1A202C] font-[600] text-[22px] font-plusjakarta">
                   Personal Support, When You Need It
                 </h3>
-                <div className="text-[#1A202C] text-[16px] font-[400] pl-4">
+                <div className="text-[#1A202C] text-[16px] font-[400] pl-4 font-plusjakarta">
                   Whether you have a question before booking or need help
                   finalizing your travel dates, our team is here for you — real
                   people, ready to help.
@@ -434,10 +434,10 @@ export default function Homepage() {
                 <IoMdPricetags size={25} />
               </div>
               <div className="flex flex-col gap-1">
-                <h3 className="text-[#1A202C] font-[600] text-[22px]">
+                <h3 className="text-[#1A202C] font-[600] text-[22px] font-plusjakarta">
                   Guided Self-Service Booking
                 </h3>
-                <div className="text-[#1A202C] text-[16px] font-[400] pl-4">
+                <div className="text-[#1A202C] text-[16px] font-[400] pl-4 font-plusjakarta">
                   Use our secure booking portal to select your travel dates,
                   view available hotels, and manage your reservation at your
                   convenience.
@@ -453,10 +453,10 @@ export default function Homepage() {
                 <IoShieldHalf size={25} />
               </div>
               <div className="flex flex-col gap-1">
-                <h3 className="text-[#1A202C] font-[600] text-[22px]">
+                <h3 className="text-[#1A202C] font-[600] text-[22px] font-plusjakarta">
                   Secure, Encrypted Checkout
                 </h3>
-                <div className="text-[#1A202C] text-[16px] font-[400] pl-4">
+                <div className="text-[#1A202C] text-[16px] font-[400] pl-4 font-plusjakarta">
                   Your payment is processed using secure, encrypted checkout
                   technology — giving you peace of mind when making your
                   purchase.
@@ -469,10 +469,10 @@ export default function Homepage() {
                 <GiPalmTree size={25} />
               </div>
               <div className="flex flex-col gap-1">
-                <h3 className="text-[#1A202C] font-[600] text-[22px]">
+                <h3 className="text-[#1A202C] font-[600] text-[22px] font-plusjakarta">
                   Simple, Flexible Travel Options
                 </h3>
-                <div className="text-[#1A202C] text-[16px] font-[400] pl-4">
+                <div className="text-[#1A202C] text-[16px] font-[400] pl-4 font-plusjakarta">
                   We know plans can shift — that&apos;s why we allow you to
                   choose travel dates that work for your schedule, add extra
                   nights, and upgrade your accommodations when available.
