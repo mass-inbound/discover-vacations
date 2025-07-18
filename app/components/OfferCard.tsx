@@ -80,16 +80,17 @@ export function OfferCard({
         <div className="bg-gradient-to-r from-[#f2b233] to-[#FFE7B8] rounded-[8px] px-3 py-1 mx-4 flex gap-2 items-start justify-center">
           <FaGift className="min-w-4 mt-1" />
           <span className="text-[16px] font-[400] text-[#08252C] font-avenir">
-            Includes a Bonus Gift:Your Choice Vacation Getaway (valued at $300+)
+            Includes a Bonus Vacation: Your Choice Vacation Bonus (valued at
+            $300+)
           </span>
         </div>
         <div className="mt-8 p-4 bg-[#F5F5F5] flex flex-col gap-1 items-center justify-center border-t border-gray-300">
           <span className="text-[#676767] font-[400] text-[13px]">
             {/* You can add duration info as metafield or in description if needed */}
           </span>
-          <p className="text-[13px] text-[#676767]">4 days/3 Nights</p>
-          <div className="flex items-center justify-center gap-1">
-            <span className="text-[#135868] font-[700] text-[27px] font-avenir">
+          <p className="text-[13px] text-[#676767]">4 days / 3 nights</p>
+          <div className="flex items-center justify-center gap-2">
+            <span className="text-[#135868] font-[700] text-[27px] font-monteserrat">
               ${Math.round(product.priceRange.minVariantPrice.amount)}
             </span>
             <span className="text-[#135868] font-[600] text-[12px] font-avenir">

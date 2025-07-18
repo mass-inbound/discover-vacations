@@ -390,7 +390,7 @@ function Tabs({upsellProducts}: {upsellProducts: any[]}) {
     'Overview',
     `What's Included`,
     'Nearby Attractions',
-    'Travel Notes',
+    'Details',
     'Gift Details',
   ];
 
@@ -402,17 +402,27 @@ function Tabs({upsellProducts}: {upsellProducts: any[]}) {
     >
       <h1 className="text-[#0E424E] font-[500] text-[24px] md:text-[36px]">
         {handle === 'orlando'
-          ? '🌾 Discover Orlando – 4 Days / 3 Nights + Bonus Vacation Gift'
+          ? '🌾 Discover Orlando – 4 Days / 3 Nights + Vacation Bonus'
           : '🌾 Poconos Mountain Getaway – 4 Days / 3 Nights'}
       </h1>
-      <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] max-w-[95%] md:max-w-[80%] mx-auto">
-        {handle === 'orlando'
-          ? 'Start your My Discover Vacation in the heart of Orlando with 4 days and 3 nights of fun, sun, and memory-making.'
-          : 'Escape to the peaceful beauty of the Pocono Mountains with a 4-Day / 3-Night vacation designed for two adults. Cozy accommodations at participating hotels provide the perfect setting for a relaxing weekend, nature exploration, or a scenic escape.'}
+      <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] max-w-[95%] md:max-w-[85%] mx-auto">
+        {handle === 'orlando' ? (
+          <div>
+            Start your My Discover Vacation in the heart of Orlando with 4 days
+            and 3 nights of fun, sun, and memory-making.
+            <br />
+            <br />
+            Enjoy a relaxing vacation stay in comfortable, convenient
+            accommodations with cozy beds, free Wi-Fi, and thoughtful extras
+            like in-room coffee and mini fridges. Trusted brands and friendly
+            service - perfect for your getaway.
+          </div>
+        ) : (
+          'Escape to the peaceful beauty of the Pocono Mountains with a 4-Day / 3-Night vacation designed for two adults. Cozy accommodations at participating hotels provide the perfect setting for a relaxing weekend, nature exploration, or a scenic escape.'
+        )}
       </p>
       <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] max-w-[95%] md:max-w-[80%] mx-auto mt-2">
-        As our thank-you, you&apos;ll also receive a Bonus Vacation Gift — your
-        choice of:
+        As our thank-you, you'll also receive a Vacation Bonus — your choice of:
       </p>
       <ul className="list-disc list-inside text-[#0E424E] text-[14px] md:text-[18px] font-[400]">
         <li>A Cruise Getaway (4–7 nights)</li>
@@ -426,26 +436,72 @@ function Tabs({upsellProducts}: {upsellProducts: any[]}) {
     </div>,
     <div
       key="included"
-      className="bg-gray-100 p-4 md:p-8 text-center flex flex-col gap-4 rounded"
+      className="bg-gray-100 p-4 md:p-8 flex flex-col gap-4 rounded"
     >
-      <h2 className="text-[#0E424E] font-[500] text-[24px] md:text-[36px]">
-        What&apos;s Included
-      </h2>
-      <ul className="list-disc list-inside text-[#0E424E] text-[16px] md:text-[20px] font-[400]">
-        {handle === 'orlando' ? (
-          <>
-            <li>3 nights hotel accommodations for two adults</li>
-            <li>Exclusive perks during your stay</li>
-            <li>Bonus vacation gift</li>
-          </>
-        ) : (
-          <>
+      {handle === 'orlando' ? (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 px-4">
+            <div>
+              <h2 className="text-[#0E424E] font-[500] text-[24px] md:text-[36px] mb-3">
+                What&apos;s Included
+              </h2>
+              <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] font-avenir mb-4">
+                🏨 3-Night Hotel StayComfy 3-night stay for two adults—your
+                perfect launchpad to relax or explore.
+              </p>
+              <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] font-avenir mb-4">
+                🎁 Bonus Vacation Gift – CHOICE GetawayPick one of these premium
+                rewards (airfare not included):
+              </p>
+              <ul className="list-disc list-inside text-[#0E424E] text-[16px] md:text-[20px] font-[400] font-avenir">
+                <li>
+                  Cruise for Two – 4–7 nights aboard Carnival, Royal Caribbean,
+                  or similar
+                </li>
+                <li>
+                  Hotel Stay – 4-day/3-night U.S. stay + $100 in perks, 1,000+
+                  hotel options
+                </li>
+                <li>
+                  Resort Condo Stay – 7 nights for up to 4 travelers in the
+                  U.S., Mexico, or Caribbean
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h2 className="text-[#0E424E] font-[500] text-[24px] md:text-[36px] mb-3">
+                VACATIONS MADE POSSIBLE
+              </h2>
+              <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] font-avenir">
+                 In partnership with top vacation resorts, this package includes
+                a presentation at one of our partner resorts during your stay —
+                it’s what makes these incredible perks possible.
+                <br />
+                <br />
+                ✨ Deeply discounted accommodations.
+                <br />
+                🎁 A bonus vacation valued up to $1,800.
+                <br />
+                🌍 Travel insights that can help you vacation better, more
+                often, and for less.
+                <br />
+                No pressure. No catch. Just great perks in return for your time.
+              </p>
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <h2 className="text-[#0E424E] font-[500] text-[24px] md:text-[36px]">
+            What&apos;s Included
+          </h2>
+          <ul className="list-disc list-inside text-[#0E424E] text-[16px] md:text-[20px] font-[400] text-center">
             <li>4 Days / 3 Nights of hotel accommodations for two adults</li>
             <li>Packages starting at just $49 per couple</li>
             <li>Bonus vacation gift of your choice</li>
-          </>
-        )}
-      </ul>
+          </ul>
+        </>
+      )}
     </div>,
     <div
       key="attractions"
@@ -454,73 +510,264 @@ function Tabs({upsellProducts}: {upsellProducts: any[]}) {
       <h2 className="text-[#0E424E] font-[500] text-[24px] md:text-[36px] mb-2">
         Nearby Attractions
       </h2>
-      <div className="flex flex-col md:flex-row gap-8 md:gap-16 justify-center mx-auto max-w-3xl">
-        <ul className="list-disc list-inside text-[#0E424E] text-[16px] md:text-[20px] font-[400] text-center">
-          {handle === 'orlando' ? (
-            <>
-              <li>Universal Studios</li>
-              <li>Walt Disney World</li>
-              <li>Volcano Bay</li>
-              <li>Universal Citywalk</li>
-              <li>SeaWorld Orlando</li>
-            </>
-          ) : (
-            <>
-              <li>Bushkill Falls</li>
-              <li>Camelback Resort & Aquatopia / Mountain Adventures</li>
-              <li>Kalahari Resorts & Conventions Poconos</li>
-              <li>Claws ’N’ Paws Wild Animal Park</li>
-              <li>Jim Thorpe</li>
-            </>
-          )}
-        </ul>
-      </div>
+      {handle === 'orlando' ? (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-[#0E424E] font-avenir text-[16px] md:text-[20px] font-[400] max-w-5xl mx-auto">
+            <div className="flex flex-col items-start">
+              <p className="text-start">🎬 Universal Studios</p>
+              <p className="text-[16px] text-start">
+                Movie-themed rides & live shows
+              </p>
+            </div>
+            <div className="flex flex-col items-start">
+              <p className="text-start">🎢 Major Theme Parks</p>
+              <p className="text-[16px] text-start">
+                Roller coaster rides, fun parks
+              </p>
+            </div>
+            <div className="flex flex-col items-start">
+              <p className="text-start">‍🧜️ SeaWorld Orlando</p>
+              <p className="text-[16px] text-start">
+                Marine shows, coasters & events
+              </p>
+            </div>
+            <div className="flex flex-col items-start">
+              <p className="text-start">🎡 Walt Disney World</p>
+              <p className="text-[16px] text-start">
+                4 parks including Magic Kingdom{' '}
+              </p>
+            </div>
+            <div className="flex flex-col items-start">
+              <p className="text-start">🎟️ Entertainment </p>
+              <p className="text-[16px] text-start">
+                4 parks including Magic Kingdom{' '}
+              </p>
+            </div>
+            <div className="flex flex-col items-start">
+              <p className="text-start">🛍️ Old Town</p>
+              <p className="text-[16px] text-start">
+                Retro rides, bars & live music
+              </p>
+            </div>
+            <div className="flex flex-col items-start">
+              <p className="text-start">🌋 Volcano Bay</p>
+              <p className="text-[16px] text-start">
+                Tropical water park with thrilling slides
+              </p>
+            </div>
+            <div className="flex flex-col items-start">
+              <p className="text-start">🍷 Disney Springs</p>
+              <p className="text-[16px] text-start">
+                Dining, nightlife & upscale shopping experiences
+              </p>
+            </div>
+            <div className="flex flex-col items-start">
+              <p className="text-start">🌆 Universal Citywalk™</p>
+              <p className="text-[16px] text-start">
+                Adult-friendly nightlife, dining
+              </p>
+            </div>
+            <div className="flex flex-col items-start">
+              <p className="text-start">🎭 Pirates Dinner Adventure</p>
+              <p className="text-[16px] text-start">
+                Interactive dinner show for all ages
+              </p>
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-[#0E424E] font-avenir text-[16px] md:text-[20px] font-[400] max-w-5xl mx-auto">
+            <div className="flex flex-col items-start">
+              <p className="text-start">🏞️ Delaware Water Gap</p>
+              <p className="text-[16px] text-start">
+                Scenic hiking, waterfalls & river views
+              </p>
+            </div>
+            <div className="flex flex-col items-start">
+              <p className="text-start">⛷️ Camelback Mountain</p>
+              <p className="text-[16px] text-start">
+                Skiing, snow tubing & mountain adventures
+              </p>
+            </div>
+            <div className="flex flex-col items-start">
+              <p className="text-start">🛶 Lake Wallenpaupack</p>
+              <p className="text-[16px] text-start">
+                Boating, fishing & lakeside fun
+              </p>
+            </div>
+            <div className="flex flex-col items-start">
+              <p className="text-start">🎰 Mount Airy Casino Resort</p>
+              <p className="text-[16px] text-start">
+                Gaming, dining & live entertainment
+              </p>
+            </div>
+            <div className="flex flex-col items-start">
+              <p className="text-start">🎢 Kalahari Resorts </p>
+              <p className="text-[16px] text-start">
+                Indoor waterpark, spa & family fun
+              </p>
+            </div>
+            <div className="flex flex-col items-start">
+              <p className="text-start">🚠 Blue Mountain Resort</p>
+              <p className="text-[16px] text-start">
+                Winter sports & summer ziplining
+              </p>
+            </div>
+            <div className="flex flex-col items-start">
+              <p className="text-start">🎯 The Crossings Premium Outlets</p>
+              <p className="text-[16px] text-start">
+                Name-brand shopping deals
+              </p>
+            </div>
+            <div className="flex flex-col items-start">
+              <p className="text-start">🌲 Bushkill Falls</p>
+              <p className="text-[16px] text-start">
+                "The Niagara of Pennsylvania" — waterfalls & trails
+              </p>
+            </div>
+            <div className="flex flex-col items-start">
+              <p className="text-start">🐻 Claws 'N' Paws Wild Animal Park</p>
+              <p className="text-[16px] text-start">
+                Petting zoo, animal encounters & wildlife fun
+              </p>
+            </div>
+            <div className="flex flex-col items-start">
+              <p className="text-start">
+                🏡 Quiet Valley Living Historical Farm
+              </p>
+              <p className="text-[16px] text-start">
+                Step back in time with 1800s farm life tours
+              </p>
+            </div>
+          </div>
+        </>
+      )}
     </div>,
     <div
-      key="notes"
+      key="details"
       className="bg-gray-100 p-4 md:p-8 text-center flex flex-col gap-4 rounded"
     >
       <h1 className="text-[#0E424E] font-[500] text-[24px] md:text-[36px]">
-        Travel Notes
+        🌊 Catch the Details
       </h1>
       <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] max-w-[95%] md:max-w-[80%] mx-auto">
-        {handle === 'orlando'
-          ? '*Travel for the Orlando getaway must be completed within 12 months of purchase.'
-          : '*Travel for the Poconos getaway must be completed within 12 months of purchase.'}
+        {handle === 'orlando' ? (
+          <>
+            <ul className="list-disc list-inside text-[#0E424E] text-[16px] md:text-[20px] font-[400] text-center font-avenir">
+              <li>
+                We’re all about making travel easy — and giving you plenty of
+                time to enjoy it. Here are a few helpful things to know after
+                you book:
+              </li>
+              <li>
+                Once you purchase your getaway, you’ll have up to 12 months to
+                travel.
+              </li>
+              <li>
+                Your Bonus Getaway will be provided after you complete your
+                vacation.
+              </li>
+              <li>
+                You’ll have 6 months to register your bonus getaway, and 18
+                months to travel, giving you lots of flexibility to plan your
+                next adventure.
+              </li>
+              <li>
+                Optional upgrades, extended stays, and enhancements are
+                available during booking — it’s your trip, your way.
+              </li>
+              <li>
+                Taxes, resort fees, and optional add-ons vary depending on your
+                selected destination.
+              </li>
+            </ul>
+            <p className="font-avenir mt-2">
+              Still have questions? Explore our FAQs for more details on travel
+              timelines, booking, and what to expect.
+            </p>
+          </>
+        ) : (
+          <>
+            <ul className="list-disc list-inside text-[#0E424E] text-[16px] md:text-[20px] font-[400] text-center font-avenir">
+              <li>
+                We’re all about making travel easy — and giving you plenty of
+                time to enjoy it. Here are a few helpful things to know after
+                you book:
+              </li>
+              <li>
+                Once you purchase your getaway, you’ll have up to 12 months to
+                travel.
+              </li>
+              <li>
+                Your Bonus Getaway will be provided after you complete your
+                vacation.
+              </li>
+              <li>
+                You’ll have 6 months to register your bonus getaway, and 18
+                months to travel, giving you lots of flexibility to plan your
+                next adventure.
+              </li>
+              <li>
+                Optional upgrades, extended stays, and enhancements are
+                available during booking — it’s your trip, your way.
+              </li>
+              <li>
+                Taxes, resort fees, and optional add-ons vary depending on your
+                selected destination.
+              </li>
+            </ul>
+            <p className="font-avenir mt-2">
+              Still have questions? Explore our FAQs for more details on travel
+              timelines, booking, and what to expect.
+            </p>
+          </>
+        )}
       </p>
     </div>,
-    <div key="gift" className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-      {upsellProducts.length > 0 ? (
-        upsellProducts.map((product: any, idx: number) => (
-          <div
-            key={product.id}
-            className="rounded-[10px] bg-white shadow flex flex-col"
-          >
-            <div className="bg-[#F2B233] py-1 text-[#071F24] font-[500] text-[21px] flex justify-center items-center gap-3 rounded-t-[10px]">
-              <span>
-                <FaGift />
-              </span>
-              <span>{product.title}</span>
-            </div>
-            <div className="relative bg-gray-100 min-h-[180px] md:min-h-[280px] overflow-hidden flex items-center justify-center">
-              <img
-                src={product.featuredImage?.url || '/assets/orlando.jpg'}
-                alt={product.title}
-                className="w-full h-full object-cover absolute inset-0"
-              />
-              <div className="absolute bottom-0 w-full bg-white/20 backdrop-blur-md py-4 px-2">
-                <p className="font-[400] text-[16px] text-[#FEFEFE] text-center">
-                  {product.description?.split('\n')[0]}
-                </p>
+    <div key="gift">
+      <h1 className="text-[#0E424E] font-[500] text-[24px] md:text-[36px] flex items-center justify-center gap-4 mb-3">
+        <FaGift /> Your Bonus, Your Choice!
+      </h1>
+      <p className="text-[#676767] font-avenir text-[16px] md:text-[20px] mb-6 text-center max-w-5xl mx-auto">
+        Your Bonus Vacation is included with your purchase today — it's the
+        vacation after your vacation! You'll choose your favorite at checkout
+        and unlock it after completing your Featured Getaway. Catch the wave,
+        enjoy the journey, and discover just how rewarding travel can be.
+      </p>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        {upsellProducts.length > 0 ? (
+          upsellProducts.map((product: any, idx: number) => (
+            <div
+              key={product.id}
+              className="rounded-[10px] bg-white shadow flex flex-col"
+            >
+              <div className="bg-[#F2B233] py-1 text-[#071F24] font-[500] text-[21px] flex justify-center items-center gap-3 rounded-t-[10px]">
+                <span>
+                  <FaGift />
+                </span>
+                <span>{product.title}</span>
+              </div>
+              <div className="relative bg-gray-100 min-h-[180px] md:min-h-[280px] overflow-hidden flex items-center justify-center rounded-b-[10px]">
+                <img
+                  src={product.featuredImage?.url || '/assets/orlando.jpg'}
+                  alt={product.title}
+                  className="w-full h-full object-cover absolute inset-0"
+                />
+                <div className="absolute bottom-0 w-full bg-white/20 backdrop-blur-md py-4 px-2">
+                  <p className="font-[400] text-[16px] text-[#FEFEFE] text-center">
+                    {product.description?.split('\n')[0]}
+                  </p>
+                </div>
               </div>
             </div>
+          ))
+        ) : (
+          <div className="col-span-3 text-center text-gray-500 py-12">
+            No upsell gifts available.
           </div>
-        ))
-      ) : (
-        <div className="col-span-3 text-center text-gray-500 py-12">
-          No upsell gifts available.
-        </div>
-      )}
+        )}
+      </div>
     </div>,
   ];
 
