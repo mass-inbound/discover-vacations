@@ -202,6 +202,53 @@ export default function Cart() {
     consent: false,
   });
 
+  // Validation state
+  const [errors, setErrors] = useState<any>({});
+
+  // Validation function
+  function validateForm() {
+    const newErrors: any = {};
+    if (!form.firstName.trim()) newErrors.firstName = 'First name is required.';
+    if (!form.lastName.trim()) newErrors.lastName = 'Last name is required.';
+    if (!form.email.trim()) {
+      newErrors.email = 'Email is required.';
+    } else if (!/^\S+@\S+\.\S+$/.test(form.email)) {
+      newErrors.email = 'Invalid email address.';
+    }
+    if (!form.phone.trim()) {
+      newErrors.phone = 'Phone number is required.';
+    } else if (!/^\d{10}$/.test(form.phone)) {
+      newErrors.phone = 'Phone number must be 10 digits.';
+    }
+    if (!form.adults || Number(form.adults) < 1) {
+      newErrors.adults = 'At least 1 adult is required.';
+    }
+    if (!form.consent) {
+      newErrors.consent = 'You must agree to the terms.';
+    }
+    return newErrors;
+  }
+
+  function semivalidateForm() {
+    const newErrors: any = {};
+    if (!form.firstName.trim()) newErrors.firstName = 'First name is required.';
+    if (!form.lastName.trim()) newErrors.lastName = 'Last name is required.';
+    if (!form.email.trim()) {
+      newErrors.email = 'Email is required.';
+    } else if (!/^\S+@\S+\.\S+$/.test(form.email)) {
+      newErrors.email = 'Invalid email address.';
+    }
+    if (!form.phone.trim()) {
+      newErrors.phone = 'Phone number is required.';
+    } else if (!/^\d{10}$/.test(form.phone)) {
+      newErrors.phone = 'Phone number must be 10 digits.';
+    }
+    if (!form.adults || Number(form.adults) < 1) {
+      newErrors.adults = 'At least 1 adult is required.';
+    }
+    return newErrors;
+  }
+
   // Date range picker
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -321,7 +368,19 @@ export default function Cart() {
             {/* General Information Form */}
             <form
               method="post"
-              className="bg-[#FAFAFA] rounded-t-xl md:rounded-l-xl md:rounded-tr-none shadow-xl p-4 sm:p-6 md:p-8 flex flex-col gap-2 w-full"
+              className="relative bg-[#FAFAFA] rounded-t-xl md:rounded-l-xl md:rounded-tr-none shadow-xl p-4 sm:p-6 md:p-8 flex flex-col gap-2 w-full"
+              onSubmit={(e) => {
+                const validationErrors = validateForm();
+                setErrors(validationErrors);
+                if (Object.keys(validationErrors).length > 0) {
+                  e.preventDefault();
+                } else {
+                  e.preventDefault(); // Prevent default form submission
+                  if (cart?.checkoutUrl) {
+                    window.location.href = cart.checkoutUrl;
+                  }
+                }
+              }}
             >
               <div>
                 <h2 className="text-[21px] font-[500]">General Information</h2>
@@ -330,20 +389,34 @@ export default function Cart() {
                 </p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <input
-                  name="firstName"
-                  value={form.firstName}
-                  onChange={handleInput}
-                  placeholder="First Name"
-                  className=" rounded-[10px] px-3 py-2 outline-none border border-gray-100 shadow-md"
-                />
-                <input
-                  name="lastName"
-                  value={form.lastName}
-                  onChange={handleInput}
-                  placeholder="Last Name"
-                  className=" rounded-[10px] px-3 py-2 outline-none border border-gray-100 shadow-md"
-                />
+                <div className="flex flex-col gap-1">
+                  <input
+                    name="firstName"
+                    value={form.firstName}
+                    onChange={handleInput}
+                    placeholder="First Name"
+                    className=" rounded-[10px] px-3 py-2 outline-none border border-gray-100 shadow-md"
+                  />
+                  {errors.firstName && (
+                    <span className="text-red-500 text-xs">
+                      {errors.firstName}
+                    </span>
+                  )}
+                </div>
+                <div className="flex flex-col gap-1">
+                  <input
+                    name="lastName"
+                    value={form.lastName}
+                    onChange={handleInput}
+                    placeholder="Last Name"
+                    className=" rounded-[10px] px-3 py-2 outline-none border border-gray-100 shadow-md"
+                  />
+                  {errors.lastName && (
+                    <span className="text-red-500 text-xs">
+                      {errors.lastName}
+                    </span>
+                  )}
+                </div>
                 <input
                   name="email"
                   value={form.email}
@@ -351,6 +424,11 @@ export default function Cart() {
                   placeholder="Email"
                   className=" rounded-[10px] px-3 py-2 outline-none border border-gray-100 shadow-md sm:col-span-2"
                 />
+                {errors.email && (
+                  <span className="text-red-500 text-xs col-span-2">
+                    {errors.email}
+                  </span>
+                )}
                 <input
                   name="phone"
                   value={form.phone}
@@ -358,6 +436,11 @@ export default function Cart() {
                   placeholder="Phone Number"
                   className=" rounded-[10px] px-3 py-2 outline-none border border-gray-100 shadow-md sm:col-span-2"
                 />
+                {errors.phone && (
+                  <span className="text-red-500 text-xs col-span-2">
+                    {errors.phone}
+                  </span>
+                )}
               </div>
               <h3 className="text-[21px] font-[500] mt-5">
                 How Many Traveling
@@ -378,6 +461,11 @@ export default function Cart() {
                   onChange={handleInput}
                   className="rounded-[10px] px-3 py-2 outline-none border border-gray-100 col-span-2 shadow-md w-full"
                 />
+                {errors.adults && (
+                  <span className="text-red-500 text-xs col-span-2">
+                    {errors.adults}
+                  </span>
+                )}
                 <label
                   htmlFor="kids"
                   className="block font-[400] text-4 text-[#071F24]"
@@ -426,10 +514,31 @@ export default function Cart() {
                   an alternative to the consent above you may enter the
                   Promotion here. and , both of which I agree I have read,
                   understand and agree to. As an alternate to the above consent,
-                  click here for other ways to take advantage of this Promotion
-                  here.
+                  click here for other ways to take advantage of this Promotion{' '}
+                  <button
+                    className="text-[#2AB7B7] underline"
+                    onClick={(e) => {
+                      const validationErrors = semivalidateForm();
+                      setErrors(validationErrors);
+                      if (Object.keys(validationErrors).length > 0) {
+                        e.preventDefault();
+                      } else {
+                        e.preventDefault(); // Prevent default form submission
+                        if (cart?.checkoutUrl) {
+                          window.location.href = cart.checkoutUrl;
+                        }
+                      }
+                    }}
+                  >
+                    here.
+                  </button>
                 </span>
               </div>
+              {errors.consent && (
+                <span className="text-red-500 text-xs mt-1">
+                  {errors.consent}
+                </span>
+              )}
               {/* Hidden offer data inputs */}
               <input type="hidden" name="offerTitle" value={cartOffer?.title} />
               <input
@@ -468,6 +577,20 @@ export default function Cart() {
                 name="checkOut"
                 value={checkOut ? checkOut.toISOString() : ''}
               />
+
+              {cart?.checkoutUrl && (
+                <div className="flex justify-end mt-8 md:absolute md:bottom-8 md:-right-[58%]">
+                  <button
+                    type="submit"
+                    className="w-full bg-[#2AB7B7] text-white rounded-lg p-3 mt-auto font-semibold flex items-center justify-center gap-2 text-base hover:bg-[#239f9f]"
+                  >
+                    {/* <a href={cart.checkoutUrl}> */}
+                    <BsCreditCard2BackFill size={20} />
+                    Proceed to Checkout
+                    {/* </a> */}
+                  </button>
+                </div>
+              )}
             </form>
 
             {/* Date Picker & Toggle */}
@@ -607,17 +730,6 @@ export default function Cart() {
                 <BsCreditCard2BackFill size={20} />
                 Proceed to Payment
               </button> */}
-              {cart?.checkoutUrl && (
-                <div className="flex justify-end mt-8">
-                  <a
-                    href={cart.checkoutUrl}
-                    className="w-full bg-[#2AB7B7] text-white rounded-lg p-3 mt-auto font-semibold flex items-center justify-center gap-2 text-base"
-                  >
-                    <BsCreditCard2BackFill size={20} />
-                    Proceed to Checkout
-                  </a>
-                </div>
-              )}
             </div>
           </div>
 
