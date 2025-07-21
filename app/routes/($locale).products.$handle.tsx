@@ -561,6 +561,10 @@ function Tabs({upsellProducts}: {upsellProducts: any[]}) {
                 Dining, nightlife & upscale shopping experiences
               </p>
             </div>
+            <div className="hidden md:flex flex-col items-start">
+              <p className="text-start"></p>
+              <p className="text-[16px] text-start"></p>
+            </div>
             <div className="flex flex-col items-start">
               <p className="text-start">🌆 Universal Citywalk™</p>
               <p className="text-[16px] text-start">
@@ -625,6 +629,10 @@ function Tabs({upsellProducts}: {upsellProducts: any[]}) {
               <p className="text-[16px] text-start">
                 "The Niagara of Pennsylvania" — waterfalls & trails
               </p>
+            </div>
+            <div className="hidden md:flex flex-col items-start">
+              <p className="text-start"></p>
+              <p className="text-[16px] text-start"></p>
             </div>
             <div className="flex flex-col items-start">
               <p className="text-start">🐻 Claws 'N' Paws Wild Animal Park</p>

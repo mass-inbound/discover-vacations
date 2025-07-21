@@ -6,8 +6,8 @@ export default function HowItWorks() {
     <>
       <SectionHeroBanner
         tagline="Vacation booking made simple"
-        title="Discover How it works"
-        description="Choose your destination, select your offer, and pick your travel dates, it's that easy. We've streamlined the entire booking process so you can focus on getting excited for your trip, not figuring out how to plan it."
+        title="How it works"
+        description="We believe planning a vacation should feel as exciting as going on one. That’s why we’ve made the process simple and stress-free. Just follow a few easy steps to claim your exclusive offer, lock in your trip, and get ready to make some unforgettable memories."
         image="/assets/beach1.png"
       />
       <VacationProcess />

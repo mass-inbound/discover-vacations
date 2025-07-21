@@ -14,7 +14,7 @@ import {
   type HeadersFunction,
 } from '@shopify/remix-oxygen';
 import {CartMain} from '~/components/CartMain';
-import {useMemo, useState, useEffect} from 'react';
+import {useMemo, useState, useEffect, useRef} from 'react';
 import {MdOutlineShoppingCart} from 'react-icons/md';
 import {format, startOfMonth, endOfMonth, getDay, addMonths} from 'date-fns';
 import {addDays} from 'date-fns';
@@ -293,6 +293,20 @@ export default function Cart() {
   const selectedBonus = upsellProductsInCart[0];
   const selectedBonusVariantId = selectedBonus?.merchandise?.id;
 
+  const upsellRef = useRef<HTMLDivElement | null>(null);
+
+  const handleUpsellScroll = () => {
+    if (upsellRef.current) {
+      const yOffset = -150; // negative navbar height
+      const y =
+        upsellRef.current.getBoundingClientRect().top +
+        window.pageYOffset +
+        yOffset;
+
+      window.scrollTo({top: y, behavior: 'smooth'});
+    }
+  };
+
   return (
     <div className="min-h-screen ">
       <div className="py-8 px-2 sm:px-4 md:px-8 flex flex-col items-start mx-auto max-w-7xl w-full">
@@ -380,43 +394,40 @@ export default function Cart() {
                   className="rounded-[10px] px-3 py-2 outline-none border border-gray-100 col-span-2 shadow-md w-full"
                 />
               </div>
-              <div className="text-[10px] font-[400] text-gray-600 mt-2">
-                I understand by clicking the Check box, I hereby give prior
-                express written consent to receive e-mail, SMS/Text messages,
-                ringless voice mail, ringless voicemail drops, voicemail drops,
-                direct-to- voicemail messages, other messaging, and/or
-                telemarketing/telephonic sales calls about offers, products,
-                services and/or deals from an automatic telephone dialing
-                system, autodialer, and/or artificial or pre-recorded voice, or
-                recorded messages, including through voice assisted technology
-                or ringless voicemail technology from or on behalf of Discover
-                Vacations, LLC at the telephone number(s) and address(es) that I
-                have provided above, regardless of whether my telephone number
-                is on any Do Not Call registry. My consent is not a condition of
-                purchase. By clicking Continue Booking, I confirm that I&apos;m
-                over age 25, and agree to the{' '}
-                <Link to={'/policies/privacy-policy'} className="underline">
-                  {' '}
-                  Privacy Policy
-                </Link>{' '}
-                and{' '}
-                <Link to={'/policies/terms-conditions'} className="underline">
-                  Terms & Conditions
-                </Link>
-                , both of which I agree I have read, understand and agree to. As
-                an alternate to the above consent, click here for other ways to
-                take advantage of this promotion.
-              </div>
-              <div className="flex items-center mt-2">
+              <div className="flex items-start mt-2">
                 <input
                   type="checkbox"
                   name="consent"
                   checked={form.consent}
                   onChange={handleInput}
-                  className="mr-2"
+                  className="mr-2 mt-2"
                 />
-                <span className="text-xs text-gray-700">
-                  I agree to the terms and conditions
+                <span className="text-[10px] font-[400] text-gray-600 mt-2">
+                  Discover Vacations, LLC, may need to contact you to assist in
+                  booking your vacation, and follow up on any questions. By
+                  clicking this checkbox, you agree to the{' '}
+                  <Link to={'/policies/terms-conditions'} className="underline">
+                    Terms & Conditions
+                  </Link>{' '}
+                  &
+                  <Link to={'/policies/privacy-policy'} className="underline">
+                    {' '}
+                    Privacy Policy
+                  </Link>{' '}
+                  all of which you agree you have read, understand and agree to.
+                  By clicking the checkbox, you also agree and consent to
+                  receive promotional emails, SMS texts and calls, including
+                  pre-recorded messages and/or calls or texts made from an
+                  Auto-dial telephone dialing system from Discover Vacations,
+                  LLC., and its affiliates, parents and/or subsidiaries
+                  (text/data and other charges may apply) at the address/numbers
+                  provided regardless of that number being on any Do not Call
+                  Registry. Your consent is not a condition of any purchase. As
+                  an alternative to the consent above you may enter the
+                  Promotion here. and , both of which I agree I have read,
+                  understand and agree to. As an alternate to the above consent,
+                  click here for other ways to take advantage of this Promotion
+                  here.
                 </span>
               </div>
               {/* Hidden offer data inputs */}
@@ -611,7 +622,7 @@ export default function Cart() {
           </div>
 
           {/* Offer Summary */}
-          <div className="bg-gray-100 rounded-xl shadow flex flex-col min-h-[300px] md:min-h-[500px] mt-8 md:mt-0 w-full">
+          <div className="bg-gray-100 rounded-xl shadow flex flex-col min-h-[300px] md:min-h-[500px] mt-8 pb-8 md:pb-0 md:mt-0 w-full">
             <div className="bg-[#2AB7B7] text-white rounded-t-xl px-4 py-2 h-[50px] flex items-center justify-center gap-4">
               <span className="font-[500] text-[21px]">Offer Expires:</span>
               <div className="font-mono flex items-center gap-1 mt-1">
@@ -699,7 +710,7 @@ export default function Cart() {
                     </span>
                   </span>
                 </div>
-                <ul className="text-sm text-[#135868] mx-8 my-2 space-y-2">
+                <ul className="text-sm text-[#135868] mx-8 my-2 space-y-2 tracking-wider font-plusjakarta">
                   {cartOffer?.description ? (
                     cartOffer.description
                       .split('\n')
@@ -712,12 +723,19 @@ export default function Cart() {
                     </>
                   )}
                 </ul>
-                <div className="bg-gradient-to-r from-[#f2b233] to-[#FFE7B8] rounded-[8px] px-3 py-1 mx-6 mt-4 flex gap-2 items-start justify-center">
+                <div className="relative bg-gradient-to-r from-[#f2b233] to-[#FFE7B8] rounded-[8px] px-3 py-1 mx-6 mt-4 flex gap-2 items-start justify-center">
                   <FaGift className="min-w-4 mt-1" />
-                  <span className="text-[16px] font-[400] text-[#08252C]">
-                    Includes a Bonus Gift:Your Choice Vacation Getaway (valued
-                    at $300+)
+                  <span className="text-[16px] font-[400] text-[#08252C] tracking-wide">
+                    Includes a Bonus Vacation: Your Choice Vacation Bonus
+                    (valued at $300+)
                   </span>
+                  {upsellProductsInCart.length == 0 && (
+                    <img
+                      className="absolute -bottom-12 right-15"
+                      src="/assets/cart-arrow.svg"
+                      alt=""
+                    />
+                  )}
                 </div>
                 {/* Show selected upsell products in cart */}
                 {upsellProductsInCart.length > 0 && (
@@ -771,14 +789,16 @@ export default function Cart() {
                     })}
                   </div>
                 )}
-                {/* <button
+                <button
                   type="button"
-                  className="text-[#0E424E] underline text-[16px] font-[600] mt-5 mx-8"
-                  onClick={() => {
-                  }}
+                  onClick={handleUpsellScroll}
+                  className="flex items-center justify-center gap-2 text-[#070707] border-b-3 border-[#F2B233] text-[16px] font-[600] mt-14 mx-8 font-plusjakarta md:max-w-[60%] cursor-pointer transition-transform duration-300 hover:-translate-y-1"
                 >
-                  Need Help? Contact Us
-                </button> */}
+                  <FaGift className="min-w-5 mb-1" />
+                  <span className="tracking-wide text-shadow-2xs">
+                    Select Your Bonus Vacation
+                  </span>
+                </button>
               </>
             )}
           </div>
@@ -787,15 +807,15 @@ export default function Cart() {
 
       {/* Discover More — Choose Your Bonus Vacation  */}
 
-      <div className="max-w-7xl py-12 mx-auto px-8">
+      <div className="max-w-7xl py-12 mx-auto px-8" ref={upsellRef}>
         <div className="text-center flex flex-col justify-center items-center mb-6">
-          <h1 className="text-[#0E424E] font-[500] text-[36px]">
+          <h1 className="text-[#0E424E] font-[500] text-[28px] md:text-[36px] font-monteserrat pb-3">
             Discover More — Choose Your Bonus Vacation
           </h1>
-          <p className="font-[400] text-[20px] text-[#101010]">
-            Select your preferred gift and add it to your cart for $0.00. It
-            will be confirmed during your vacation, and you&apos;ll have the
-            chance to change it if you&apos;d like.
+          <p className="font-[400] text-[20px] text-[#101010] font-avenir max-w-[70%] mx-auto">
+            Select the gift that excites you most and add it to your cart for
+            $0.00.No pressure— *your selection can be updated later if you
+            change your mind.
           </p>
         </div>
         <div className="h-[1px] bg-gray-300"></div>
@@ -923,8 +943,14 @@ export default function Cart() {
           )}
         </div>
 
-        <p className="text-[#676767] font-[400] text-[16px] flex items-center justify-center tracking-wider">
-          Please contact us if you would like to change your gift later.
+        <p className="text-[#676767] font-[400] text-[16px] flex items-center justify-center tracking-wider text-center">
+          Please contact us if you would like to change your gift later” to 🎁
+          The Bonus Vacation is yours today — guaranteed! <br /> ✨ Pick your
+          favorite now, but if you want to change it later, no worries — *you’ll
+          unlock all three options once your Featured Vacation is complete.{' '}
+          <br />
+          Cant Decide? No worries-choose later! Create A CTA Button Lock In My
+          Bonus Now Choose Later.
         </p>
       </div>
     </div>

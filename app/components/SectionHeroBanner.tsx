@@ -32,7 +32,7 @@ export default function SectionHeroBanner({
         <h1 className="text-3xl md:text-5xl font-bold text-white mb-3 drop-shadow-lg">
           {title}
         </h1>
-        <p className="text-white text-base md:text-lg max-w-2xl drop-shadow">
+        <p className="text-white text-base md:text-lg max-w-3xl drop-shadow pt-3">
           {description}
         </p>
       </div>
