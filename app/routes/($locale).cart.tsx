@@ -255,6 +255,10 @@ export default function Cart() {
   const [checkIn, setCheckIn] = useState<Date | null>(null);
   const [checkOut, setCheckOut] = useState<Date | null>(null);
 
+  // Calendar restriction: only allow selection 9 days after today
+  const today = new Date();
+  const minSelectableDate = addDays(today, 8);
+
   // helper to generate days grid for the visible month
   const monthData = useMemo(() => {
     const start = startOfMonth(currentMonth);
@@ -691,20 +695,26 @@ export default function Cart() {
                             checkOut &&
                             day > checkIn &&
                             day < checkOut;
+                          const isDisabled = day < minSelectableDate;
 
                           return (
                             <button
                               key={idx}
-                              onClick={() => handleDateClick(day)}
+                              onClick={() =>
+                                !isDisabled && handleDateClick(day)
+                              }
                               className={`w-8 h-8 flex items-center justify-center rounded-full text-sm transition
                                 ${
                                   isStart || isEnd
                                     ? 'bg-[#2AB7B7] text-white'
                                     : inRange
                                       ? 'bg-[#2AB7B7]/30 text-white'
-                                      : 'hover:bg-[#2AB7B7]/30'
+                                      : isDisabled
+                                        ? 'text-gray-400 !cursor-not-allowed'
+                                        : 'hover:bg-[#2AB7B7]/30'
                                 }
                               `}
+                              disabled={isDisabled}
                             >
                               {format(day, 'd')}
                             </button>
