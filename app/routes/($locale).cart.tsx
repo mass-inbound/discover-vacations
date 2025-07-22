@@ -290,11 +290,27 @@ export default function Cart() {
     }
   }
 
+  // Function to format phone number
+  function formatPhoneNumber(value: string) {
+    const cleaned = ('' + value).replace(/\D/g, '');
+    const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+    if (match) {
+      return `(${match[1]}) ${match[2]}-${match[3]}`;
+    }
+    return value;
+  }
+
+  // Update handleInput function
   function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
     const {name, value, type, checked} = e.target;
     setForm((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]:
+        name === 'phone'
+          ? formatPhoneNumber(value)
+          : type === 'checkbox'
+            ? checked
+            : value,
     }));
   }
 
@@ -594,7 +610,7 @@ export default function Cart() {
             </form>
 
             {/* Date Picker & Toggle */}
-            <div className="bg-[#164C51] rounded md:rounded-b-xl md:rounded-r-xl md:rounded-bl-none shadow-xl p-4 sm:p-6 md:p-8 flex flex-col items-center justify-between text-white min-h-[300px] md:min-h-[500px] h-full w-full">
+            <div className="bg-[#164C51] rounded md:rounded-b-xl md:rounded-r-xl md:rounded-bl-none shadow-xl p-4 sm:p-6 md:p-8 flex flex-col items-center text-white min-h-[300px] md:min-h-[500px] h-full w-full">
               <div className="flex items-center justify-between mb-12 w-full">
                 <span className="font-medium text-lg">
                   Do you know your dates?
@@ -699,7 +715,7 @@ export default function Cart() {
                   </div>
 
                   {/* Check-In / Check-Out display */}
-                  <div className="flex justify-center border-t border-b border-gray-400 p-4">
+                  <div className="flex justify-center border-t border-b border-gray-400 p-4 text-center">
                     {['Check-In', 'Check-Out'].map((label, i) => {
                       const val = i === 0 ? checkIn : checkOut;
                       return (
