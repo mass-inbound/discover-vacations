@@ -192,16 +192,45 @@ export default function Cart() {
   const cartOffer = getOfferFromCart(cart);
 
   // Form state
-  const [form, setForm] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '', // formatted
-    phoneRaw: '', // digits only
-    adults: 0,
-    kids: 0,
-    consent: false,
+  type CartFormState = {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    phoneRaw: string;
+    adults: number;
+    kids: number;
+    consent: boolean;
+  };
+
+  const [form, setForm] = useState<CartFormState>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('cartForm');
+      if (saved) {
+        try {
+          return JSON.parse(saved) as CartFormState;
+        } catch {
+          // ignore parse error
+        }
+      }
+    }
+    return {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '', // formatted
+      phoneRaw: '', // digits only
+      adults: 0,
+      kids: 0,
+      consent: false,
+    };
   });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('cartForm', JSON.stringify(form));
+    }
+  }, [form]);
 
   // Validation state
   const [errors, setErrors] = useState<any>({});
@@ -401,6 +430,9 @@ export default function Cart() {
                   e.preventDefault();
                 } else {
                   e.preventDefault(); // Prevent default form submission
+                  if (typeof window !== 'undefined') {
+                    localStorage.removeItem('cartForm');
+                  }
                   if (cart?.checkoutUrl) {
                     window.location.href = cart.checkoutUrl;
                   }
@@ -773,16 +805,18 @@ export default function Cart() {
                 {cart?.checkoutUrl && !cartIsEmpty && (
                   <div className="w-full py-3 mt-auto flex items-center justify-center gap-2">
                     <div className="flex flex-col gap-8 mt-2">
-                      <button
-                        type="button"
-                        onClick={handleUpsellScroll}
-                        className="flex items-center justify-center gap-2 text-white border-b-3 border-[#F2B233] text-[16px] font-[600] font-plusjakarta cursor-pointer transition-transform duration-300 hover:-translate-y-1"
-                      >
-                        <FaGift className="min-w-5 mb-1" />
-                        <span className="tracking-wide text-shadow-2xs">
-                          Select Bonus Vacation
-                        </span>
-                      </button>
+                      {upsellProductsInCart.length == 0 && (
+                        <button
+                          type="button"
+                          onClick={handleUpsellScroll}
+                          className="flex items-center justify-center gap-2 text-white border-b-3 border-[#F2B233] text-[16px] font-[600] font-plusjakarta cursor-pointer transition-transform duration-300 hover:-translate-y-1"
+                        >
+                          <FaGift className="min-w-5 mb-1" />
+                          <span className="tracking-wide text-shadow-2xs">
+                            Select Bonus Vacation
+                          </span>
+                        </button>
+                      )}
                       <button
                         type="submit"
                         className="w-full bg-[#2AB7B7] text-white rounded-lg p-3 mt-auto font-semibold flex items-center justify-center gap-2 text-base hover:bg-[#239f9f]"
