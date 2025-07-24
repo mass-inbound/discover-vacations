@@ -306,8 +306,16 @@ export default function Cart() {
 
   function handleDateClick(day: Date) {
     if (!checkIn || (checkIn && checkOut)) {
+      // Always set checkIn to the selected day
       setCheckIn(day);
-      setCheckOut(null);
+      // Try to set checkOut to 3 days later
+      const autoCheckOut = addDays(day, 3);
+      // Only set checkOut if autoCheckOut is not before minSelectableDate
+      if (autoCheckOut >= minSelectableDate) {
+        setCheckOut(autoCheckOut);
+      } else {
+        setCheckOut(null);
+      }
     } else if (day > checkIn) {
       const diffInDays = Math.ceil(
         (day.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24),
@@ -320,7 +328,13 @@ export default function Cart() {
     } else {
       // clicked before existing checkIn
       setCheckIn(day);
-      setCheckOut(null);
+      // Try to set checkOut to 3 days later
+      const autoCheckOut = addDays(day, 3);
+      if (autoCheckOut >= minSelectableDate) {
+        setCheckOut(autoCheckOut);
+      } else {
+        setCheckOut(null);
+      }
     }
   }
 
