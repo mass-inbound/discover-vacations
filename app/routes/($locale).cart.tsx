@@ -253,6 +253,11 @@ export default function Cart() {
     if (!form.adults || Number(form.adults) < 1) {
       newErrors.adults = 'At least 1 adult is required.';
     }
+    // New validation for sum of adults and kids
+    if (Number(form.adults) + Number(form.kids) > 4) {
+      newErrors.adultsKidsSum =
+        'Total number of adults and kids cannot exceed 4.';
+    }
     if (!form.consent) {
       newErrors.consent = 'You must agree to the terms.';
     }
@@ -275,6 +280,11 @@ export default function Cart() {
     }
     if (!form.adults || Number(form.adults) < 1) {
       newErrors.adults = 'At least 1 adult is required.';
+    }
+    // New validation for sum of adults and kids
+    if (Number(form.adults) + Number(form.kids) > 4) {
+      newErrors.adultsKidsSum =
+        'Total number of adults and kids cannot exceed 4.';
     }
     return newErrors;
   }
@@ -555,6 +565,12 @@ export default function Cart() {
                     onChange={handleInput}
                     className="rounded-[10px] px-3 py-2 outline-none border border-gray-100 col-span-2 shadow-md w-full"
                   />
+                  {/* New error for sum of adults and kids */}
+                  {errors.adultsKidsSum && (
+                    <span className="text-red-500 text-xs col-span-2">
+                      {errors.adultsKidsSum}
+                    </span>
+                  )}
                 </div>
                 <div className="flex items-start mt-2">
                   <input
