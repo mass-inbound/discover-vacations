@@ -196,7 +196,8 @@ export default function Cart() {
     firstName: '',
     lastName: '',
     email: '',
-    phone: '',
+    phone: '', // formatted
+    phoneRaw: '', // digits only
     adults: 0,
     kids: 0,
     consent: false,
@@ -215,9 +216,9 @@ export default function Cart() {
     } else if (!/^\S+@\S+\.\S+$/.test(form.email)) {
       newErrors.email = 'Invalid email address.';
     }
-    if (!form.phone.trim()) {
+    if (!form.phoneRaw.trim()) {
       newErrors.phone = 'Phone number is required.';
-    } else if (!/^\d{10}$/.test(form.phone)) {
+    } else if (!/^\d{10}$/.test(form.phoneRaw)) {
       newErrors.phone = 'Phone number must be 10 digits.';
     }
     if (!form.adults || Number(form.adults) < 1) {
@@ -238,9 +239,9 @@ export default function Cart() {
     } else if (!/^\S+@\S+\.\S+$/.test(form.email)) {
       newErrors.email = 'Invalid email address.';
     }
-    if (!form.phone.trim()) {
+    if (!form.phoneRaw.trim()) {
       newErrors.phone = 'Phone number is required.';
-    } else if (!/^\d{10}$/.test(form.phone)) {
+    } else if (!/^\d{10}$/.test(form.phoneRaw)) {
       newErrors.phone = 'Phone number must be 10 digits.';
     }
     if (!form.adults || Number(form.adults) < 1) {
@@ -307,15 +308,19 @@ export default function Cart() {
   // Update handleInput function
   function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
     const {name, value, type, checked} = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]:
-        name === 'phone'
-          ? formatPhoneNumber(value)
-          : type === 'checkbox'
-            ? checked
-            : value,
-    }));
+    if (name === 'phone') {
+      const digits = value.replace(/\D/g, '');
+      setForm((prev) => ({
+        ...prev,
+        phone: formatPhoneNumber(digits),
+        phoneRaw: digits,
+      }));
+    } else {
+      setForm((prev) => ({
+        ...prev,
+        [name]: type === 'checkbox' ? checked : value,
+      }));
+    }
   }
 
   // Countdown hook
@@ -384,11 +389,11 @@ export default function Cart() {
           </span>
         </div>
         <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-8">
-          <div className="grid grid-cols-1 md:grid-cols-[1.5fr_1fr] gap-0 ">
+          <div>
             {/* General Information Form */}
             <form
               method="post"
-              className="relative bg-[#FAFAFA] rounded-t-xl md:rounded-l-xl md:rounded-tr-none shadow-xl p-4 sm:p-6 md:p-8 flex flex-col gap-2 w-full"
+              className="grid grid-cols-1 md:grid-cols-[1.5fr_1fr] gap-0"
               onSubmit={(e) => {
                 const validationErrors = validateForm();
                 setErrors(validationErrors);
@@ -402,308 +407,321 @@ export default function Cart() {
                 }
               }}
             >
-              <div>
-                <h2 className="text-[21px] font-[500]">General Information</h2>
-                <p className="text-[#111] font-[400] text-[13px] mb-4 tracking-wide">
-                  Please fill out the form to proceed to payment.
-                </p>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="flex flex-col gap-1">
+              <div className="relative bg-[#FAFAFA] rounded-t-xl md:rounded-l-xl md:rounded-tr-none shadow-xl p-4 sm:p-6 md:p-8 flex flex-col gap-2 w-full">
+                <div>
+                  <h2 className="text-[21px] font-[500]">
+                    General Information
+                  </h2>
+                  <p className="text-[#111] font-[400] text-[13px] mb-4 tracking-wide">
+                    Please fill out the form to proceed to payment.
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="flex flex-col gap-1">
+                    <input
+                      name="firstName"
+                      value={form.firstName}
+                      onChange={handleInput}
+                      placeholder="First Name"
+                      className=" rounded-[10px] px-3 py-2 outline-none border border-gray-100 shadow-md"
+                    />
+                    {errors.firstName && (
+                      <span className="text-red-500 text-xs">
+                        {errors.firstName}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <input
+                      name="lastName"
+                      value={form.lastName}
+                      onChange={handleInput}
+                      placeholder="Last Name"
+                      className=" rounded-[10px] px-3 py-2 outline-none border border-gray-100 shadow-md"
+                    />
+                    {errors.lastName && (
+                      <span className="text-red-500 text-xs">
+                        {errors.lastName}
+                      </span>
+                    )}
+                  </div>
                   <input
-                    name="firstName"
-                    value={form.firstName}
+                    name="email"
+                    value={form.email}
                     onChange={handleInput}
-                    placeholder="First Name"
-                    className=" rounded-[10px] px-3 py-2 outline-none border border-gray-100 shadow-md"
+                    placeholder="Email"
+                    className=" rounded-[10px] px-3 py-2 outline-none border border-gray-100 shadow-md sm:col-span-2"
                   />
-                  {errors.firstName && (
-                    <span className="text-red-500 text-xs">
-                      {errors.firstName}
+                  {errors.email && (
+                    <span className="text-red-500 text-xs col-span-2">
+                      {errors.email}
+                    </span>
+                  )}
+                  <input
+                    name="phone"
+                    value={form.phone}
+                    onChange={handleInput}
+                    placeholder="Phone Number"
+                    className=" rounded-[10px] px-3 py-2 outline-none border border-gray-100 shadow-md sm:col-span-2"
+                  />
+                  {errors.phone && (
+                    <span className="text-red-500 text-xs col-span-2">
+                      {errors.phone}
                     </span>
                   )}
                 </div>
-                <div className="flex flex-col gap-1">
+                <h3 className="text-[21px] font-[500] mt-5">
+                  How Many Traveling
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-2">
+                  <label
+                    htmlFor="adults"
+                    className="block font-[400] text-4 text-[#071F24]"
+                  >
+                    Adults
+                  </label>
                   <input
-                    name="lastName"
-                    value={form.lastName}
+                    id="adults"
+                    name="adults"
+                    type="number"
+                    min={1}
+                    value={form.adults}
                     onChange={handleInput}
-                    placeholder="Last Name"
-                    className=" rounded-[10px] px-3 py-2 outline-none border border-gray-100 shadow-md"
+                    className="rounded-[10px] px-3 py-2 outline-none border border-gray-100 col-span-2 shadow-md w-full"
                   />
-                  {errors.lastName && (
-                    <span className="text-red-500 text-xs">
-                      {errors.lastName}
+                  {errors.adults && (
+                    <span className="text-red-500 text-xs col-span-2">
+                      {errors.adults}
                     </span>
                   )}
-                </div>
-                <input
-                  name="email"
-                  value={form.email}
-                  onChange={handleInput}
-                  placeholder="Email"
-                  className=" rounded-[10px] px-3 py-2 outline-none border border-gray-100 shadow-md sm:col-span-2"
-                />
-                {errors.email && (
-                  <span className="text-red-500 text-xs col-span-2">
-                    {errors.email}
-                  </span>
-                )}
-                <input
-                  name="phone"
-                  value={form.phone}
-                  onChange={handleInput}
-                  placeholder="Phone Number"
-                  className=" rounded-[10px] px-3 py-2 outline-none border border-gray-100 shadow-md sm:col-span-2"
-                />
-                {errors.phone && (
-                  <span className="text-red-500 text-xs col-span-2">
-                    {errors.phone}
-                  </span>
-                )}
-              </div>
-              <h3 className="text-[21px] font-[500] mt-5">
-                How Many Traveling
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-2">
-                <label
-                  htmlFor="adults"
-                  className="block font-[400] text-4 text-[#071F24]"
-                >
-                  Adults
-                </label>
-                <input
-                  id="adults"
-                  name="adults"
-                  type="number"
-                  min={1}
-                  value={form.adults}
-                  onChange={handleInput}
-                  className="rounded-[10px] px-3 py-2 outline-none border border-gray-100 col-span-2 shadow-md w-full"
-                />
-                {errors.adults && (
-                  <span className="text-red-500 text-xs col-span-2">
-                    {errors.adults}
-                  </span>
-                )}
-                <label
-                  htmlFor="kids"
-                  className="block font-[400] text-4 text-[#071F24]"
-                >
-                  Kids
-                </label>
-                <input
-                  id="kids"
-                  name="kids"
-                  type="number"
-                  min={0}
-                  value={form.kids}
-                  onChange={handleInput}
-                  className="rounded-[10px] px-3 py-2 outline-none border border-gray-100 col-span-2 shadow-md w-full"
-                />
-              </div>
-              <div className="flex items-start mt-2">
-                <input
-                  type="checkbox"
-                  name="consent"
-                  checked={form.consent}
-                  onChange={handleInput}
-                  className="mr-2 mt-2"
-                />
-                <span className="text-[10px] font-[400] text-gray-600 mt-2">
-                  Discover Vacations, LLC, may need to contact you to assist in
-                  booking your vacation, and follow up on any questions. By
-                  clicking this checkbox, you agree to the{' '}
-                  <Link to={'/policies/terms-conditions'} className="underline">
-                    Terms & Conditions
-                  </Link>{' '}
-                  &
-                  <Link to={'/policies/privacy-policy'} className="underline">
-                    {' '}
-                    Privacy Policy
-                  </Link>{' '}
-                  all of which you agree you have read, understand and agree to.
-                  By clicking the checkbox, you also agree and consent to
-                  receive promotional emails, SMS texts and calls, including
-                  pre-recorded messages and/or calls or texts made from an
-                  Auto-dial telephone dialing system from Discover Vacations,
-                  LLC., and its affiliates, parents and/or subsidiaries
-                  (text/data and other charges may apply) at the address/numbers
-                  provided regardless of that number being on any Do not Call
-                  Registry. Your consent is not a condition of any purchase. As
-                  an alternative to the consent above you may enter the
-                  Promotion here. and , both of which I agree I have read,
-                  understand and agree to. As an alternate to the above consent,
-                  click here for other ways to take advantage of this Promotion{' '}
-                  <button
-                    className="text-[#2AB7B7] underline"
-                    onClick={(e) => {
-                      const validationErrors = semivalidateForm();
-                      setErrors(validationErrors);
-                      if (Object.keys(validationErrors).length > 0) {
-                        e.preventDefault();
-                      } else {
-                        e.preventDefault(); // Prevent default form submission
-                        if (cart?.checkoutUrl) {
-                          window.location.href = cart.checkoutUrl;
-                        }
-                      }
-                    }}
+                  <label
+                    htmlFor="kids"
+                    className="block font-[400] text-4 text-[#071F24]"
                   >
-                    here.
-                  </button>
-                </span>
-              </div>
-              {errors.consent && (
-                <span className="text-red-500 text-xs mt-1">
-                  {errors.consent}
-                </span>
-              )}
-              {/* Hidden offer data inputs */}
-              <input type="hidden" name="offerTitle" value={cartOffer?.title} />
-              <input
-                type="hidden"
-                name="offerLocation"
-                value={cartOffer?.location}
-              />
-              <input type="hidden" name="offerImage" value={cartOffer?.image} />
-              <input type="hidden" name="offerPrice" value={cartOffer?.price} />
-              <input
-                type="hidden"
-                name="offerNights"
-                value={cartOffer?.nights}
-              />
-              <input type="hidden" name="offerDays" value={cartOffer?.days} />
-              <input
-                type="hidden"
-                name="offerDescription"
-                value={cartOffer?.description || ''}
-              />
-              <input
-                type="hidden"
-                name="variantId"
-                value={
-                  new URLSearchParams(location.search).get('variantId') || ''
-                }
-              />
-              {/* Date picker values as hidden inputs */}
-              <input
-                type="hidden"
-                name="checkIn"
-                value={checkIn ? checkIn.toISOString() : ''}
-              />
-              <input
-                type="hidden"
-                name="checkOut"
-                value={checkOut ? checkOut.toISOString() : ''}
-              />
-
-              {cart?.checkoutUrl && (
-                <div className="flex justify-end mt-8 md:absolute md:bottom-8 md:-right-[58%]">
-                  <button
-                    type="submit"
-                    className="w-full bg-[#2AB7B7] text-white rounded-lg p-3 mt-auto font-semibold flex items-center justify-center gap-2 text-base hover:bg-[#239f9f]"
-                  >
-                    {/* <a href={cart.checkoutUrl}> */}
-                    <BsCreditCard2BackFill size={20} />
-                    Proceed to Checkout
-                    {/* </a> */}
-                  </button>
+                    Kids
+                  </label>
+                  <input
+                    id="kids"
+                    name="kids"
+                    type="number"
+                    min={0}
+                    value={form.kids}
+                    onChange={handleInput}
+                    className="rounded-[10px] px-3 py-2 outline-none border border-gray-100 col-span-2 shadow-md w-full"
+                  />
                 </div>
-              )}
-            </form>
-
-            {/* Date Picker & Toggle */}
-            <div className="bg-[#164C51] rounded md:rounded-b-xl md:rounded-r-xl md:rounded-bl-none shadow-xl p-4 sm:p-6 md:p-8 flex flex-col items-center text-white min-h-[300px] md:min-h-[500px] h-full w-full">
-              <div className="flex items-center justify-between mb-12 w-full">
-                <span className="font-medium text-lg">
-                  Do you know your dates?
-                </span>
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <span className="sr-only">Toggle date picker</span>
+                <div className="flex items-start mt-2">
                   <input
                     type="checkbox"
-                    checked={showDatePicker}
-                    onChange={() => setShowDatePicker((v) => !v)}
-                    className="sr-only peer"
+                    name="consent"
+                    checked={form.consent}
+                    onChange={handleInput}
+                    className="mr-2 mt-2"
                   />
-                  <div className="w-16 h-8 bg-gray-200 peer-checked:bg-[#2AB7B7] rounded-full p-1 flex items-center transition-colors">
-                    <span
-                      className={`w-1/2 text-xs font-semibold text-center transition-colors ${
-                        showDatePicker ? 'text-white' : 'text-white'
-                      }`}
+                  <span className="text-[10px] font-[400] text-gray-600 mt-2">
+                    Discover Vacations, LLC, may need to contact you to assist
+                    in booking your vacation, and follow up on any questions. By
+                    clicking this checkbox, you agree to the{' '}
+                    <Link
+                      to={'/policies/terms-conditions'}
+                      className="underline"
+                      tabIndex={-1}
                     >
-                      YES
-                    </span>
-                    <span
-                      className={`w-1/2 text-xs font-semibold text-center transition-colors ${
-                        showDatePicker ? 'text-white' : 'text-[#2AB7B7]'
-                      }`}
+                      Terms & Conditions
+                    </Link>{' '}
+                    &
+                    <Link
+                      to={'/policies/privacy-policy'}
+                      className="underline"
+                      tabIndex={-1}
                     >
-                      NO
-                    </span>
-                    <div
-                      className={`absolute top-1 left-1 w-6 h-6 bg-white rounded-full shadow transform transition-transform ${
-                        showDatePicker ? 'translate-x-8' : ''
-                      }`}
-                    />
-                  </div>
-                </label>
+                      {' '}
+                      Privacy Policy
+                    </Link>{' '}
+                    all of which you agree you have read, understand and agree
+                    to. By clicking the checkbox, you also agree and consent to
+                    receive promotional emails, SMS texts and calls, including
+                    pre-recorded messages and/or calls or texts made from an
+                    Auto-dial telephone dialing system from Discover Vacations,
+                    LLC., and its affiliates, parents and/or subsidiaries
+                    (text/data and other charges may apply) at the
+                    address/numbers provided regardless of that number being on
+                    any Do not Call Registry. Your consent is not a condition of
+                    any purchase. As an alternative to the consent above you may
+                    enter the Promotion here. and , both of which I agree I have
+                    read, understand and agree to. As an alternate to the above
+                    consent, click here for other ways to take advantage of this
+                    Promotion{' '}
+                    <button
+                      className="text-[#2AB7B7] underline"
+                      onClick={(e) => {
+                        const validationErrors = semivalidateForm();
+                        setErrors(validationErrors);
+                        if (Object.keys(validationErrors).length > 0) {
+                          e.preventDefault();
+                        } else {
+                          e.preventDefault(); // Prevent default form submission
+                          if (cart?.checkoutUrl) {
+                            window.location.href = cart.checkoutUrl;
+                          }
+                        }
+                      }}
+                      tabIndex={-1}
+                    >
+                      here.
+                    </button>
+                  </span>
+                </div>
+                {errors.consent && (
+                  <span className="text-red-500 text-xs mt-1">
+                    {errors.consent}
+                  </span>
+                )}
+                {/* Hidden offer data inputs */}
+                <input
+                  type="hidden"
+                  name="offerTitle"
+                  value={cartOffer?.title}
+                />
+                <input
+                  type="hidden"
+                  name="offerLocation"
+                  value={cartOffer?.location}
+                />
+                <input
+                  type="hidden"
+                  name="offerImage"
+                  value={cartOffer?.image}
+                />
+                <input
+                  type="hidden"
+                  name="offerPrice"
+                  value={cartOffer?.price}
+                />
+                <input
+                  type="hidden"
+                  name="offerNights"
+                  value={cartOffer?.nights}
+                />
+                <input type="hidden" name="offerDays" value={cartOffer?.days} />
+                <input
+                  type="hidden"
+                  name="offerDescription"
+                  value={cartOffer?.description || ''}
+                />
+                <input
+                  type="hidden"
+                  name="variantId"
+                  value={
+                    new URLSearchParams(location.search).get('variantId') || ''
+                  }
+                />
+                {/* Date picker values as hidden inputs */}
+                <input
+                  type="hidden"
+                  name="checkIn"
+                  value={checkIn ? checkIn.toISOString() : ''}
+                />
+                <input
+                  type="hidden"
+                  name="checkOut"
+                  value={checkOut ? checkOut.toISOString() : ''}
+                />
               </div>
 
-              {/* Calendar or "NO" fallback */}
-              {showDatePicker ? (
-                <div className="space-y-4 w-full">
-                  {/* Month nav */}
-                  <div className="flex items-center justify-between text-white">
-                    <BiChevronLeft
-                      className="w-5 h-5 cursor-pointer"
-                      onClick={() => setCurrentMonth((m) => addMonths(m, -1))}
+              {/* Date Picker & Toggle */}
+              <div className="bg-[#164C51] rounded md:rounded-b-xl md:rounded-r-xl md:rounded-bl-none shadow-xl p-4 sm:p-6 md:p-8 flex flex-col items-center text-white min-h-[300px] md:min-h-[500px] h-full w-full">
+                <div className="flex items-center justify-between mb-12 w-full">
+                  <span className="font-medium text-lg">
+                    Do you know your dates?
+                  </span>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <span className="sr-only">Toggle date picker</span>
+                    <input
+                      type="checkbox"
+                      checked={showDatePicker}
+                      onChange={() => setShowDatePicker((v) => !v)}
+                      className="sr-only peer"
+                      tabIndex={-1}
                     />
-                    <span className="font-semibold">
-                      {format(currentMonth, 'MMMM yyyy')}
-                    </span>
-                    <BiChevronRight
-                      className="w-5 h-5 cursor-pointer"
-                      onClick={() => setCurrentMonth((m) => addMonths(m, +1))}
-                    />
-                  </div>
-
-                  {/* Days grid */}
-                  <div className="grid grid-cols-7 gap-1 text-xs min-h-[240px]">
-                    {['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'].map((d) => (
-                      <div
-                        key={d}
-                        className="text-center text-[#2AB7B7] font-bold"
+                    <div className="w-16 h-8 bg-gray-200 peer-checked:bg-[#2AB7B7] rounded-full p-1 flex items-center transition-colors">
+                      <span
+                        className={`w-1/2 text-xs font-semibold text-center transition-colors ${
+                          showDatePicker ? 'text-white' : 'text-white'
+                        }`}
                       >
-                        {d}
-                      </div>
-                    ))}
-                    {monthData.map((day, idx) =>
-                      !day ? (
-                        <div key={idx} />
-                      ) : (
-                        (() => {
-                          const dayStr = format(day, 'yyyy-MM-dd');
-                          const isStart =
-                            checkIn && format(checkIn, 'yyyy-MM-dd') === dayStr;
-                          const isEnd =
-                            checkOut &&
-                            format(checkOut, 'yyyy-MM-dd') === dayStr;
-                          const inRange =
-                            checkIn &&
-                            checkOut &&
-                            day > checkIn &&
-                            day < checkOut;
-                          const isDisabled = day < minSelectableDate;
+                        YES
+                      </span>
+                      <span
+                        className={`w-1/2 text-xs font-semibold text-center transition-colors ${
+                          showDatePicker ? 'text-white' : 'text-[#2AB7B7]'
+                        }`}
+                      >
+                        NO
+                      </span>
+                      <div
+                        className={`absolute top-1 left-1 w-6 h-6 bg-white rounded-full shadow transform transition-transform ${
+                          showDatePicker ? 'translate-x-8' : ''
+                        }`}
+                      />
+                    </div>
+                  </label>
+                </div>
 
-                          return (
-                            <button
-                              key={idx}
-                              onClick={() =>
-                                !isDisabled && handleDateClick(day)
-                              }
-                              className={`w-8 h-8 flex items-center justify-center rounded-full text-sm transition
+                {/* Calendar or "NO" fallback */}
+                {showDatePicker ? (
+                  <div className="space-y-4 w-full">
+                    {/* Month nav */}
+                    <div className="flex items-center justify-between text-white">
+                      <BiChevronLeft
+                        className="w-5 h-5 cursor-pointer"
+                        onClick={() => setCurrentMonth((m) => addMonths(m, -1))}
+                      />
+                      <span className="font-semibold">
+                        {format(currentMonth, 'MMMM yyyy')}
+                      </span>
+                      <BiChevronRight
+                        className="w-5 h-5 cursor-pointer"
+                        onClick={() => setCurrentMonth((m) => addMonths(m, +1))}
+                      />
+                    </div>
+
+                    {/* Days grid */}
+                    <div className="grid grid-cols-7 gap-1 text-xs min-h-[240px]">
+                      {['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'].map((d) => (
+                        <div
+                          key={d}
+                          className="text-center text-[#2AB7B7] font-bold"
+                        >
+                          {d}
+                        </div>
+                      ))}
+                      {monthData.map((day, idx) =>
+                        !day ? (
+                          <div key={idx} />
+                        ) : (
+                          (() => {
+                            const dayStr = format(day, 'yyyy-MM-dd');
+                            const isStart =
+                              checkIn &&
+                              format(checkIn, 'yyyy-MM-dd') === dayStr;
+                            const isEnd =
+                              checkOut &&
+                              format(checkOut, 'yyyy-MM-dd') === dayStr;
+                            const inRange =
+                              checkIn &&
+                              checkOut &&
+                              day > checkIn &&
+                              day < checkOut;
+                            const isDisabled = day < minSelectableDate;
+
+                            return (
+                              <button
+                                key={idx}
+                                onClick={() =>
+                                  !isDisabled && handleDateClick(day)
+                                }
+                                className={`w-8 h-8 flex items-center justify-center rounded-full text-sm transition
                                 ${
                                   isStart || isEnd
                                     ? 'bg-[#2AB7B7] text-white'
@@ -714,49 +732,69 @@ export default function Cart() {
                                         : 'hover:bg-[#2AB7B7]/30'
                                 }
                               `}
-                              disabled={isDisabled}
-                            >
-                              {format(day, 'd')}
-                            </button>
-                          );
-                        })()
-                      ),
-                    )}
-                  </div>
+                                disabled={isDisabled}
+                              >
+                                {format(day, 'd')}
+                              </button>
+                            );
+                          })()
+                        ),
+                      )}
+                    </div>
 
-                  {/* Check-In / Check-Out display */}
-                  <div className="flex justify-center border-t border-b border-gray-400 p-4 text-center">
-                    {['Check-In', 'Check-Out'].map((label, i) => {
-                      const val = i === 0 ? checkIn : checkOut;
-                      return (
-                        <div
-                          key={label}
-                          className="flex flex-col items-center px-2"
-                        >
-                          <span className="text-xs bg-white text-[#070707] px-4 py-1 rounded">
-                            {label}
-                          </span>
-                          <button className="mt-1 text-[#F2B233] text-sm">
-                            {val ? format(val, 'MMM d') : 'Select'}
-                          </button>
-                        </div>
-                      );
-                    })}
+                    {/* Check-In / Check-Out display */}
+                    <div className="flex justify-center border-t border-b border-gray-400 p-4 text-center">
+                      {['Check-In', 'Check-Out'].map((label, i) => {
+                        const val = i === 0 ? checkIn : checkOut;
+                        return (
+                          <div
+                            key={label}
+                            className="flex flex-col items-center px-2"
+                          >
+                            <span className="text-xs bg-white text-[#070707] px-4 py-1 rounded">
+                              {label}
+                            </span>
+                            <button
+                              className="mt-1 text-[#F2B233] text-sm"
+                              tabIndex={-1}
+                            >
+                              {val ? format(val, 'MMM d') : 'Select'}
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <div className="flex items-center justify-center h-32 w-full">
-                  <span className="text-xl font-semibold"></span>
-                </div>
-              )}
-              {/* <button
-                type="submit"
-                className="w-full bg-[#2AB7B7] text-white rounded-lg py-3 mt-auto font-semibold flex items-center justify-center gap-2 text-base"
-              >
-                <BsCreditCard2BackFill size={20} />
-                Proceed to Payment
-              </button> */}
-            </div>
+                ) : (
+                  <div className="flex items-center justify-center h-32 w-full">
+                    <span className="text-xl font-semibold"></span>
+                  </div>
+                )}
+                {cart?.checkoutUrl && !cartIsEmpty && (
+                  <div className="w-full py-3 mt-auto flex items-center justify-center gap-2">
+                    <div className="flex flex-col gap-8 mt-2">
+                      <button
+                        type="button"
+                        onClick={handleUpsellScroll}
+                        className="flex items-center justify-center gap-2 text-white border-b-3 border-[#F2B233] text-[16px] font-[600] font-plusjakarta cursor-pointer transition-transform duration-300 hover:-translate-y-1"
+                      >
+                        <FaGift className="min-w-5 mb-1" />
+                        <span className="tracking-wide text-shadow-2xs">
+                          Select Bonus Vacation
+                        </span>
+                      </button>
+                      <button
+                        type="submit"
+                        className="w-full bg-[#2AB7B7] text-white rounded-lg p-3 mt-auto font-semibold flex items-center justify-center gap-2 text-base hover:bg-[#239f9f]"
+                      >
+                        <BsCreditCard2BackFill size={20} />
+                        Proceed to Checkout
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </form>
           </div>
 
           {/* Offer Summary */}
@@ -867,13 +905,13 @@ export default function Cart() {
                     Includes a Bonus Vacation: Your Choice Vacation Bonus
                     (valued at $300+)
                   </span>
-                  {upsellProductsInCart.length == 0 && (
+                  {/* {upsellProductsInCart.length == 0 && (
                     <img
                       className="absolute -bottom-12 right-15"
                       src="/assets/cart-arrow.svg"
                       alt=""
                     />
-                  )}
+                  )} */}
                 </div>
                 {/* Show selected upsell products in cart */}
                 {upsellProductsInCart.length > 0 && (
@@ -927,7 +965,7 @@ export default function Cart() {
                     })}
                   </div>
                 )}
-                <button
+                {/* <button
                   type="button"
                   onClick={handleUpsellScroll}
                   className="flex items-center justify-center gap-2 text-[#070707] border-b-3 border-[#F2B233] text-[16px] font-[600] mt-14 mx-8 font-plusjakarta md:max-w-[60%] cursor-pointer transition-transform duration-300 hover:-translate-y-1"
@@ -936,7 +974,7 @@ export default function Cart() {
                   <span className="tracking-wide text-shadow-2xs">
                     Select Your Bonus Vacation
                   </span>
-                </button>
+                </button> */}
               </>
             )}
           </div>
