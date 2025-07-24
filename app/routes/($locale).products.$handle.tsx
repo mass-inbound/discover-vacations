@@ -136,6 +136,23 @@ function loadDeferredData({context, params}: LoaderFunctionArgs) {
   return {};
 }
 
+// Add useCountdown hook (copy from cart)
+function useCountdown(targetTime: string | null) {
+  const [timeLeft, setTimeLeft] = useState<number>(0);
+  useEffect(() => {
+    if (!targetTime) return;
+    const interval = setInterval(() => {
+      const diff = new Date(targetTime).getTime() - Date.now();
+      setTimeLeft(diff > 0 ? diff : 0);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [targetTime]);
+  const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+  const minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
+  const seconds = Math.floor((timeLeft / 1000) % 60);
+  return {hours, minutes, seconds, expired: timeLeft <= 0};
+}
+
 export default function Product() {
   const {product, upsellProducts} = useLoaderData<typeof loader>();
   const images = product.images?.nodes || [];
@@ -196,6 +213,29 @@ export default function Product() {
   const navigate = useNavigate();
   const rootData = useRouteLoaderData('root');
 
+  const {handle} = product;
+  // Timer logic: persistent per product handle
+  const [expiresAt, setExpiresAt] = useState<string | null>(null);
+  useEffect(() => {
+    if (!handle) return;
+    const key = `offerExpiresAt_${handle}`;
+    let stored = null;
+    if (typeof window !== 'undefined') {
+      stored = localStorage.getItem(key);
+    }
+    let expires: string;
+    if (stored && new Date(stored).getTime() > Date.now()) {
+      expires = stored;
+    } else {
+      expires = new Date(Date.now() + 30 * 60 * 1000).toISOString();
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(key, expires);
+      }
+    }
+    setExpiresAt(expires);
+  }, [handle]);
+  const {hours, minutes, seconds, expired} = useCountdown(expiresAt);
+
   return (
     <div className="mx-auto md:mt-20">
       {/* Offer Expires Section */}
@@ -234,14 +274,20 @@ export default function Product() {
               Offer Expires:
             </span>
             <span className="font-mono text-[#135868] text-[18px] flex items-center gap-1">
-              <span>00</span>
-              <span className="text-[12px] mx-1">HR</span>
-              <span>:</span>
-              <span>00</span>
-              <span className="text-[12px] mx-1">MIN</span>
-              <span>:</span>
-              <span>00</span>
-              <span className="text-[12px] mx-1">SEC</span>
+              {expired ? (
+                <span className="text-red-500">Expired</span>
+              ) : (
+                <>
+                  <span>{String(hours).padStart(2, '0')}</span>
+                  <span className="text-[12px] mx-1">HR</span>
+                  <span>:</span>
+                  <span>{String(minutes).padStart(2, '0')}</span>
+                  <span className="text-[12px] mx-1">MIN</span>
+                  <span>:</span>
+                  <span>{String(seconds).padStart(2, '0')}</span>
+                  <span className="text-[12px] mx-1">SEC</span>
+                </>
+              )}
             </span>
           </div>
           <div className="bg-[#F5F5F5] py-8 px-10 md:h-full">
