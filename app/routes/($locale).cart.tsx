@@ -1023,9 +1023,9 @@ export default function Cart() {
             Discover More — Choose Your Bonus Vacation
           </h1>
           <p className="font-[400] text-[20px] text-[#101010] font-avenir max-w-[70%] mx-auto">
-            Select the gift that excites you most and add it to your cart for
-            $0.00.No pressure— *your selection can be updated later if you
-            change your mind.
+            Select the bonus vacation that excites you most and add it to your
+            cart for $0.00 No pressure— *your selection can be updated later if
+            you change your mind.
           </p>
         </div>
         <div className="h-[1px] bg-gray-300"></div>
@@ -1154,13 +1154,11 @@ export default function Cart() {
         </div>
 
         <p className="text-[#676767] font-[400] text-[16px] flex items-center justify-center tracking-wider text-center">
-          Please contact us if you would like to change your gift later” to 🎁
-          The Bonus Vacation is yours today — guaranteed! <br /> ✨ Pick your
-          favorite now, but if you want to change it later, no worries — *you’ll
-          unlock all three options once your Featured Vacation is complete.{' '}
-          <br />
-          Cant Decide? No worries-choose later! Create A CTA Button Lock In My
-          Bonus Now Choose Later.
+          🎁Your Bonus Vacation is Included with Your Purchase Today! <br />
+          Pick your favorite now — and if you change your mind later, no
+          problem. <br />
+          All three options will unlock and be ready to book once your Featured
+          Vacation is complete.
         </p>
       </div>
     </div>

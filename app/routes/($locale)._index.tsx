@@ -187,10 +187,9 @@ export default function Homepage() {
             Travel, Discover, Experience
           </h1>
           <p className="text-white text-[20px] font-[400] max-w-4xl mx-auto mb-6 drop-shadow">
-            Discover curated vacation offers with simple pricing and a simple
-            and stress-free booking experience — designed to make planning easy.
-            Whether you&apos;re ready to travel now or 12 months from now, your
-            getaway starts here.
+            Discover exclusive vacation offers with simple pricing and a
+            stress-free booking experience — designed to make planning easy.
+            Your getaway starts here.
           </p>
           <div className="flex gap-12 justify-center my-8">
             <Link

@@ -391,7 +391,7 @@ function Tabs({upsellProducts}: {upsellProducts: any[]}) {
     `What's Included`,
     'Nearby Attractions',
     'Details',
-    'Gift Details',
+    'Bonus Details',
   ];
 
   // Define dynamic content based on the handle

@@ -95,9 +95,7 @@ export default function Policy() {
       <div className="policy max-w-7xl mx-auto px-4 sm:px-10 mb-[7rem]">
         <br />
         <br />
-        <div>
-          <Link to="/">← Back</Link>
-        </div>
+        <div>{/* <Link to="/">← Back</Link> */}</div>
         <br />
         <h1 className="font-600 text-xl">{data.page.title}</h1>
         <div
