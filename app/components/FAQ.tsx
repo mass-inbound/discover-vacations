@@ -53,7 +53,7 @@ const faqs = [
           </li>
         </ol>
         <p className="mt-2">
-          You'll receive a link via email/SMS to the My Discover Booking Hub.
+          You'll receive a link via email/SMS to the My Discover Travel Hub.
           Enter your email and Package ID to log in or visit{' '}
           <a
             href="https://mydiscovervacations.com"
@@ -69,14 +69,14 @@ const faqs = [
     ),
   },
   {
-    question: 'How do I access the My Discover Booking Hub after purchase?',
+    question: 'How do I access the My Discover Travel Hub after purchase?',
     summary:
-      "Once your purchase is complete, you'll receive a link via email or SMS to access the My Discover Booking Hub. Enter your email and Package ID to log in. Or visit...",
+      "Once your purchase is complete, you'll receive a link via email or SMS to access the My Discover Travel Hub. Enter your email and Package ID to log in. Or visit...",
     answer: (
       <>
         Once your purchase is complete, you'll receive a link via email or SMS
-        to access the My Discover Booking Hub. Enter your email and Package ID
-        to log in.
+        to access the My Discover Travel Hub. Enter your email and Package ID to
+        log in.
         <br />
         Or visit{' '}
         <a

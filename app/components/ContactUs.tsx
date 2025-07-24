@@ -93,15 +93,15 @@ Fill out the form below and we’ll get back to you within one business day."
                 >
                   By submitting this form, you consent to be contacted by
                   Discover Vacations via phone, email, or SMS. Standard
-                  messaging rates may apply. Please read our{' '}
+                  messaging rates may apply.
+                  {/* Please read our{' '}
                   <a href="/" style={{textDecoration: 'underline'}}>
                     Terms & Conditions
                   </a>{' '}
                   and{' '}
                   <a href="/" style={{textDecoration: 'underline'}}>
                     Privacy Policy
-                  </a>
-                  .
+                  </a> */}
                 </label>
               </div>
             </div>
@@ -129,7 +129,7 @@ Fill out the form below and we’ll get back to you within one business day."
                 </span>
               </div>
               <div className="text-gray-700 text-sm leading-tight mb-2">
-                2881 F.Oakland Park Blvd
+                2881 E.Oakland Park Blvd
                 <br />
                 Suite 205
                 <br />

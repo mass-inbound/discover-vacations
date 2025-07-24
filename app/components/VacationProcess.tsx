@@ -22,8 +22,8 @@ export default function VacationProcess() {
           Vacation Booking, Simplified
         </h2>
         <p className="text-[#1A202C] mb-[3.5rem] max-w-2xl mx-auto font-[400] text-[25px]">
-          Exclusive offers. Real value. Flexible dates and room options to fit
-          your travel plans — without overcomplicating the process.
+          Exclusive offers. Real value. Tailor your travel and room options to
+          fit your travel plans — without overcomplicating the process.
         </p>
         <div className="flex flex-col md:flex-row items-start justify-center relative">
           {/* Curly line connecting icons */}
@@ -65,8 +65,8 @@ export default function VacationProcess() {
             </h3>
             <p className="text-[#151515] text-[20px] font-avenir font-[500] opacity-90 text-center leading-7">
               Know your dates? Select them on the calendar before checkout. Not
-              ready yet? No problem — purchase now and choose your dates anytime
-              in the Booking Hub.
+              ready yet? No problem — plan your trip in your Travel Hub after
+              checkout.
             </p>
           </div>
           {/* After second card: horizontal for desktop, vertical for mobile */}
@@ -94,8 +94,7 @@ export default function VacationProcess() {
             </h3>
             <p className="text-[#151515] text-[20px] font-[500] opacity-90 text-center font-avenir leading-7">
               Complete your purchase and get instant access to your personal
-              Booking Portal, where reserving your trip is quick, easy, and
-              secure.
+              Travel Hub, where reserving your trip is quick, easy, and secure.
             </p>
           </div>
         </div>
