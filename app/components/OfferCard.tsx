@@ -72,16 +72,15 @@ export function OfferCard({
         <ul className="text-4 font-[400] tracking-wide text-[#000] mb-4 list-disc list-inside pl-4 space-y-2">
           {bullets.map((b: string, i: number) => (
             <li key={i} className="flex gap-2 items-center">
-              <FaCheck className="text-amber-400" />{' '}
-              <span className="max-w-[85%]">{b}</span>
+              {/* <FaCheck className="text-amber-400" />{' '} */}
+              <span className="max-w-[85%] ml-4">{b}</span>
             </li>
           ))}
         </ul>
         <div className="bg-gradient-to-r from-[#f2b233] to-[#FFE7B8] rounded-[8px] px-3 py-1 mx-4 flex gap-2 items-start justify-center">
           <FaGift className="min-w-4 mt-1" />
           <span className="text-[16px] font-[400] text-[#08252C] font-avenir">
-            Includes a Bonus Vacation: Your Choice Vacation Bonus (valued at
-            $300+)
+            Includes a Bonus Vacation: Choice Vacation Getaway (valued at $300+)
           </span>
         </div>
         <div className="mt-8 p-4 bg-[#F5F5F5] flex flex-col gap-1 items-center justify-center border-t border-gray-300">

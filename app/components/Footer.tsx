@@ -4,6 +4,7 @@ import type {FooterQuery, HeaderQuery} from 'storefrontapi.generated';
 import {FaFacebookF, FaInstagram, FaTwitter} from 'react-icons/fa';
 import {MdEmail} from 'react-icons/md';
 import {Link} from 'react-router';
+import {TiSocialInstagram} from 'react-icons/ti';
 
 interface FooterProps {
   footer: Promise<FooterQuery | null>;
@@ -64,7 +65,7 @@ export function Footer({
                   alt="Discover Vacations"
                   className="w-[300px] mb-2"
                 />
-                <p className="text-sm opacity-80">
+                <p className="text-sm text-[#AEAEAE]">
                   Catch the Wave. Discover More For Less.
                 </p>
                 <div className="flex gap-3 mt-2">
@@ -72,21 +73,25 @@ export function Footer({
                     href="#"
                     className="bg-white text-black p-2 rounded-full hover:bg-gray-200 transition"
                   >
-                    <FaFacebookF />
+                    <FaFacebookF size={20} />
                   </a>
                   <a
                     href="#"
                     className="bg-white text-black p-2 rounded-full hover:bg-gray-200 transition"
                   >
-                    <FaInstagram />
+                    <FaTwitter size={20} />
                   </a>
                   <a
                     href="#"
                     className="bg-white text-black p-2 rounded-full hover:bg-gray-200 transition"
                   >
-                    <FaTwitter />
+                    <TiSocialInstagram size={20} />
                   </a>
                 </div>
+                <p className="text-sm text-[#AEAEAE]">
+                  Florida ST-17213 · California CST 2025290-40 · Washington UBI
+                  602 005 020 · Hawaii TAR-5681
+                </p>
               </div>
               {/* About */}
               <div>

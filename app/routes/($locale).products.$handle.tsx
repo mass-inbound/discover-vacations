@@ -253,7 +253,7 @@ export default function Product() {
             </p>
             <div className="bg-white rounded-[10px] my-4 p-3 flex flex-col items-center mb-8">
               <span className="text-[#0E424E] font-[400] text-[13px]">
-                3 night/4 days
+                4 days / 3 nights
               </span>
               <div className="flex items-center justify-center gap-1">
                 <span className="text-[#135868] font-[500] text-[27px]">
@@ -281,7 +281,7 @@ export default function Product() {
             <div className="bg-gradient-to-r from-[#f2b233] to-[#FFE7B8] rounded-[8px] px-3 py-1 mb-10 flex gap-2 items-start justify-center">
               <FaGift className="min-w-4 mt-1" />
               <span className="text-[16px] font-[400] text-[#08252C]">
-                Includes a Bonus Gift:Your Choice Vacation Getaway (valued at
+                Includes a Bonus Vacation: Choice Vacation Getaway (valued at
                 $300+)
               </span>
             </div>
@@ -446,8 +446,8 @@ function Tabs({upsellProducts}: {upsellProducts: any[]}) {
                 What&apos;s Included
               </h2>
               <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] font-avenir mb-4">
-                🏨 3-Night Hotel StayComfy 3-night stay for two adults—your
-                perfect launchpad to relax or explore.
+                🏨 3 Nights, One Unforgettable Stay — Relax, Recharge, and
+                Explore with Room for Up to Four!
               </p>
               <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] font-avenir mb-4">
                 🎁 Bonus Vacation Gift – CHOICE GetawayPick one of these premium
@@ -492,14 +492,44 @@ function Tabs({upsellProducts}: {upsellProducts: any[]}) {
         </>
       ) : (
         <>
-          <h2 className="text-[#0E424E] font-[500] text-[24px] md:text-[36px]">
-            What&apos;s Included
-          </h2>
-          <ul className="list-disc list-inside text-[#0E424E] text-[16px] md:text-[20px] font-[400] text-center">
-            <li>4 Days / 3 Nights of hotel accommodations for two adults</li>
-            <li>Packages starting at just $49 per couple</li>
-            <li>Bonus vacation gift of your choice</li>
-          </ul>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 px-4">
+            <div>
+              <h2 className="text-[#0E424E] font-[500] text-[24px] md:text-[36px] mb-3">
+                What&apos;s Included
+              </h2>
+              <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] font-avenir mb-4">
+                🏨 3 Nights, One Unforgettable Stay — Relax, Recharge, and
+                Explore with Room for Up to Four!
+              </p>
+              <ul className="list-disc list-inside text-[#0E424E] text-[16px] md:text-[20px] font-[400] font-avenir">
+                <li>
+                  4 Days / 3 Nights of hotel accommodations for two adults
+                </li>
+                <li>Packages starting at just $49 per couple</li>
+                <li>Bonus vacation gift of your choice</li>
+              </ul>
+            </div>
+            <div>
+              <h2 className="text-[#0E424E] font-[500] text-[24px] md:text-[36px] mb-3">
+                VACATIONS MADE POSSIBLE
+              </h2>
+              <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] font-avenir">
+                 In partnership with top vacation resorts, this package includes
+                a presentation at one of our partner resorts during your stay —
+                it’s what makes these incredible perks possible.
+                <br />
+                <br />
+                ✨ Deeply discounted accommodations.
+                <br />
+                🎁 A bonus vacation valued up to $1,800.
+                <br />
+                🌍 Travel insights that can help you vacation better, more
+                often, and for less.
+                <br />
+                No pressure. No catch. Just great perks in return for your time.
+              </p>
+            </div>
+          </div>
         </>
       )}
     </div>,
