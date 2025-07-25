@@ -61,7 +61,7 @@ export default function ProductDetail() {
       <div
         className="w-full flex items-center justify-center px-2 md:px-0 py-8 md:py-0"
         style={{
-          backgroundImage: `url('/assets/orlando-detail.jpg')`,
+          backgroundImage: `url('/assets/OrlandoCoverImg.png')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           height: '400px',

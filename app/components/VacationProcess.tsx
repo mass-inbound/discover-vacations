@@ -65,8 +65,8 @@ export default function VacationProcess() {
             </h3>
             <p className="text-[#151515] text-[20px] font-avenir font-[500] opacity-90 text-center leading-7">
               Know your dates? Select them on the calendar before checkout. Not
-              ready yet? No problem — plan your trip in your Travel Hub after
-              checkout.
+              ready yet? No problem — plan your trip in your Booking Portal
+              after checkout.
             </p>
           </div>
           {/* After second card: horizontal for desktop, vertical for mobile */}
@@ -94,7 +94,8 @@ export default function VacationProcess() {
             </h3>
             <p className="text-[#151515] text-[20px] font-[500] opacity-90 text-center font-avenir leading-7">
               Complete your purchase and get instant access to your personal
-              Travel Hub, where reserving your trip is quick, easy, and secure.
+              Booking Portal, where reserving your trip is quick, easy, and
+              secure.
             </p>
           </div>
         </div>

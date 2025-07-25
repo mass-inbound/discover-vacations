@@ -164,7 +164,7 @@ export default function AboutUs() {
                 <FaLaptop className="text-white text-xl" />
               </div>
               <h3 className="font-semibold text-lg text-gray-800 mb-3">
-                Easy Self–Service Travel Hub
+                Easy Self–Service Booking Portal
               </h3>
               <p className="text-gray-600 text-sm leading-relaxed">
                 Book, manage, or reschedule your getaway anytime through our
