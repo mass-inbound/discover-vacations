@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {FaLocationDot} from 'react-icons/fa6';
 import {FaEnvelope, FaComments} from 'react-icons/fa';
 import SectionHeroBanner from './SectionHeroBanner';
+
 // Figma green color
 const green = '#8DD3C7';
 const greenHover = '#6fc1b2';
@@ -9,6 +10,88 @@ const greyBg = '#F5F5F5';
 
 export default function ContactUs() {
   const [checked, setChecked] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState('');
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    message: '',
+  });
+
+  const handleInputChange = (e: any) => {
+    const {name, value} = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const clearForm = () => {
+    setFormData({
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      message: '',
+    });
+    setChecked(false);
+  };
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+
+    if (!checked) {
+      setSubmitMessage('Please accept the terms and conditions.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitMessage('');
+
+    try {
+      // Get your shop domain from environment or hardcode it
+      const shopDomain = window.location.hostname; // or your-shop.myshopify.com
+
+      const contactFormData = new FormData();
+      contactFormData.append('form_type', 'contact');
+      contactFormData.append('utf8', '✓');
+      contactFormData.append(
+        'contact[name]',
+        `${formData.firstName} ${formData.lastName}`,
+      );
+      contactFormData.append('contact[email]', formData.email);
+      contactFormData.append('contact[phone]', formData.phone);
+      contactFormData.append('contact[body]', formData.message);
+
+      const response = await fetch(`https://${shopDomain}/contact`, {
+        method: 'POST',
+        body: contactFormData,
+        headers: {
+          Accept: 'application/json, text/plain, */*',
+        },
+      });
+
+      if (response.ok) {
+        clearForm();
+        setSubmitMessage(
+          "Thank you! Your message has been sent successfully. We'll get back to you within one business day.",
+        );
+      } else {
+        throw new Error('Failed to submit form');
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setSubmitMessage(
+        'There was an error submitting your form. Please try again or contact us directly at customercare@mydiscovervacations.com',
+      );
+    } finally {
+      setIsSubmitting(false);
+      // Clear message after 8 seconds
+      setTimeout(() => setSubmitMessage(''), 8000);
+    }
+  };
 
   return (
     <>
@@ -16,9 +99,9 @@ export default function ContactUs() {
         <SectionHeroBanner
           tagline="Ask Discover"
           title="CONTACT US"
-          description="We’re here to help you Discover more, stress less. Ask away — your My Discover Vacation starts here. Whether you’re planning a trip, managing a reservation, or just need a few details clarified, our team is ready to help.
+          description="We're here to help you Discover more, stress less. Ask away — your My Discover Vacation starts here. Whether you're planning a trip, managing a reservation, or just need a few details clarified, our team is ready to help.
 
-Fill out the form below and we’ll get back to you within one business day."
+Fill out the form below and we'll get back to you within one business day."
           image="/assets/beach3.png"
         />
         <div
@@ -27,6 +110,7 @@ Fill out the form below and we’ll get back to you within one business day."
         >
           {/* Left: Form */}
           <form
+            onSubmit={handleSubmit}
             className="flex-1 bg-gray-100 rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6 md:p-8 flex flex-col gap-4 min-w-[0] animate-fade-in justify-between w-full max-w-full"
             style={{minHeight: 520}}
           >
@@ -41,26 +125,55 @@ Fill out the form below and we’ll get back to you within one business day."
                   shortly.
                 </span>
               </p>
+
+              {/* Success/Error Message */}
+              {submitMessage && (
+                <div
+                  className={`mb-4 p-3 rounded-[10px] text-sm ${
+                    submitMessage.includes('Thank you')
+                      ? 'bg-green-100 text-green-700 border border-green-200'
+                      : 'bg-red-100 text-red-700 border border-red-200'
+                  }`}
+                >
+                  {submitMessage}
+                </div>
+              )}
+
               <div className="flex flex-col md:flex-row gap-4">
                 <input
                   type="text"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleInputChange}
                   placeholder="First Name"
+                  required
                   className="flex-1 rounded-[10px] border border-gray-100 shadow-lg bg-gray-50 px-3 py-2 sm:px-4 sm:py-3 text-gray-800 focus:ring-2 focus:ring-green-200 focus:bg-white transition text-sm sm:text-base"
                 />
                 <input
                   type="text"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleInputChange}
                   placeholder="Last Name"
+                  required
                   className="flex-1 rounded-[10px] border border-gray-100 shadow-lg bg-gray-50 px-3 py-2 sm:px-4 sm:py-3 text-gray-800 focus:ring-2 focus:ring-green-200 focus:bg-white transition text-sm sm:text-base mt-2 md:mt-0"
                 />
               </div>
               <div className="flex flex-col md:flex-row gap-4 mt-4">
                 <input
                   type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
                   placeholder="Email"
+                  required
                   className="flex-1 rounded-[10px] border border-gray-100 shadow-lg bg-gray-50 px-3 py-2 sm:px-4 sm:py-3 text-gray-800 focus:ring-2 focus:ring-green-200 focus:bg-white transition text-sm sm:text-base"
                 />
                 <input
                   type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
                   placeholder="Phone Number"
                   className="flex-1 rounded-[10px] border border-gray-100 shadow-lg bg-gray-50 px-3 py-2 sm:px-4 sm:py-3 text-gray-800 focus:ring-2 focus:ring-green-200 focus:bg-white transition text-sm sm:text-base mt-2 md:mt-0"
                 />
@@ -74,8 +187,12 @@ Fill out the form below and we’ll get back to you within one business day."
                 </label>
                 <textarea
                   id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleInputChange}
                   placeholder="Please write here."
                   rows={5}
+                  required
                   className="w-full rounded-[10px] border border-gray-100 shadow-lg bg-gray-50 px-3 py-2 sm:px-4 sm:py-3 text-gray-800 focus:ring-2 focus:ring-green-200 focus:bg-white transition resize-none text-sm sm:text-base"
                 />
               </div>
@@ -86,6 +203,7 @@ Fill out the form below and we’ll get back to you within one business day."
                   checked={checked}
                   onChange={() => setChecked(!checked)}
                   className="mt-1 accent-green-400"
+                  required
                 />
                 <label
                   htmlFor="consent"
@@ -94,25 +212,23 @@ Fill out the form below and we’ll get back to you within one business day."
                   By submitting this form, you consent to be contacted by
                   Discover Vacations via phone, email, or SMS. Standard
                   messaging rates may apply.
-                  {/* Please read our{' '}
-                  <a href="/" style={{textDecoration: 'underline'}}>
-                    Terms & Conditions
-                  </a>{' '}
-                  and{' '}
-                  <a href="/" style={{textDecoration: 'underline'}}>
-                    Privacy Policy
-                  </a> */}
                 </label>
               </div>
             </div>
             <button
               type="submit"
-              className="mt-2 font-semibold py-3 px-8 rounded-[10px] shadow-md transition-all duration-150 bg-[#2AB7B7] focus:outline-none focus:ring-2 focus:ring-green-200 self-start w-full text-base sm:text-[16px] sm:font-[600] hover:bg-[#1a8f8f] "
+              disabled={isSubmitting}
+              className={`mt-2 font-semibold py-3 px-8 rounded-[10px] shadow-md transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-green-200 self-start w-full text-base sm:text-[16px] sm:font-[600] ${
+                isSubmitting
+                  ? 'bg-gray-400 cursor-not-allowed'
+                  : 'bg-[#2AB7B7] hover:bg-[#1a8f8f]'
+              }`}
               style={{color: 'white'}}
             >
-              Submit
+              {isSubmitting ? 'Submitting...' : 'Submit'}
             </button>
           </form>
+
           {/* Right: Contact Cards */}
           <div
             className="flex flex-col flex-1 min-w-[0] max-w-full md:max-w-sm justify-between mt-8 md:mt-0 w-full"
@@ -129,22 +245,14 @@ Fill out the form below and we’ll get back to you within one business day."
                 </span>
               </div>
               <div className="text-gray-700 text-sm leading-tight mb-2">
-                2881 E.Oakland Park Blvd
+                2881 East Oakland Park Blvd
                 <br />
                 Suite 205
                 <br />
                 Fort Lauderdale, FL 33306
               </div>
-              {/* <a
-              href="https://maps.google.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-2 w-full border rounded-md py-2 font-medium text-center transition-all duration-150"
-              style={{borderColor: green, color: green, background: 'white'}}
-            >
-              Get Directions
-            </a> */}
             </div>
+
             {/* Email Card */}
             <div className="flex flex-col gap-2 mb-2 bg-[#F5F5F5] rounded-[10px] px-4 py-8 shadow-lg border border-gray-200">
               <div className="flex items-center gap-2 mb-1 text-[#2AB7B7]">
@@ -161,6 +269,7 @@ Fill out the form below and we’ll get back to you within one business day."
                 Email Us
               </a>
             </div>
+
             {/* Live Chat Card */}
             <div className="flex flex-col gap-2 mb-2 bg-[#F5F5F5] rounded-[10px] px-4 py-8 shadow-lg border border-gray-200">
               <div className="flex items-center gap-2 mb-1 text-[#2AB7B7]">
