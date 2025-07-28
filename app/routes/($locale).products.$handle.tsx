@@ -496,7 +496,7 @@ function Tabs({upsellProducts}: {upsellProducts: any[]}) {
                 Explore with Room for Up to Four!
               </p>
               <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] font-avenir mb-4">
-                🎁 Bonus Vacation Gift – CHOICE GetawayPick one of these premium
+                🎁 Bonus Vacation – CHOICE Getaway - Pick one of these premium
                 rewards (airfare not included):
               </p>
               <ul className="list-disc list-inside text-[#0E424E] text-[16px] md:text-[20px] font-[400] font-avenir">
@@ -552,7 +552,7 @@ function Tabs({upsellProducts}: {upsellProducts: any[]}) {
                   4 Days / 3 Nights of hotel accommodations for two adults
                 </li>
                 <li>Packages starting at just $49 per couple</li>
-                <li>Bonus vacation gift of your choice</li>
+                <li>Bonus vacation of your choice</li>
               </ul>
             </div>
             <div>
