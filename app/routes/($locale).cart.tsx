@@ -596,7 +596,7 @@ export default function Cart() {
                           ? `/policies/terms-conditions-${getLocationSlug(
                               cartOffer.title,
                             )}`
-                          : '/policies/terms-conditions'
+                          : '/cart'
                       }
                       className="underline"
                       tabIndex={-1}
