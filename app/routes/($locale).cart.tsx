@@ -432,6 +432,12 @@ export default function Cart() {
     }
   };
 
+  // Add this helper inside or above the Cart component
+  function getLocationSlug(location: string | undefined) {
+    if (!location) return '';
+    return location.split(',')[0].trim().toLowerCase().replace(/\s+/g, '-');
+  }
+
   return (
     <div className="min-h-screen ">
       <div className="py-8 px-2 sm:px-4 md:px-8 flex flex-col items-start mx-auto max-w-7xl w-full">
@@ -585,7 +591,13 @@ export default function Cart() {
                     in booking your vacation, and follow up on any questions. By
                     clicking this checkbox, you agree to the{' '}
                     <Link
-                      to={'/policies/terms-conditions'}
+                      to={
+                        cartOffer?.title
+                          ? `/policies/terms-conditions-${getLocationSlug(
+                              cartOffer.title,
+                            )}`
+                          : '/policies/terms-conditions'
+                      }
                       className="underline"
                       tabIndex={-1}
                     >
@@ -929,7 +941,7 @@ export default function Cart() {
                   {/* Text */}
                   <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-white z-10">
                     <h2 className="text-[27px] font-[500]">
-                      {cartOffer?.title ?? 'Magical Orlando Getaway'}
+                      {cartOffer?.title ?? 'Magical Getaway'}
                     </h2>
                     <p className="text-[20px] font-[400]">
                       {cartOffer?.location ?? 'Orlando, FL'}

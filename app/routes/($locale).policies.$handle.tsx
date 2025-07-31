@@ -9,6 +9,8 @@ type SelectedPolicies = keyof Pick<
 
 const SHOPIFY_PAGE_HANDLES = [
   'terms-conditions',
+  'terms-conditions-orlando',
+  'terms-conditions-poconos',
   'privacy-policy',
   'refund-cancellation-policy',
   'tcpa-policy',
@@ -45,8 +47,12 @@ export async function loader({params, context}: LoaderFunctionArgs) {
     throw new Response('No handle was passed in', {status: 404});
   }
 
-  // If the handle matches a Shopify Online Store Page, fetch the page
-  if (SHOPIFY_PAGE_HANDLES.includes(params.handle)) {
+  // Check if the handle is a dynamic terms-conditions handle or matches known handles
+  const isDynamicTermsConditions =
+    params.handle.startsWith('terms-conditions-');
+  const isKnownHandle = SHOPIFY_PAGE_HANDLES.includes(params.handle);
+
+  if (isKnownHandle || isDynamicTermsConditions) {
     const {page} = await context.storefront.query(PAGE_QUERY, {
       variables: {
         handle: params.handle,
