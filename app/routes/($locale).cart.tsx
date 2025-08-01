@@ -40,54 +40,381 @@ export async function action({request, context}: ActionFunctionArgs) {
     }
     return redirect('/cart');
   }
-  // Get all form fields
-  const variantId = formData.get('variantId');
 
-  const quantity = 1;
-  // Add to cart if variantId is present
-  let result;
+  // Handle form submission for checkout
+  const isCheckoutSubmission = formData.get('isCheckoutSubmission');
+  if (isCheckoutSubmission === 'true') {
+    // Get all form fields
+    const firstName = formData.get('firstName');
+    const lastName = formData.get('lastName');
+    const email = formData.get('email');
+    const phone = formData.get('phone');
+    const adults = formData.get('adults');
+    const kids = formData.get('kids');
+    const consent = formData.get('consent');
+    const bypassConsent = formData.get('bypassConsent');
+    const checkIn = formData.get('checkIn');
+    const checkOut = formData.get('checkOut');
+    const offerTitle = formData.get('offerTitle');
+    const offerLocation = formData.get('offerLocation');
+    const offerImage = formData.get('offerImage');
+    const offerPrice = formData.get('offerPrice');
+    const offerNights = formData.get('offerNights');
+    const offerDays = formData.get('offerDays');
+    const offerDescription = formData.get('offerDescription');
+    const selectedUpsellVariantId = formData.get('selectedUpsellVariantId');
+    const selectedUpsellTitle = formData.get('selectedUpsellTitle');
+    const selectedUpsellImage = formData.get('selectedUpsellImage');
+    const selectedUpsellNights = formData.get('selectedUpsellNights');
+    const selectedUpsellDays = formData.get('selectedUpsellDays');
+    const selectedUpsellDescription = formData.get('selectedUpsellDescription');
+    const selectedUpsellLocation = formData.get('selectedUpsellLocation');
+
+    // Set offer expiration 30 minutes from now
+    const expiresAt = new Date(Date.now() + 30 * 60 * 1000).toISOString();
+
+    // Get the main variant ID from URL, form data, or existing cart
+    let mainVariantId =
+      formData.get('variantId') ||
+      new URLSearchParams(request.url.split('?')[1] || '').get('variantId');
+
+    // If no variant ID found, check if there's already a product in the cart
+    if (!mainVariantId) {
+      const existingCart = await cart.get();
+      if (existingCart?.lines?.nodes && existingCart.lines.nodes.length > 0) {
+        // Find the main product (not bonus vacation) in the cart
+        const mainProductLine = existingCart.lines.nodes.find((line: any) => {
+          const attrs = Object.fromEntries(
+            (line.attributes || []).map(
+              (attr: {key: string; value: string}) => [attr.key, attr.value],
+            ),
+          );
+          return (
+            attrs['Product Type'] === 'Main Vacation Package' ||
+            attrs['Bonus Vacation'] === 'false'
+          );
+        });
+
+        if (mainProductLine?.merchandise?.id) {
+          mainVariantId = mainProductLine.merchandise.id;
+        } else if (existingCart.lines.nodes[0]?.merchandise?.id) {
+          // Fallback to first product if no main product found
+          mainVariantId = existingCart.lines.nodes[0].merchandise.id;
+        }
+      }
+    }
+
+    if (mainVariantId) {
+      // Clear existing cart items first to prevent duplicates
+      const existingCart = await cart.get();
+      if (existingCart?.lines?.nodes && existingCart.lines.nodes.length > 0) {
+        const lineIds = existingCart.lines.nodes.map((line: any) => line.id);
+        await cart.removeLines(lineIds);
+      }
+
+      // 1. Add main product with all form data and real price
+      await cart.addLines([
+        {
+          merchandiseId: mainVariantId as string,
+          quantity: 1,
+          attributes: [
+            {key: 'First Name', value: String(firstName || '')},
+            {key: 'Last Name', value: String(lastName || '')},
+            {key: 'Email', value: String(email || '')},
+            {key: 'Phone', value: String(phone || '')},
+            {key: 'Adults', value: String(adults || '')},
+            {key: 'Kids', value: String(kids || '')},
+            {key: 'Check In', value: String(checkIn || '')},
+            {key: 'Check Out', value: String(checkOut || '')},
+            {key: 'Offer Title', value: String(offerTitle || '')},
+            {key: 'Offer Location', value: String(offerLocation || '')},
+            {key: 'Offer Image', value: String(offerImage || '')},
+            {key: 'Offer Price', value: String(offerPrice || '')},
+            {key: 'offerNights', value: String(offerNights || '')},
+            {key: 'offerDays', value: String(offerDays || '')},
+            {key: 'offerDescription', value: String(offerDescription || '')},
+            {key: 'Offer Expires At', value: expiresAt},
+            {key: 'Product Type', value: 'Main Vacation Package'},
+            {key: 'Price', value: String(offerPrice || '')},
+            {key: 'Bonus Vacation', value: 'false'},
+            {
+              key: 'TCPA Status',
+              value: String(
+                bypassConsent === 'true'
+                  ? 'Not Approved'
+                  : consent === 'on' || consent === 'true'
+                    ? 'Approved'
+                    : 'Not Approved',
+              ),
+            },
+          ],
+        },
+      ]);
+
+      // 2. Add selected upsell product if any (with only bonus attributes)
+      if (
+        selectedUpsellVariantId &&
+        selectedUpsellVariantId !== mainVariantId
+      ) {
+        await cart.addLines([
+          {
+            merchandiseId: selectedUpsellVariantId as string,
+            quantity: 1,
+            attributes: [
+              {key: 'Bonus Vacation', value: 'true'},
+              {key: 'Product Type', value: 'Bonus Vacation'},
+              {key: 'Main Offer Title', value: String(offerTitle || '')},
+              {key: 'Offer Title', value: String(selectedUpsellTitle || '')},
+              {key: 'Offer Image', value: String(selectedUpsellImage || '')},
+              {key: 'Offer Price', value: 'Free'},
+              {key: 'Original Price', value: '$300+'},
+              {key: 'offerNights', value: String(selectedUpsellNights || '')},
+              {key: 'offerDays', value: String(selectedUpsellDays || '')},
+              {
+                key: 'offerDescription',
+                value: String(selectedUpsellDescription || ''),
+              },
+              {
+                key: 'Offer Location',
+                value: String(selectedUpsellLocation || ''),
+              },
+              {key: 'Offer Expires At', value: expiresAt},
+            ],
+          },
+        ]);
+      }
+
+      // Add cart-level attributes for Shopify Admin visibility
+      await cart.updateAttributes([
+        {key: 'First Name', value: String(firstName || '')},
+        {key: 'Last Name', value: String(lastName || '')},
+        {key: 'Email', value: String(email || '')},
+        {key: 'Phone', value: String(phone || '')},
+        {key: 'Adults', value: String(adults || '')},
+        {key: 'Kids', value: String(kids || '')},
+        {
+          key: 'Consent',
+          value: String(
+            bypassConsent === 'true'
+              ? 'Not Approved'
+              : consent === 'on' || consent === 'true'
+                ? 'Approved'
+                : 'Not Approved',
+          ),
+        },
+        {key: 'Check In', value: String(checkIn || '')},
+        {key: 'Check Out', value: String(checkOut || '')},
+      ]);
+
+      const updatedCart = await cart.get();
+      if (updatedCart?.checkoutUrl) {
+        const headers = cart.setCartId(updatedCart.id);
+        return redirect(updatedCart.checkoutUrl, {headers});
+      }
+      return redirect('/cart');
+    }
+  }
+
+  // Handle regular add to cart (for upsell products)
+  const variantId = formData.get('variantId');
   if (variantId) {
     // Set offer expiration 30 minutes from now
     const expiresAt = new Date(Date.now() + 30 * 60 * 1000).toISOString();
-    result = await cart.addLines([
-      {
-        merchandiseId: variantId as string,
-        quantity,
-        attributes: [
-          {key: 'First Name', value: String(formData.get('firstName') || '')},
-          {key: 'Last Name', value: String(formData.get('lastName') || '')},
-          {key: 'Email', value: String(formData.get('email') || '')},
-          {key: 'Phone', value: String(formData.get('phone') || '')},
-          {key: 'Adults', value: String(formData.get('adults') || '')},
-          {key: 'Kids', value: String(formData.get('kids') || '')},
-          {key: 'Check In', value: String(formData.get('checkIn') || '')},
-          {key: 'Check Out', value: String(formData.get('checkOut') || '')},
-          {key: 'Offer Title', value: String(formData.get('offerTitle') || '')},
-          {
-            key: 'Offer Location',
-            value: String(formData.get('offerLocation') || ''),
-          },
-          {key: 'Offer Image', value: String(formData.get('offerImage') || '')},
-          {key: 'Offer Price', value: String(formData.get('offerPrice') || '')},
-          {
-            key: 'offerNights',
-            value: String(formData.get('offerNights') || ''),
-          },
-          {key: 'offerDays', value: String(formData.get('offerDays') || '')},
-          {
-            key: 'offerDescription',
-            value: String(formData.get('offerDescription') || ''),
-          },
-          {key: 'Offer Expires At', value: expiresAt},
-          {
-            key: 'TCPA Status',
-            value: String(
-              formData.get('consent') ? 'Approved' : 'Not Approved',
-            ),
-          },
-        ],
-      },
-    ]);
+
+    // Check if this is a bonus product
+    const isBonusProduct = formData.get('Bonus Vacation') === 'true';
+    const productType = formData.get('Product Type') || 'Main Vacation Package';
+
+    // Check if this product is already in the cart
+    const existingCart = await cart.get();
+    const existingLine = existingCart?.lines?.nodes?.find(
+      (line: any) => line.merchandise.id === variantId,
+    );
+
+    if (existingLine) {
+      // Update the existing line with new attributes
+      const attributes = isBonusProduct
+        ? [
+            {key: 'Bonus Vacation', value: 'true'},
+            {key: 'Product Type', value: 'Bonus Vacation'},
+            {
+              key: 'Offer Title',
+              value: String(formData.get('offerTitle') || ''),
+            },
+            {
+              key: 'Offer Image',
+              value: String(formData.get('offerImage') || ''),
+            },
+            {key: 'Offer Price', value: 'Free'},
+            {
+              key: 'Original Price',
+              value: String(formData.get('Original Price') || '$300+'),
+            },
+            {
+              key: 'offerNights',
+              value: String(formData.get('offerNights') || ''),
+            },
+            {key: 'offerDays', value: String(formData.get('offerDays') || '')},
+            {
+              key: 'offerDescription',
+              value: String(formData.get('offerDescription') || ''),
+            },
+            {
+              key: 'Offer Location',
+              value: String(formData.get('offerLocation') || ''),
+            },
+            {key: 'Offer Expires At', value: expiresAt},
+          ]
+        : [
+            {key: 'First Name', value: String(formData.get('firstName') || '')},
+            {key: 'Last Name', value: String(formData.get('lastName') || '')},
+            {key: 'Email', value: String(formData.get('email') || '')},
+            {key: 'Phone', value: String(formData.get('phone') || '')},
+            {key: 'Adults', value: String(formData.get('adults') || '')},
+            {key: 'Kids', value: String(formData.get('kids') || '')},
+            {key: 'Check In', value: String(formData.get('checkIn') || '')},
+            {key: 'Check Out', value: String(formData.get('checkOut') || '')},
+            {
+              key: 'Offer Title',
+              value: String(formData.get('offerTitle') || ''),
+            },
+            {
+              key: 'Offer Location',
+              value: String(formData.get('offerLocation') || ''),
+            },
+            {
+              key: 'Offer Image',
+              value: String(formData.get('offerImage') || ''),
+            },
+            {
+              key: 'Offer Price',
+              value: String(formData.get('offerPrice') || ''),
+            },
+            {
+              key: 'offerNights',
+              value: String(formData.get('offerNights') || ''),
+            },
+            {key: 'offerDays', value: String(formData.get('offerDays') || '')},
+            {
+              key: 'offerDescription',
+              value: String(formData.get('offerDescription') || ''),
+            },
+            {key: 'Offer Expires At', value: expiresAt},
+            {key: 'Product Type', value: 'Main Vacation Package'},
+            {key: 'Price', value: String(formData.get('offerPrice') || '')},
+            {key: 'Bonus Vacation', value: 'false'},
+            {
+              key: 'TCPA Status',
+              value: String(
+                formData.get('consent') === 'on' ||
+                  formData.get('consent') === 'true'
+                  ? 'Approved'
+                  : 'Not Approved',
+              ),
+            },
+          ];
+
+      await cart.updateLines([
+        {
+          id: existingLine.id,
+          merchandiseId: variantId as string,
+          quantity: 1,
+          attributes,
+        },
+      ]);
+    } else {
+      // Add new line if product doesn't exist in cart
+      const attributes = isBonusProduct
+        ? [
+            {key: 'Bonus Vacation', value: 'true'},
+            {key: 'Product Type', value: 'Bonus Vacation'},
+            {
+              key: 'Offer Title',
+              value: String(formData.get('offerTitle') || ''),
+            },
+            {
+              key: 'Offer Image',
+              value: String(formData.get('offerImage') || ''),
+            },
+            {key: 'Offer Price', value: 'Free'},
+            {
+              key: 'Original Price',
+              value: String(formData.get('Original Price') || '$300+'),
+            },
+            {
+              key: 'offerNights',
+              value: String(formData.get('offerNights') || ''),
+            },
+            {key: 'offerDays', value: String(formData.get('offerDays') || '')},
+            {
+              key: 'offerDescription',
+              value: String(formData.get('offerDescription') || ''),
+            },
+            {
+              key: 'Offer Location',
+              value: String(formData.get('offerLocation') || ''),
+            },
+            {key: 'Offer Expires At', value: expiresAt},
+          ]
+        : [
+            {key: 'First Name', value: String(formData.get('firstName') || '')},
+            {key: 'Last Name', value: String(formData.get('lastName') || '')},
+            {key: 'Email', value: String(formData.get('email') || '')},
+            {key: 'Phone', value: String(formData.get('phone') || '')},
+            {key: 'Adults', value: String(formData.get('adults') || '')},
+            {key: 'Kids', value: String(formData.get('kids') || '')},
+            {key: 'Check In', value: String(formData.get('checkIn') || '')},
+            {key: 'Check Out', value: String(formData.get('checkOut') || '')},
+            {
+              key: 'Offer Title',
+              value: String(formData.get('offerTitle') || ''),
+            },
+            {
+              key: 'Offer Location',
+              value: String(formData.get('offerLocation') || ''),
+            },
+            {
+              key: 'Offer Image',
+              value: String(formData.get('offerImage') || ''),
+            },
+            {
+              key: 'Offer Price',
+              value: String(formData.get('offerPrice') || ''),
+            },
+            {
+              key: 'offerNights',
+              value: String(formData.get('offerNights') || ''),
+            },
+            {key: 'offerDays', value: String(formData.get('offerDays') || '')},
+            {
+              key: 'offerDescription',
+              value: String(formData.get('offerDescription') || ''),
+            },
+            {key: 'Offer Expires At', value: expiresAt},
+            {key: 'Product Type', value: 'Main Vacation Package'},
+            {key: 'Price', value: String(formData.get('offerPrice') || '')},
+            {key: 'Bonus Vacation', value: 'false'},
+            {
+              key: 'TCPA Status',
+              value: String(
+                formData.get('bypassConsent') === 'true'
+                  ? 'Not Approved'
+                  : formData.get('consent') === 'on' ||
+                      formData.get('consent') === 'true'
+                    ? 'Approved'
+                    : 'Not Approved',
+              ),
+            },
+          ];
+
+      const result = await cart.addLines([
+        {
+          merchandiseId: variantId as string,
+          quantity: 1,
+          attributes,
+        },
+      ]);
+    }
     // Add cart-level attributes for Shopify Admin visibility
     await cart.updateAttributes([
       {key: 'First Name', value: String(formData.get('firstName') || '')},
@@ -98,13 +425,20 @@ export async function action({request, context}: ActionFunctionArgs) {
       {key: 'Kids', value: String(formData.get('kids') || '')},
       {
         key: 'Consent',
-        value: String(formData.get('consent') ? 'Approved' : 'Not Approved'),
+        value: String(
+          formData.get('bypassConsent') === 'true'
+            ? 'Not Approved'
+            : formData.get('consent') === 'on' ||
+                formData.get('consent') === 'true'
+              ? 'Approved'
+              : 'Not Approved',
+        ),
       },
       {key: 'Check In', value: String(formData.get('checkIn') || '')},
       {key: 'Check Out', value: String(formData.get('checkOut') || '')},
     ]);
-    const headers = cart.setCartId(result.cart.id);
-    return redirect('/cart', {headers});
+    // For regular add-to-cart, just redirect back to cart page
+    return redirect('/cart');
   }
   // Redirect to cart page (not checkout)
   return redirect('/cart');
@@ -169,8 +503,23 @@ export default function Cart() {
   // Helper to extract offer from cart lines
   function getOfferFromCart(cart: any) {
     if (!cart?.lines?.nodes?.length) return null;
-    // Find the most recent line with offer attributes
-    const line = cart.lines.nodes[cart.lines.nodes.length - 1];
+
+    // Find the main product (not bonus vacation)
+    const mainProductLine = cart.lines.nodes.find((line: any) => {
+      const attrs = Object.fromEntries(
+        (line.attributes || []).map((attr: {key: string; value: string}) => [
+          attr.key,
+          attr.value,
+        ]),
+      );
+      return (
+        attrs['Product Type'] === 'Main Vacation Package' ||
+        attrs['Bonus Vacation'] === 'false'
+      );
+    });
+
+    // If no main product found, use the first line
+    const line = mainProductLine || cart.lines.nodes[0];
     const attrs = Object.fromEntries(
       (line.attributes || []).map((attr: {key: string; value: string}) => [
         attr.key,
@@ -226,6 +575,9 @@ export default function Cart() {
     };
   });
 
+  // State to track if "here" button was clicked (bypass consent)
+  const [bypassConsent, setBypassConsent] = useState(false);
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('cartForm', JSON.stringify(form));
@@ -258,7 +610,8 @@ export default function Cart() {
       newErrors.adultsKidsSum =
         'Total number of adults and kids cannot exceed 4.';
     }
-    if (!form.consent) {
+    // Only validate consent if bypassConsent is false
+    if (!bypassConsent && !form.consent) {
       newErrors.consent = 'You must agree to the terms.';
     }
     return newErrors;
@@ -409,7 +762,11 @@ export default function Cart() {
           attr.value,
         ]),
       );
-      return upsellProducts.some((prod) => prod.title === attrs['Offer Title']);
+      // Look for bonus vacation products specifically
+      return (
+        attrs['Product Type'] === 'Bonus Vacation' ||
+        attrs['Bonus Vacation'] === 'true'
+      );
     });
   }
 
@@ -452,6 +809,7 @@ export default function Cart() {
             {/* General Information Form */}
             <form
               method="post"
+              action="/cart"
               className="grid grid-cols-1 md:grid-cols-[1.5fr_1fr] gap-0"
               onSubmit={(e) => {
                 const validationErrors = validateForm();
@@ -459,12 +817,10 @@ export default function Cart() {
                 if (Object.keys(validationErrors).length > 0) {
                   e.preventDefault();
                 } else {
-                  e.preventDefault(); // Prevent default form submission
+                  // Don't prevent default - let the form submit to the action function
+                  // The action function will handle adding form data to cart and then redirect to checkout
                   if (typeof window !== 'undefined') {
                     localStorage.removeItem('cartForm');
-                  }
-                  if (cart?.checkoutUrl) {
-                    window.location.href = cart.checkoutUrl;
                   }
                 }
               }}
@@ -627,18 +983,16 @@ export default function Cart() {
                     consent, click here for other ways to take advantage of this
                     Promotion{' '}
                     <button
+                      type="submit"
                       className="text-[#2AB7B7] underline"
                       onClick={(e) => {
-                        const validationErrors = semivalidateForm();
-                        setErrors(validationErrors);
-                        if (Object.keys(validationErrors).length > 0) {
-                          e.preventDefault();
-                        } else {
-                          e.preventDefault(); // Prevent default form submission
-                          if (cart?.checkoutUrl) {
-                            window.location.href = cart.checkoutUrl;
-                          }
+                        // Bypass only consent validation for the "here" button
+                        setBypassConsent(true);
+                        if (typeof window !== 'undefined') {
+                          localStorage.removeItem('cartForm');
                         }
+                        // Clear any existing errors and let the main form's onSubmit handle validation
+                        setErrors({});
                       }}
                       tabIndex={-1}
                     >
@@ -700,6 +1054,65 @@ export default function Cart() {
                   type="hidden"
                   name="checkOut"
                   value={checkOut ? checkOut.toISOString() : ''}
+                />
+                {/* Form data hidden inputs */}
+                <input type="hidden" name="firstName" value={form.firstName} />
+                <input type="hidden" name="lastName" value={form.lastName} />
+                <input type="hidden" name="email" value={form.email} />
+                <input type="hidden" name="phone" value={form.phone} />
+                <input type="hidden" name="adults" value={form.adults} />
+                <input type="hidden" name="kids" value={form.kids} />
+                <input
+                  type="hidden"
+                  name="consent"
+                  value={form.consent ? 'on' : ''}
+                />
+                <input
+                  type="hidden"
+                  name="bypassConsent"
+                  value={bypassConsent ? 'true' : ''}
+                />
+                <input type="hidden" name="isCheckoutSubmission" value="true" />
+                <input
+                  type="hidden"
+                  name="selectedUpsellVariantId"
+                  value={selectedBonusVariantId || ''}
+                />
+                <input
+                  type="hidden"
+                  name="selectedUpsellTitle"
+                  value={selectedBonus?.title || ''}
+                />
+                <input
+                  type="hidden"
+                  name="selectedUpsellImage"
+                  value={selectedBonus?.featuredImage?.url || ''}
+                />
+                <input
+                  type="hidden"
+                  name="selectedUpsellNights"
+                  value={selectedBonus?.nights || ''}
+                />
+                <input
+                  type="hidden"
+                  name="selectedUpsellDays"
+                  value={selectedBonus?.days || ''}
+                />
+                <input
+                  type="hidden"
+                  name="selectedUpsellDescription"
+                  value={selectedBonus?.description || ''}
+                />
+                <input
+                  type="hidden"
+                  name="selectedUpsellLocation"
+                  value={
+                    Array.isArray(selectedBonus?.tags)
+                      ? selectedBonus.tags.find((t: string) =>
+                          t.match(/,|FL|PA/),
+                        ) || ''
+                      : ''
+                  }
                 />
               </div>
 
@@ -844,10 +1257,12 @@ export default function Cart() {
                     <span className="text-xl font-semibold"></span>
                   </div>
                 )}
-                {cart?.checkoutUrl && !cartIsEmpty && (
+                {/* Show submit button if there's a variant ID or if cart has items */}
+                {(new URLSearchParams(location.search).get('variantId') ||
+                  !cartIsEmpty) && (
                   <div className="w-full py-3 mt-auto flex items-center justify-center gap-2">
                     <div className="flex flex-col gap-8 mt-2">
-                      {upsellProductsInCart.length == 0 && (
+                      {upsellProductsInCart.length == 0 && !cartIsEmpty && (
                         <button
                           type="button"
                           onClick={handleUpsellScroll}
@@ -1123,11 +1538,7 @@ export default function Cart() {
                       name="offerImage"
                       value={product.featuredImage?.url || ''}
                     />
-                    <input
-                      type="hidden"
-                      name="offerPrice"
-                      value={product.priceRange.minVariantPrice.amount}
-                    />
+                    <input type="hidden" name="offerPrice" value="Free" />
                     <input
                       type="hidden"
                       name="offerDescription"
@@ -1154,6 +1565,13 @@ export default function Cart() {
                       name="offerDays"
                       value={product.days || 4}
                     />
+                    <input
+                      type="hidden"
+                      name="Product Type"
+                      value="Bonus Vacation"
+                    />
+                    <input type="hidden" name="Bonus Vacation" value="true" />
+                    <input type="hidden" name="Original Price" value="$300+" />
                     {selectedBonus &&
                     selectedBonusVariantId === product.variants.nodes[0]?.id ? (
                       <button
