@@ -38,6 +38,11 @@ export async function action({request, context}: ActionFunctionArgs) {
     if (lineIds.length > 0) {
       await cart.removeLines(lineIds.map(String));
     }
+    const cartData = await cart.get();
+    if (cartData?.id) {
+      const headers = cart.setCartId(cartData.id);
+      return redirect('/cart', {headers});
+    }
     return redirect('/cart');
   }
 
@@ -225,6 +230,12 @@ export async function action({request, context}: ActionFunctionArgs) {
     const isBonusProduct = formData.get('Bonus Vacation') === 'true';
     const productType = formData.get('Product Type') || 'Main Vacation Package';
 
+    // Check if this is a direct add-to-cart (from OfferCard or product detail page)
+    const isDirectAddToCart =
+      !formData.get('firstName') &&
+      !formData.get('lastName') &&
+      !formData.get('email');
+
     // Check if this product is already in the cart
     const existingCart = await cart.get();
     const existingLine = existingCart?.lines?.nodes?.find(
@@ -265,54 +276,100 @@ export async function action({request, context}: ActionFunctionArgs) {
             },
             {key: 'Offer Expires At', value: expiresAt},
           ]
-        : [
-            {key: 'First Name', value: String(formData.get('firstName') || '')},
-            {key: 'Last Name', value: String(formData.get('lastName') || '')},
-            {key: 'Email', value: String(formData.get('email') || '')},
-            {key: 'Phone', value: String(formData.get('phone') || '')},
-            {key: 'Adults', value: String(formData.get('adults') || '')},
-            {key: 'Kids', value: String(formData.get('kids') || '')},
-            {key: 'Check In', value: String(formData.get('checkIn') || '')},
-            {key: 'Check Out', value: String(formData.get('checkOut') || '')},
-            {
-              key: 'Offer Title',
-              value: String(formData.get('offerTitle') || ''),
-            },
-            {
-              key: 'Offer Location',
-              value: String(formData.get('offerLocation') || ''),
-            },
-            {
-              key: 'Offer Image',
-              value: String(formData.get('offerImage') || ''),
-            },
-            {
-              key: 'Offer Price',
-              value: String(formData.get('offerPrice') || ''),
-            },
-            {
-              key: 'offerNights',
-              value: String(formData.get('offerNights') || ''),
-            },
-            {key: 'offerDays', value: String(formData.get('offerDays') || '')},
-            {
-              key: 'offerDescription',
-              value: String(formData.get('offerDescription') || ''),
-            },
-            {key: 'Offer Expires At', value: expiresAt},
-            {key: 'Product Type', value: 'Main Vacation Package'},
-            {key: 'Price', value: String(formData.get('offerPrice') || '')},
-            {key: 'Bonus Vacation', value: 'false'},
-            {
-              key: 'TCPA Status',
-              value: String(
-                formData.get('consent') === 'on' ||
-                  formData.get('consent') === 'true'
-                  ? 'Approved'
-                  : 'Not Approved',
-              ),
-            },
-          ];
+        : isDirectAddToCart
+          ? [
+              // Direct add-to-cart (from OfferCard or product detail page)
+              {
+                key: 'Offer Title',
+                value: String(formData.get('offerTitle') || ''),
+              },
+              {
+                key: 'Offer Location',
+                value: String(formData.get('offerLocation') || ''),
+              },
+              {
+                key: 'Offer Image',
+                value: String(formData.get('offerImage') || ''),
+              },
+              {
+                key: 'Offer Price',
+                value: String(formData.get('offerPrice') || ''),
+              },
+              {
+                key: 'offerNights',
+                value: String(formData.get('offerNights') || ''),
+              },
+              {
+                key: 'offerDays',
+                value: String(formData.get('offerDays') || ''),
+              },
+              {
+                key: 'offerDescription',
+                value: String(formData.get('offerDescription') || ''),
+              },
+              {key: 'Offer Expires At', value: expiresAt},
+              {key: 'Product Type', value: 'Main Vacation Package'},
+              {key: 'Price', value: String(formData.get('offerPrice') || '')},
+              {key: 'Bonus Vacation', value: 'false'},
+              {key: 'TCPA Status', value: 'Not Approved'},
+            ]
+          : [
+              // Full form submission with personal information
+              {
+                key: 'First Name',
+                value: String(formData.get('firstName') || ''),
+              },
+              {key: 'Last Name', value: String(formData.get('lastName') || '')},
+              {key: 'Email', value: String(formData.get('email') || '')},
+              {key: 'Phone', value: String(formData.get('phone') || '')},
+              {key: 'Adults', value: String(formData.get('adults') || '')},
+              {key: 'Kids', value: String(formData.get('kids') || '')},
+              {key: 'Check In', value: String(formData.get('checkIn') || '')},
+              {key: 'Check Out', value: String(formData.get('checkOut') || '')},
+              {
+                key: 'Offer Title',
+                value: String(formData.get('offerTitle') || ''),
+              },
+              {
+                key: 'Offer Location',
+                value: String(formData.get('offerLocation') || ''),
+              },
+              {
+                key: 'Offer Image',
+                value: String(formData.get('offerImage') || ''),
+              },
+              {
+                key: 'Offer Price',
+                value: String(formData.get('offerPrice') || ''),
+              },
+              {
+                key: 'offerNights',
+                value: String(formData.get('offerNights') || ''),
+              },
+              {
+                key: 'offerDays',
+                value: String(formData.get('offerDays') || ''),
+              },
+              {
+                key: 'offerDescription',
+                value: String(formData.get('offerDescription') || ''),
+              },
+              {key: 'Offer Expires At', value: expiresAt},
+              {key: 'Product Type', value: 'Main Vacation Package'},
+              {key: 'Price', value: String(formData.get('offerPrice') || '')},
+              {key: 'Bonus Vacation', value: 'false'},
+              {
+                key: 'TCPA Status',
+                value: String(
+                  formData.get('bypassConsent') === 'true'
+                    ? 'Not Approved'
+                    : formData.get('consent') === 'on' ||
+                        formData.get('consent') === 'true'
+                      ? 'Approved'
+                      : 'Not Approved',
+                ),
+              },
+            ];
 
       await cart.updateLines([
         {
@@ -356,56 +413,100 @@ export async function action({request, context}: ActionFunctionArgs) {
             },
             {key: 'Offer Expires At', value: expiresAt},
           ]
-        : [
-            {key: 'First Name', value: String(formData.get('firstName') || '')},
-            {key: 'Last Name', value: String(formData.get('lastName') || '')},
-            {key: 'Email', value: String(formData.get('email') || '')},
-            {key: 'Phone', value: String(formData.get('phone') || '')},
-            {key: 'Adults', value: String(formData.get('adults') || '')},
-            {key: 'Kids', value: String(formData.get('kids') || '')},
-            {key: 'Check In', value: String(formData.get('checkIn') || '')},
-            {key: 'Check Out', value: String(formData.get('checkOut') || '')},
-            {
-              key: 'Offer Title',
-              value: String(formData.get('offerTitle') || ''),
-            },
-            {
-              key: 'Offer Location',
-              value: String(formData.get('offerLocation') || ''),
-            },
-            {
-              key: 'Offer Image',
-              value: String(formData.get('offerImage') || ''),
-            },
-            {
-              key: 'Offer Price',
-              value: String(formData.get('offerPrice') || ''),
-            },
-            {
-              key: 'offerNights',
-              value: String(formData.get('offerNights') || ''),
-            },
-            {key: 'offerDays', value: String(formData.get('offerDays') || '')},
-            {
-              key: 'offerDescription',
-              value: String(formData.get('offerDescription') || ''),
-            },
-            {key: 'Offer Expires At', value: expiresAt},
-            {key: 'Product Type', value: 'Main Vacation Package'},
-            {key: 'Price', value: String(formData.get('offerPrice') || '')},
-            {key: 'Bonus Vacation', value: 'false'},
-            {
-              key: 'TCPA Status',
-              value: String(
-                formData.get('bypassConsent') === 'true'
-                  ? 'Not Approved'
-                  : formData.get('consent') === 'on' ||
-                      formData.get('consent') === 'true'
-                    ? 'Approved'
-                    : 'Not Approved',
-              ),
-            },
-          ];
+        : isDirectAddToCart
+          ? [
+              // Direct add-to-cart (from OfferCard or product detail page)
+              {
+                key: 'Offer Title',
+                value: String(formData.get('offerTitle') || ''),
+              },
+              {
+                key: 'Offer Location',
+                value: String(formData.get('offerLocation') || ''),
+              },
+              {
+                key: 'Offer Image',
+                value: String(formData.get('offerImage') || ''),
+              },
+              {
+                key: 'Offer Price',
+                value: String(formData.get('offerPrice') || ''),
+              },
+              {
+                key: 'offerNights',
+                value: String(formData.get('offerNights') || ''),
+              },
+              {
+                key: 'offerDays',
+                value: String(formData.get('offerDays') || ''),
+              },
+              {
+                key: 'offerDescription',
+                value: String(formData.get('offerDescription') || ''),
+              },
+              {key: 'Offer Expires At', value: expiresAt},
+              {key: 'Product Type', value: 'Main Vacation Package'},
+              {key: 'Price', value: String(formData.get('offerPrice') || '')},
+              {key: 'Bonus Vacation', value: 'false'},
+              {key: 'TCPA Status', value: 'Not Approved'},
+            ]
+          : [
+              // Full form submission with personal information
+              {
+                key: 'First Name',
+                value: String(formData.get('firstName') || ''),
+              },
+              {key: 'Last Name', value: String(formData.get('lastName') || '')},
+              {key: 'Email', value: String(formData.get('email') || '')},
+              {key: 'Phone', value: String(formData.get('phone') || '')},
+              {key: 'Adults', value: String(formData.get('adults') || '')},
+              {key: 'Kids', value: String(formData.get('kids') || '')},
+              {key: 'Check In', value: String(formData.get('checkIn') || '')},
+              {key: 'Check Out', value: String(formData.get('checkOut') || '')},
+              {
+                key: 'Offer Title',
+                value: String(formData.get('offerTitle') || ''),
+              },
+              {
+                key: 'Offer Location',
+                value: String(formData.get('offerLocation') || ''),
+              },
+              {
+                key: 'Offer Image',
+                value: String(formData.get('offerImage') || ''),
+              },
+              {
+                key: 'Offer Price',
+                value: String(formData.get('offerPrice') || ''),
+              },
+              {
+                key: 'offerNights',
+                value: String(formData.get('offerNights') || ''),
+              },
+              {
+                key: 'offerDays',
+                value: String(formData.get('offerDays') || ''),
+              },
+              {
+                key: 'offerDescription',
+                value: String(formData.get('offerDescription') || ''),
+              },
+              {key: 'Offer Expires At', value: expiresAt},
+              {key: 'Product Type', value: 'Main Vacation Package'},
+              {key: 'Price', value: String(formData.get('offerPrice') || '')},
+              {key: 'Bonus Vacation', value: 'false'},
+              {
+                key: 'TCPA Status',
+                value: String(
+                  formData.get('bypassConsent') === 'true'
+                    ? 'Not Approved'
+                    : formData.get('consent') === 'on' ||
+                        formData.get('consent') === 'true'
+                      ? 'Approved'
+                      : 'Not Approved',
+                ),
+              },
+            ];
 
       const result = await cart.addLines([
         {
@@ -416,31 +517,47 @@ export async function action({request, context}: ActionFunctionArgs) {
       ]);
     }
     // Add cart-level attributes for Shopify Admin visibility
-    await cart.updateAttributes([
-      {key: 'First Name', value: String(formData.get('firstName') || '')},
-      {key: 'Last Name', value: String(formData.get('lastName') || '')},
-      {key: 'Email', value: String(formData.get('email') || '')},
-      {key: 'Phone', value: String(formData.get('phone') || '')},
-      {key: 'Adults', value: String(formData.get('adults') || '')},
-      {key: 'Kids', value: String(formData.get('kids') || '')},
-      {
-        key: 'Consent',
-        value: String(
-          formData.get('bypassConsent') === 'true'
-            ? 'Not Approved'
-            : formData.get('consent') === 'on' ||
-                formData.get('consent') === 'true'
-              ? 'Approved'
-              : 'Not Approved',
-        ),
-      },
-      {key: 'Check In', value: String(formData.get('checkIn') || '')},
-      {key: 'Check Out', value: String(formData.get('checkOut') || '')},
-    ]);
+    if (isDirectAddToCart) {
+      // For direct add-to-cart, set minimal cart-level attributes
+      await cart.updateAttributes([{key: 'Consent', value: 'Not Approved'}]);
+    } else {
+      // For full form submissions, set all cart-level attributes
+      await cart.updateAttributes([
+        {key: 'First Name', value: String(formData.get('firstName') || '')},
+        {key: 'Last Name', value: String(formData.get('lastName') || '')},
+        {key: 'Email', value: String(formData.get('email') || '')},
+        {key: 'Phone', value: String(formData.get('phone') || '')},
+        {key: 'Adults', value: String(formData.get('adults') || '')},
+        {key: 'Kids', value: String(formData.get('kids') || '')},
+        {
+          key: 'Consent',
+          value: String(
+            formData.get('bypassConsent') === 'true'
+              ? 'Not Approved'
+              : formData.get('consent') === 'on' ||
+                  formData.get('consent') === 'true'
+                ? 'Approved'
+                : 'Not Approved',
+          ),
+        },
+        {key: 'Check In', value: String(formData.get('checkIn') || '')},
+        {key: 'Check Out', value: String(formData.get('checkOut') || '')},
+      ]);
+    }
     // For regular add-to-cart, just redirect back to cart page
+    const cartData = await cart.get();
+    if (cartData?.id) {
+      const headers = cart.setCartId(cartData.id);
+      return redirect('/cart', {headers});
+    }
     return redirect('/cart');
   }
   // Redirect to cart page (not checkout)
+  const cartData = await cart.get();
+  if (cartData?.id) {
+    const headers = cart.setCartId(cartData.id);
+    return redirect('/cart', {headers});
+  }
   return redirect('/cart');
 }
 
