@@ -51,27 +51,24 @@ export default function ContactUs() {
     setSubmitMessage('');
 
     try {
-      // Get your shop domain from environment or hardcode it
-      const shopDomain = window.location.hostname; // or your-shop.myshopify.com
+      const payload = {
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        email: formData.email,
+        phone_number: formData.phone,
+        message: formData.message,
+      };
 
-      const contactFormData = new FormData();
-      contactFormData.append('form_type', 'contact');
-      contactFormData.append('utf8', '✓');
-      contactFormData.append(
-        'contact[name]',
-        `${formData.firstName} ${formData.lastName}`,
-      );
-      contactFormData.append('contact[email]', formData.email);
-      contactFormData.append('contact[phone]', formData.phone);
-      contactFormData.append('contact[body]', formData.message);
-
-      const response = await fetch(`https://${shopDomain}/contact`, {
-        method: 'POST',
-        body: contactFormData,
-        headers: {
-          Accept: 'application/json, text/plain, */*',
+      const response = await fetch(
+        'https://rxmqy989nf.execute-api.us-east-2.amazonaws.com/submit',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
         },
-      });
+      );
 
       if (response.ok) {
         clearForm();
