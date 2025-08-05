@@ -102,8 +102,8 @@ Fill out the form below and we'll get back to you within one business day."
         >
           {/* Left: Form */}
           <div
-            className="flex-1 bg-gray-100 rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6 md:p-8 flex flex-col gap-4 min-w-[0] animate-fade-in justify-between w-full max-w-full"
-            style={{minHeight: 520}}
+            className="flex-1 bg-gray-100 rounded-xl shadow-lg border border-gray-200 sm:p-6 md:p-8 flex flex-col gap-4 min-w-[0] min-h-screen md:min-h-[820px] animate-fade-in justify-between w-full max-w-full"
+            style={{minHeight: 820}}
           >
             <div className="w-full">
               <iframe
@@ -112,20 +112,19 @@ Fill out the form below and we'll get back to you within one business day."
                 allowTransparency={true}
                 allow="geolocation; microphone; camera; fullscreen; payment"
                 src="https://forms.inboundrequest.com/252155661988065"
-                frameBorder="0"
                 style={{
                   minWidth: '100%',
                   maxWidth: '100%',
-                  height: '539px',
                   border: 'none',
+                  height: '100%',
+                  minHeight: 800,
                 }}
-                scrolling="no"
               ></iframe>
             </div>
           </div>
           {/* Right: Contact Cards */}
           <div
-            className="flex flex-col flex-1 min-w-[0] max-w-full md:max-w-sm justify-between mt-8 md:mt-0 w-full"
+            className="flex flex-col flex-1 min-w-[0] max-w-full md:max-w-sm gap-8 mt-8 md:mt-0 w-full"
             style={{
               minHeight: 520,
             }}

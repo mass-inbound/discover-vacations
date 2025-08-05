@@ -27,6 +27,10 @@ export default async function handleRequest(
       'ws://*.tryhydrogen.dev:*',
       'https://rxmqy989nf.execute-api.us-east-2.amazonaws.com', // Allow external contact API
     ],
+    frameSrc: [
+      "'self'",
+      'https://forms.inboundrequest.com', // Allow iframes from Jotform
+    ],
   });
 
   const body = await renderToReadableStream(
