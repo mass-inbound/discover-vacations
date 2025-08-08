@@ -51,7 +51,7 @@ export default function AboutUs() {
               <br />
               More For Less.
             </h1>
-            <p className="text-[#101010] text-[18px] font-[400] md:pt-10 font-avenir">
+            <p className="text-[#101010] text-[18px] font-[400] md:pt-10 font-avenir text-center md:text-left">
               At Discover Vacations, we believe planning your next getaway
               should be as exciting as the trip itself. That&apos;s why
               we&apos;ve built a smarter, simpler way to access vacation
@@ -79,18 +79,18 @@ export default function AboutUs() {
       </div>
       {/* Mission and Values Section */}
       <div className="max-w-4xl mx-auto md:mt-24 mt-100 text-center px-6 md:px-8">
-        <h4 className="text-[#2AB7B7] text-[20px] md:text-lg font-semibold mb-3 tracking-widest uppercase font-plusjakarta">
+        <h4 className="text-[#2AB7B7] text-[22px] font-semibold mb-3 tracking-widest uppercase font-plusjakarta">
           OUR MISSION
         </h4>
-        <p className="text-[#070707] mb-12 text-base leading-relaxed max-w-3xl mx-auto">
+        <p className="text-[#070707] mb-12 text-[18px] font-[500] leading-relaxed max-w-4xl mx-auto font-plusjakarta">
           To provide travelers with high-quality, value-packed vacation
           experiences through transparent offers, flexible support, and
           unmatched customer service — all backed by a team you can trust.
         </p>
-        <h4 className="text-[#2AB7B7] font-plusjakarta text-[20px] md:text-lg font-semibold mb-3 tracking-widest uppercase font-plusjakarta">
+        <h4 className="text-[#2AB7B7] font-plusjakarta text-[22px] font-semibold mb-3 tracking-widest uppercase font-plusjakarta">
           OUR VALUES
         </h4>
-        <div className="text-[#070707] font-plusjakarta text-base md:text-lg leading-relaxed max-w-3xl mx-auto space-y-4">
+        <div className="text-[#070707] font-plusjakarta text-[18px] font-[500] leading-relaxed max-w-4xl mx-auto space-y-4">
           <p>
             Discover Vacations was created by a team of seasoned travel
             professionals with a shared mission: to make it easier for customers
@@ -114,7 +114,7 @@ export default function AboutUs() {
       {/* What Sets Us Apart Section */}
       <div className="relative w-full pt-24 pb-16">
         <div className="max-w-5xl mx-auto px-6 md:px-4">
-          <h2 className="text-3xl font-semibold text-center mb-12 text-[#0e424e] font-monteserrat">
+          <h2 className="text-[36px] font-[500] text-center mb-6 text-[#0e424e] font-monteserrat">
             What Sets Us Apart
           </h2>
 
@@ -124,10 +124,10 @@ export default function AboutUs() {
               <div className="bg-[#2AB7B7] rounded-full w-16 h-16 flex items-center justify-center mb-4">
                 <FaTag className="text-white text-xl" />
               </div>
-              <h3 className="font-semibold text-lg text-gray-800 mb-3">
+              <h3 className="font-[600] text-[24px] text-[#113B3F] mb-1 font-plusjakarta">
                 Verified Travel Offers
               </h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
+              <p className="text-gray-600 text-sm leading-relaxed font-avenir font-[400] text-[16px]">
                 All of our vacation packages are backed by official Seller of
                 Travel registrations and reviewed for security and accuracy.
               </p>
@@ -137,10 +137,10 @@ export default function AboutUs() {
               <div className="bg-[#2AB7B7] rounded-full w-16 h-16 flex items-center justify-center mb-4">
                 <FaCalendarAlt className="text-white text-xl" />
               </div>
-              <h3 className="font-semibold text-lg text-gray-800 mb-3">
+              <h3 className="font-[600] text-[24px] text-[#113B3F] mb-1 font-plusjakarta">
                 Flexible Booking Options
               </h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
+              <p className="text-gray-600 text-sm leading-relaxed font-avenir font-[400] text-[16px]">
                 Choose your destination, plan your trip, and adjust when needed
                 — with full support along the way.
               </p>
@@ -150,10 +150,10 @@ export default function AboutUs() {
               <div className="bg-[#2AB7B7] rounded-full w-16 h-16 flex items-center justify-center mb-4">
                 <FaGift className="text-white text-xl" />
               </div>
-              <h3 className="font-semibold text-lg text-gray-800 mb-3">
+              <h3 className="font-[600] text-[24px] text-[#113B3F] mb-1 font-plusjakarta">
                 More For Less
               </h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
+              <p className="text-gray-600 text-sm leading-relaxed font-avenir font-[400] text-[16px]">
                 Every package includes bonus perks like hotel savings, cruise
                 options, or travel extras to help you get the most value.
               </p>
@@ -163,10 +163,10 @@ export default function AboutUs() {
               <div className="bg-[#2AB7B7] rounded-full w-16 h-16 flex items-center justify-center mb-4">
                 <FaLaptop className="text-white text-xl" />
               </div>
-              <h3 className="font-semibold text-lg text-gray-800 mb-3">
+              <h3 className="font-[600] text-[24px] text-[#113B3F] mb-1 font-plusjakarta">
                 Easy Self–Service Booking Portal
               </h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
+              <p className="text-gray-600 text-sm leading-relaxed font-avenir font-[400] text-[16px]">
                 Book, manage, or reschedule your getaway anytime through our
                 secure online portal — it&apos;s travel made simple.
               </p>
@@ -186,10 +186,11 @@ export default function AboutUs() {
         />
         {/* Who We Are */}
         <div className="max-w-4xl mx-auto px-6 md:px-8">
-          <h2 className="text-3xl font-semibold text-center mb-6 text-[#0e424e] font-monteserrat">
+          <h2 className="text-[36px] font-[500] text-center mb-3 text-[#0e424e] font-monteserrat">
             Who We Are
           </h2>
-          <p className="text-center text-[#1A202C] mb-16 text-base leading-relaxed max-w-3xl mx-auto font-plusjakarta">
+          {/* <p className="text-center text-[#1A202C] mb-16 text-base leading-relaxed max-w-3xl mx-auto font-plusjakarta"> */}
+          <p className="text-[#070707] font-plusjakarta text-[18px] font-[500] leading-relaxed max-w-4xl mx-auto text-center mb-12">
             We&apos;re a team of travel professionals who&apos;ve spent decades
             helping families, couples, and explorers just like you create
             unforgettable getaways. With experience in vacation planning, resort
@@ -198,10 +199,10 @@ export default function AboutUs() {
             check in.
           </p>
           {/* Trusted and Certified */}
-          <h2 className="text-3xl font-semibold text-center mb-6 text-[#0e424e] font-monteserrat">
+          <h2 className="text-[36px] font-[500] text-center mb-3 text-[#0e424e] font-monteserrat">
             Trusted and Certified
           </h2>
-          <div className="text-center text-[#1A202C] text-base leading-relaxed max-w-3xl mx-auto space-y-4 font-plusjakarta">
+          <div className="text-center text-[#070707] font-plusjakarta text-[18px] font-[500] leading-relaxed max-w-4xl mx-auto mb-12">
             <p>
               Discover Vacations is a registered travel provider that meets all
               required industry standards to ensure your vacation is secure and
@@ -217,7 +218,7 @@ export default function AboutUs() {
             </p>
           </div>
 
-          <p className="text-xs text-center text-[#1A202C] max-w-3xl mx-auto mt-8">
+          <p className="text-[13px] font-[400] text-center text-[#1A202C] max-w-3xl mx-auto mt-8 font-avenir">
             Discover Vacations operates under authorized Seller of Travel
             registrations: Florida ST-17213, California CST 2025290-40,
             Washington UBI 602 005 020, and Hawaii TAR-5681.
