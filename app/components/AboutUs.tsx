@@ -51,7 +51,7 @@ export default function AboutUs() {
               <br />
               More For Less.
             </h1>
-            <p className="text-[#101010] text-[18px] font-[400] md:pt-10 font-avenir text-center md:text-left">
+            <p className="text-[#070707] text-[18px] font-[500] md:pt-10 font-plusjakarta text-center md:text-left">
               At Discover Vacations, we believe planning your next getaway
               should be as exciting as the trip itself. That&apos;s why
               we&apos;ve built a smarter, simpler way to access vacation
