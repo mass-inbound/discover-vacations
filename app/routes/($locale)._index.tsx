@@ -208,9 +208,9 @@ export default function Homepage() {
         </div>
         {/* Logo at bottom right */}
         <img
-          src="/assets/heroImageLogo.png"
+          src="/assets/heroImageLogo1.png"
           alt="Logo"
-          className="absolute right-8 bottom-8 w-32 md:w-[225px] h-auto z-20"
+          className="absolute right-4 md:right-8 bottom-8 w-32 md:w-[225px] h-auto z-20"
         />
         {/* Scroll Button */}
         <button
