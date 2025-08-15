@@ -667,6 +667,8 @@ export default function Cart() {
     adults: number;
     kids: number;
     consent: boolean;
+    checkIn: string | null;
+    checkOut: string | null;
   };
 
   const [form, setForm] = useState<CartFormState>(() => {
@@ -689,6 +691,8 @@ export default function Cart() {
       adults: 0,
       kids: 0,
       consent: false,
+      checkIn: null,
+      checkOut: null,
     };
   });
 
@@ -762,12 +766,65 @@ export default function Cart() {
   // Date range picker
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [checkIn, setCheckIn] = useState<Date | null>(null);
-  const [checkOut, setCheckOut] = useState<Date | null>(null);
+  const [checkIn, setCheckIn] = useState<Date | null>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('cartForm');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (
+            parsed &&
+            typeof parsed === 'object' &&
+            'checkIn' in parsed &&
+            typeof parsed.checkIn === 'string'
+          ) {
+            return new Date(parsed.checkIn);
+          }
+        } catch {
+          // ignore parse error
+        }
+      }
+    }
+    return null;
+  });
+  const [checkOut, setCheckOut] = useState<Date | null>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('cartForm');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (
+            parsed &&
+            typeof parsed === 'object' &&
+            'checkOut' in parsed &&
+            typeof parsed.checkOut === 'string'
+          ) {
+            return new Date(parsed.checkOut);
+          }
+        } catch {
+          // ignore parse error
+        }
+      }
+    }
+    return null;
+  });
 
+  // Update form state when dates change to persist them
+  useEffect(() => {
+    updateFormWithDates();
+  }, [checkIn, checkOut]);
   // Calendar restriction: only allow selection 9 days after today
   const today = new Date();
   const minSelectableDate = addDays(today, 8);
+
+  // Function to update form with date picker values
+  function updateFormWithDates() {
+    setForm((prev) => ({
+      ...prev,
+      checkIn: checkIn ? checkIn.toISOString() : null,
+      checkOut: checkOut ? checkOut.toISOString() : null,
+    }));
+  }
 
   // helper to generate days grid for the visible month
   const monthData = useMemo(() => {
