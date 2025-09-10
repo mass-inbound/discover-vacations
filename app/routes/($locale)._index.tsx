@@ -30,7 +30,7 @@ import {useOptimisticCart} from '@shopify/hydrogen';
 import VacationProcess from '~/components/VacationProcess';
 
 export const meta: MetaFunction = () => {
-  return [{title: 'Hydrogen | Home'}];
+  return [{title: 'My Discovery Vacations'}];
 };
 
 const COLLECTION_PRODUCT_FRAGMENT = `#graphql
