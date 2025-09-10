@@ -8,7 +8,7 @@ type SelectedPolicies = keyof Pick<
 >;
 
 const SHOPIFY_PAGE_HANDLES = [
-  'terms-conditions',
+  'terms-of-use',
   'terms-conditions-orlando',
   'terms-conditions-poconos',
   'privacy-policy',

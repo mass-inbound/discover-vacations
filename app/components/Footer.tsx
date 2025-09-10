@@ -182,10 +182,7 @@ export function Footer({
                 <Link to="/policies/privacy-policy" className="hover:underline">
                   Privacy & Policy
                 </Link>
-                <Link
-                  to="/policies/terms-conditions"
-                  className="hover:underline"
-                >
+                <Link to="/policies/terms-of-use" className="hover:underline">
                   Terms of Use
                 </Link>
               </div>
