@@ -6,18 +6,18 @@ const faqs = [
   {
     question: 'Need Assistance?',
     summary:
-      'For the fastest service, we recommend using our Ask Discover form located in the Help Section or email us at Customercare@mydiscovervacation.com and one of our service agents will respond as soon as possible. Response times may vary, but we aim to reply within one business day. Please note: Phone and mail inquiries may experience longer wait times.',
+      'For the fastest service, we recommend using our Ask Discover form located in the Help Section or email us at customercare@mydiscovervacations.com and one of our service agents will respond as soon as possible. Response times may vary, but we aim to reply within one business day. Please note: Phone and mail inquiries may experience longer wait times.',
     answer: (
       <>
         For the fastest service, we recommend using our Ask Discover form
         located in the Help Section or email us at
         <a
-          href="mailto:Customercare@mydiscovervacation.com"
+          href="mailto:customercare@mydiscovervacations.com"
           className="text-blue-600 underline"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Customercare@mydiscovervacation.com
+          customercare@mydiscovervacations.com
         </a>{' '}
         and one of our service agents will respond as soon as possible. Response
         times may vary, but we aim to reply within one business day. Please
