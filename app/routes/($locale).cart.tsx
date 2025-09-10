@@ -733,7 +733,7 @@ export default function Cart() {
     }
     // Only validate consent if bypassConsent is false
     if (!bypassConsent && !form.consent) {
-      newErrors.consent = 'You must agree to the terms.';
+      newErrors.consent = 'You Must Agree to the Terms to Proceed.';
     }
     return newErrors;
   }
