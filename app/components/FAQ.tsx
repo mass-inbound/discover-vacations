@@ -10,7 +10,7 @@ const faqs = [
     answer: (
       <>
         For the fastest service, we recommend using our Ask Discover form
-        located in the Help Section or email us at
+        located in the Help Section or email us at{' '}
         <a
           href="mailto:customercare@mydiscovervacations.com"
           className="text-blue-600 underline"

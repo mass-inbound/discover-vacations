@@ -764,7 +764,7 @@ export default function Cart() {
   }
 
   // Date range picker
-  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(true);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [checkIn, setCheckIn] = useState<Date | null>(() => {
     if (typeof window !== 'undefined') {
