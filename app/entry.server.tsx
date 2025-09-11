@@ -43,7 +43,12 @@ export default async function handleRequest(
       'https://newassets.hcaptcha.com',
       'https://js.hcaptcha.com',
     ],
-    fontSrc: ["'self'", 'https://fonts.shopifycdn.com'],
+    fontSrc: [
+      "'self'",
+      'https://fonts.shopifycdn.com',
+      'https://cdn.shopify.com',
+      'data:',
+    ],
     formAction: [
       "'self'",
       'https://forms.shopifyapps.com',
