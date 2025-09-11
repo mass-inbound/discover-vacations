@@ -17,19 +17,56 @@ export default async function handleRequest(
       checkoutDomain: context.env.PUBLIC_CHECKOUT_DOMAIN,
       storeDomain: context.env.PUBLIC_STORE_DOMAIN,
     },
+    defaultSrc: [
+      "'self'",
+      'https://js.hcaptcha.com',
+      'https://fonts.shopifycdn.com',
+      'https://newassets.hcaptcha.com',
+    ],
+    scriptSrc: [
+      "'self' 'unsafe-inline'", // Allow inline scripts for Shopify Forms
+      'https://forms.shopifyapps.com',
+      'https://js.hcaptcha.com',
+      'https://newassets.hcaptcha.com',
+      'https://cdn.shopify.com',
+    ],
+    styleSrc: [
+      "'self' 'unsafe-inline'", // Allow inline styles from formStyle
+      'https://fonts.shopifycdn.com',
+      'https://newassets.hcaptcha.com',
+      'https://cdn.shopify.com',
+    ],
+    imgSrc: [
+      "'self'",
+      'data:',
+      'https://cdn.shopify.com',
+      'https://newassets.hcaptcha.com',
+      'https://js.hcaptcha.com',
+    ],
+    fontSrc: ["'self'", 'https://fonts.shopifycdn.com'],
+    formAction: [
+      "'self'",
+      'https://forms.shopifyapps.com',
+      'https://discover-vacations.myshopify.com',
+    ],
     connectSrc: [
       "'self'",
       'https://monorail-edge.shopifysvc.com',
       'https://discover-vacations.myshopify.com',
-      'http://localhost:*',
-      'ws://localhost:*',
-      'ws://127.0.0.1:*',
-      'ws://*.tryhydrogen.dev:*',
-      'https://rxmqy989nf.execute-api.us-east-2.amazonaws.com', // Allow external contact API
+      'https://forms.shopifyapps.com',
+      'https://otlp-http-production.shopifysvc.com',
+      'https://notify.bugsnag.com',
     ],
     frameSrc: [
       "'self'",
-      'https://forms.inboundrequest.com', // Allow iframes from Jotform
+      'https://forms.shopifyapps.com',
+      'https://newassets.hcaptcha.com', // Added for hCaptcha iframe
+      'https://js.hcaptcha.com', // Added for hCaptcha iframe
+    ],
+    mediaSrc: [
+      "'self'",
+      'https://newassets.hcaptcha.com',
+      'https://js.hcaptcha.com',
     ],
   });
 
