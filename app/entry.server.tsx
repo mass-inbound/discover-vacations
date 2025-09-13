@@ -48,6 +48,7 @@ export default async function handleRequest(
       "'self'",
       'https://forms.shopifyapps.com',
       'https://discover-vacations.myshopify.com',
+      'https://mydiscovervacations.com',
     ],
     connectSrc: [
       "'self'",
