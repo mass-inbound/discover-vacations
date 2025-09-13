@@ -12,11 +12,34 @@ export default async function handleRequest(
   reactRouterContext: EntryContext,
   context: AppLoadContext,
 ) {
+  // Environment flags
+  const isDev = process.env.NODE_ENV !== 'production';
+
+  // If you use an HTTPS tunnel (ngrok/localtunnel) set it in env: PUBLIC_DEV_TUNNEL
+  // Example: PUBLIC_DEV_TUNNEL="https://abcd-1234.ngrok.io"
+  // const devTunnel =
+  //   context.env?.PUBLIC_DEV_TUNNEL || process.env.PUBLIC_DEV_TUNNEL;
+
+  // const devFormHosts = [
+  //   ...(isDev ? ['http://localhost:3000', 'http://127.0.0.1:3000'] : []),
+  //   // include ngrok/https tunnel in formAction if provided
+  //   ...(devTunnel ? [devTunnel] : []),
+  // ];
+
+  // const devConnectHosts = [
+  //   ...(isDev
+  //     ? ['http://localhost:*', 'ws://localhost:*', 'ws://127.0.0.1:*']
+  //     : []),
+  //   ...(devTunnel ? [devTunnel] : []),
+  // ];
+
   const {nonce, header, NonceProvider} = createContentSecurityPolicy({
     shop: {
       checkoutDomain: context.env.PUBLIC_CHECKOUT_DOMAIN,
       storeDomain: context.env.PUBLIC_STORE_DOMAIN,
     },
+
+    // allow sources commonly needed for Hydrogen + forms + hcaptcha + fonts etc.
     defaultSrc: [
       "'self'",
       'https://js.hcaptcha.com',
@@ -24,14 +47,14 @@ export default async function handleRequest(
       'https://newassets.hcaptcha.com',
     ],
     scriptSrc: [
-      "'self' 'unsafe-inline'", // Allow inline scripts for Shopify Forms
+      "'self' 'unsafe-inline'", // Allow inline scripts for Shopify Forms if you need them
       'https://forms.shopifyapps.com',
       'https://js.hcaptcha.com',
       'https://newassets.hcaptcha.com',
       'https://cdn.shopify.com',
     ],
     styleSrc: [
-      "'self' 'unsafe-inline'", // Allow inline styles from formStyle
+      "'self' 'unsafe-inline'",
       'https://fonts.shopifycdn.com',
       'https://newassets.hcaptcha.com',
       'https://cdn.shopify.com',
@@ -49,6 +72,8 @@ export default async function handleRequest(
       'https://forms.shopifyapps.com',
       'https://discover-vacations.myshopify.com',
       'https://mydiscovervacations.com',
+      // include any dev hosts conditionally
+      // ...devFormHosts,
     ],
     connectSrc: [
       "'self'",
@@ -57,20 +82,18 @@ export default async function handleRequest(
       'https://forms.shopifyapps.com',
       'https://otlp-http-production.shopifysvc.com',
       'https://notify.bugsnag.com',
-      'http://localhost:*',
-      'ws://localhost:*',
-      'ws://127.0.0.1:*',
-      'ws://*.tryhydrogen.dev:*',
-      'https://rxmqy989nf.execute-api.us-east-2.amazonaws.com', // Allow external contact API
-      'https://mydiscovervacations.com', // Allow form connections
-      'https://*.mydiscovervacations.com', // Include subdomains
+      'https://rxmqy989nf.execute-api.us-east-2.amazonaws.com',
+      // dev connect hosts (http/ws local or ngrok)
+      // ...devConnectHosts,
+      // allow any additional subdomain variants you need:
+      'https://*.mydiscovervacations.com',
     ],
     frameSrc: [
       "'self'",
       'https://forms.shopifyapps.com',
-      'https://forms.inboundrequest.com', // Allow iframes from Jotform
-      'https://newassets.hcaptcha.com', // Added for hCaptcha iframe
-      'https://js.hcaptcha.com', // Added for hCaptcha iframe
+      'https://forms.inboundrequest.com',
+      'https://newassets.hcaptcha.com',
+      'https://js.hcaptcha.com',
     ],
     mediaSrc: [
       "'self'",
@@ -78,6 +101,12 @@ export default async function handleRequest(
       'https://js.hcaptcha.com',
     ],
   });
+
+  // optional: DEBUG - print header to server logs when in dev
+  if (isDev) {
+    // eslint-disable-next-line no-console
+    console.log('CSP header being set:', header);
+  }
 
   const body = await renderToReadableStream(
     <NonceProvider>
