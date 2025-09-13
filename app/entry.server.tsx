@@ -62,6 +62,8 @@ export default async function handleRequest(
       'ws://127.0.0.1:*',
       'ws://*.tryhydrogen.dev:*',
       'https://rxmqy989nf.execute-api.us-east-2.amazonaws.com', // Allow external contact API
+      'https://mydiscovervacations.com', // Allow form connections
+      'https://*.mydiscovervacations.com', // Include subdomains
     ],
     frameSrc: [
       "'self'",
