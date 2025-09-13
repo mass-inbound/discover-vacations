@@ -43,12 +43,7 @@ export default async function handleRequest(
       'https://newassets.hcaptcha.com',
       'https://js.hcaptcha.com',
     ],
-    fontSrc: [
-      "'self'",
-      'https://fonts.shopifycdn.com',
-      'https://cdn.shopify.com',
-      'data:',
-    ],
+    fontSrc: ["'self'", 'https://fonts.shopifycdn.com'],
     formAction: [
       "'self'",
       'https://forms.shopifyapps.com',
@@ -61,10 +56,16 @@ export default async function handleRequest(
       'https://forms.shopifyapps.com',
       'https://otlp-http-production.shopifysvc.com',
       'https://notify.bugsnag.com',
+      'http://localhost:*',
+      'ws://localhost:*',
+      'ws://127.0.0.1:*',
+      'ws://*.tryhydrogen.dev:*',
+      'https://rxmqy989nf.execute-api.us-east-2.amazonaws.com', // Allow external contact API
     ],
     frameSrc: [
       "'self'",
       'https://forms.shopifyapps.com',
+      'https://forms.inboundrequest.com', // Allow iframes from Jotform
       'https://newassets.hcaptcha.com', // Added for hCaptcha iframe
       'https://js.hcaptcha.com', // Added for hCaptcha iframe
     ],
