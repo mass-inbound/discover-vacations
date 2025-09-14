@@ -139,10 +139,10 @@ export async function action({request, context}: ActionFunctionArgs) {
             {key: 'offerNights', value: String(offerNights || '')},
             {key: 'offerDays', value: String(offerDays || '')},
             {key: 'offerDescription', value: String(offerDescription || '')},
-            {key: 'Offer Expires At', value: expiresAt},
+            // {key: 'Offer Expires At', value: expiresAt},
             {key: 'Product Type', value: 'Main Vacation Package'},
-            {key: 'Price', value: String(offerPrice || '')},
-            {key: 'Bonus Vacation', value: 'false'},
+            // {key: 'Price', value: String(offerPrice || '')},
+            // {key: 'Bonus Vacation', value: 'false'},
             {
               key: 'TCPA Status',
               value: String(
@@ -328,10 +328,10 @@ export async function action({request, context}: ActionFunctionArgs) {
                 key: 'offerDescription',
                 value: String(formData.get('offerDescription') || ''),
               },
-              {key: 'Offer Expires At', value: expiresAt},
+              // {key: 'Offer Expires At', value: expiresAt},
               {key: 'Product Type', value: 'Main Vacation Package'},
-              {key: 'Price', value: String(formData.get('offerPrice') || '')},
-              {key: 'Bonus Vacation', value: 'false'},
+              // {key: 'Price', value: String(formData.get('offerPrice') || '')},
+              // {key: 'Bonus Vacation', value: 'false'},
               {key: 'TCPA Status', value: 'Not Approved'},
             ]
           : [
@@ -375,10 +375,10 @@ export async function action({request, context}: ActionFunctionArgs) {
                 key: 'offerDescription',
                 value: String(formData.get('offerDescription') || ''),
               },
-              {key: 'Offer Expires At', value: expiresAt},
+              // {key: 'Offer Expires At', value: expiresAt},
               {key: 'Product Type', value: 'Main Vacation Package'},
-              {key: 'Price', value: String(formData.get('offerPrice') || '')},
-              {key: 'Bonus Vacation', value: 'false'},
+              // {key: 'Price', value: String(formData.get('offerPrice') || '')},
+              // {key: 'Bonus Vacation', value: 'false'},
               {
                 key: 'TCPA Status',
                 value: String(
@@ -465,10 +465,10 @@ export async function action({request, context}: ActionFunctionArgs) {
                 key: 'offerDescription',
                 value: String(formData.get('offerDescription') || ''),
               },
-              {key: 'Offer Expires At', value: expiresAt},
+              // {key: 'Offer Expires At', value: expiresAt},
               {key: 'Product Type', value: 'Main Vacation Package'},
-              {key: 'Price', value: String(formData.get('offerPrice') || '')},
-              {key: 'Bonus Vacation', value: 'false'},
+              // {key: 'Price', value: String(formData.get('offerPrice') || '')},
+              // {key: 'Bonus Vacation', value: 'false'},
               {key: 'TCPA Status', value: 'Not Approved'},
             ]
           : [
@@ -512,10 +512,10 @@ export async function action({request, context}: ActionFunctionArgs) {
                 key: 'offerDescription',
                 value: String(formData.get('offerDescription') || ''),
               },
-              {key: 'Offer Expires At', value: expiresAt},
+              // {key: 'Offer Expires At', value: expiresAt},
               {key: 'Product Type', value: 'Main Vacation Package'},
-              {key: 'Price', value: String(formData.get('offerPrice') || '')},
-              {key: 'Bonus Vacation', value: 'false'},
+              // {key: 'Price', value: String(formData.get('offerPrice') || '')},
+              // {key: 'Bonus Vacation', value: 'false'},
               {
                 key: 'TCPA Status',
                 value: String(
