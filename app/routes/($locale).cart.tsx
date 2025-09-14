@@ -785,7 +785,10 @@ export default function Cart() {
     return days;
   }, [currentMonth]);
 
-  function handleDateClick(day: Date) {
+  function handleDateClick(day: Date, e: React.MouseEvent) {
+    e.preventDefault(); // Prevent form submission
+    e.stopPropagation(); // Stop event bubbling
+
     if (!checkIn || (checkIn && checkOut)) {
       // Always set checkIn to the selected day
       setCheckIn(day);
@@ -1248,7 +1251,10 @@ export default function Cart() {
                     <input
                       type="checkbox"
                       checked={showDatePicker}
-                      onChange={() => setShowDatePicker(!showDatePicker)}
+                      onChange={(e) => {
+                        e.preventDefault();
+                        setShowDatePicker(!showDatePicker);
+                      }}
                       className="sr-only peer"
                       tabIndex={-1}
                     />
@@ -1281,17 +1287,29 @@ export default function Cart() {
                   <div className="space-y-4 w-full">
                     {/* Month nav */}
                     <div className="flex items-center justify-between text-white">
-                      <BiChevronLeft
+                      <button
+                        type="button"
                         className="w-5 h-5 cursor-pointer"
-                        onClick={() => setCurrentMonth((m) => addMonths(m, -1))}
-                      />
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setCurrentMonth((m) => addMonths(m, -1));
+                        }}
+                      >
+                        <BiChevronLeft className="w-5 h-5" />
+                      </button>
                       <span className="font-semibold">
                         {format(currentMonth, 'MMMM yyyy')}
                       </span>
-                      <BiChevronRight
+                      <button
+                        type="button"
                         className="w-5 h-5 cursor-pointer"
-                        onClick={() => setCurrentMonth((m) => addMonths(m, +1))}
-                      />
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setCurrentMonth((m) => addMonths(m, +1));
+                        }}
+                      >
+                        <BiChevronRight className="w-5 h-5" />
+                      </button>
                     </div>
 
                     {/* Days grid */}
@@ -1326,8 +1344,9 @@ export default function Cart() {
                             return (
                               <button
                                 key={idx}
-                                onClick={() =>
-                                  !isDisabled && handleDateClick(day)
+                                type="button"
+                                onClick={(e) =>
+                                  !isDisabled && handleDateClick(day, e)
                                 }
                                 className={`w-8 h-8 flex items-center justify-center rounded-full text-sm transition
                                 ${
@@ -1386,7 +1405,10 @@ export default function Cart() {
                       {upsellProductsInCart.length == 0 && !cartIsEmpty && (
                         <button
                           type="button"
-                          onClick={handleUpsellScroll}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleUpsellScroll();
+                          }}
                           className="flex items-center justify-center gap-2 text-white border-b-3 border-[#F2B233] text-[16px] font-[600] font-plusjakarta cursor-pointer transition-transform duration-300 hover:-translate-y-1"
                         >
                           <FaGift className="min-w-5 mb-1" />
@@ -1395,13 +1417,26 @@ export default function Cart() {
                           </span>
                         </button>
                       )}
-                      <button
-                        type="submit"
-                        className="w-full bg-[#2AB7B7] text-white rounded-lg p-3 mt-auto font-semibold flex items-center justify-center gap-2 text-base hover:bg-[#239f9f]"
-                      >
-                        <BsCreditCard2BackFill size={20} />
-                        Proceed to Checkout
-                      </button>
+                      <div className="flex flex-col items-center gap-2">
+                        <button
+                          type="submit"
+                          disabled={upsellProductsInCart.length === 0}
+                          className={`w-full rounded-lg p-3 mt-auto font-semibold flex items-center justify-center gap-2 text-base ${
+                            upsellProductsInCart.length === 0
+                              ? 'bg-[#2ab7b79d] text-white !cursor-not-allowed pointer-events-none'
+                              : 'bg-[#2AB7B7] text-white hover:bg-[#239f9f]'
+                          }`}
+                        >
+                          <BsCreditCard2BackFill size={20} />
+                          Proceed to Checkout
+                        </button>
+
+                        {upsellProductsInCart.length === 0 && (
+                          <p className="text-[12px] font-[500] text-gray-200">
+                            (*Select Bonus Vacation First)
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </div>
                 )}
@@ -1550,8 +1585,9 @@ export default function Cart() {
                             alt={attrs['Offer Title']}
                             className="w-16 h-16 object-cover rounded"
                           />
-                          <span className="text-[#0E424E] font-medium">
-                            {attrs['Offer Title']}
+                          <span className="text-[#0E424E] font-medium mr-6">
+                            {attrs['Offer Title'] ||
+                              '*No bonus vacation selected. Please choose bonus vacation again.'}
                           </span>
                           {/* Remove (X) button */}
                           <form
@@ -1719,7 +1755,7 @@ export default function Cart() {
                         </button>
                         {!product.variants.nodes[0]?.id || cartIsEmpty ? (
                           <span className="text-xs text-gray-600 mt-1">
-                            Select a main product first to add a bonus vacation.
+                            Select Destination first to add a bonus vacation.
                           </span>
                         ) : null}
                       </>
