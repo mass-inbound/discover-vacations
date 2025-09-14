@@ -21,6 +21,7 @@ import {addDays} from 'date-fns';
 import {BiChevronLeft, BiChevronRight} from 'react-icons/bi';
 import {BsCreditCard2BackFill, BsPlusCircleFill} from 'react-icons/bs';
 import {FaGift} from 'react-icons/fa6';
+import {useCartForm} from '~/components/CartFormContext';
 
 export const meta: MetaFunction = () => {
   return [{title: `Hydrogen | Cart`}];
@@ -238,6 +239,26 @@ export async function action({request, context}: ActionFunctionArgs) {
 
     // Check if this product is already in the cart
     const existingCart = await cart.get();
+    // Server-side enforcement: prevent selecting upsell without a main product selected
+    if (isBonusProduct) {
+      const hasMainInCart = existingCart?.lines?.nodes?.some((line: any) => {
+        const attrs = Object.fromEntries(
+          (line.attributes || []).map((attr: {key: string; value: string}) => [
+            attr.key,
+            attr.value,
+          ]),
+        );
+        return (
+          attrs['Product Type'] === 'Main Vacation Package' ||
+          attrs['Bonus Vacation'] === 'false'
+        );
+      });
+      const urlVariantId = new URL(request.url).searchParams.get('variantId');
+      if (!hasMainInCart && !urlVariantId) {
+        // No main product chosen; do not allow upsell-only add
+        return redirect('/cart?error=select-main-first');
+      }
+    }
     const existingLine = existingCart?.lines?.nodes?.find(
       (line: any) => line.merchandise.id === variantId,
     );
@@ -657,53 +678,13 @@ export default function Cart() {
 
   const cartOffer = getOfferFromCart(cart);
 
-  // Form state
-  type CartFormState = {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    phoneRaw: string;
-    adults: number;
-    kids: number;
-    consent: boolean;
-    checkIn: string | null;
-    checkOut: string | null;
-  };
-
-  const [form, setForm] = useState<CartFormState>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('cartForm');
-      if (saved) {
-        try {
-          return JSON.parse(saved) as CartFormState;
-        } catch {
-          // ignore parse error
-        }
-      }
-    }
-    return {
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '', // formatted
-      phoneRaw: '', // digits only
-      adults: 0,
-      kids: 0,
-      consent: false,
-      checkIn: null,
-      checkOut: null,
-    };
-  });
+  // Form state via Context (sessionStorage-backed)
+  const {form, setForm, showDatePicker, setShowDatePicker} = useCartForm();
 
   // State to track if "here" button was clicked (bypass consent)
   const [bypassConsent, setBypassConsent] = useState(false);
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('cartForm', JSON.stringify(form));
-    }
-  }, [form]);
+  // Persisting handled by context provider
 
   // Validation state
   const [errors, setErrors] = useState<any>({});
@@ -763,51 +744,14 @@ export default function Cart() {
     return newErrors;
   }
 
-  // Date range picker
-  const [showDatePicker, setShowDatePicker] = useState(true);
+  // Date range picker dates (UI only); persisted ISO strings live in form via context
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [checkIn, setCheckIn] = useState<Date | null>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('cartForm');
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          if (
-            parsed &&
-            typeof parsed === 'object' &&
-            'checkIn' in parsed &&
-            typeof parsed.checkIn === 'string'
-          ) {
-            return new Date(parsed.checkIn);
-          }
-        } catch {
-          // ignore parse error
-        }
-      }
-    }
-    return null;
-  });
-  const [checkOut, setCheckOut] = useState<Date | null>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('cartForm');
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          if (
-            parsed &&
-            typeof parsed === 'object' &&
-            'checkOut' in parsed &&
-            typeof parsed.checkOut === 'string'
-          ) {
-            return new Date(parsed.checkOut);
-          }
-        } catch {
-          // ignore parse error
-        }
-      }
-    }
-    return null;
-  });
+  const [checkIn, setCheckIn] = useState<Date | null>(
+    form.checkIn ? new Date(form.checkIn) : null,
+  );
+  const [checkOut, setCheckOut] = useState<Date | null>(
+    form.checkOut ? new Date(form.checkOut) : null,
+  );
 
   // Update form state when dates change to persist them
   useEffect(() => {
@@ -946,6 +890,13 @@ export default function Cart() {
 
   const upsellProductsInCart = getUpsellProductsInCart(cart, upsellProducts);
 
+  // If an upsell is present, auto-open date picker
+  useEffect(() => {
+    if (upsellProductsInCart.length > 0) {
+      setShowDatePicker(true);
+    }
+  }, [upsellProductsInCart.length, setShowDatePicker]);
+
   const selectedBonus = upsellProductsInCart[0];
   const selectedBonusVariantId = selectedBonus?.merchandise?.id;
 
@@ -991,11 +942,7 @@ export default function Cart() {
                 if (Object.keys(validationErrors).length > 0) {
                   e.preventDefault();
                 } else {
-                  // Don't prevent default - let the form submit to the action function
-                  // The action function will handle adding form data to cart and then redirect to checkout
-                  if (typeof window !== 'undefined') {
-                    localStorage.removeItem('cartForm');
-                  }
+                  // proceed submit; context will persist until redirect
                 }
               }}
             >
@@ -1301,7 +1248,7 @@ export default function Cart() {
                     <input
                       type="checkbox"
                       checked={showDatePicker}
-                      onChange={() => setShowDatePicker((v) => !v)}
+                      onChange={() => setShowDatePicker(!showDatePicker)}
                       className="sr-only peer"
                       tabIndex={-1}
                     />
@@ -1547,7 +1494,7 @@ export default function Cart() {
                     <span className="text-base font-normal flex flex-col leading-5">
                       {' '}
                       <span>per couple or </span>{' '}
-                      <span>upto a family of four</span>
+                      <span>up to a family of four</span>
                     </span>
                   </span>
                 </div>
@@ -1756,25 +1703,26 @@ export default function Cart() {
                         Selected <BsPlusCircleFill />
                       </button>
                     ) : (
-                      <button
-                        type="submit"
-                        className={`w-full text-[#071F24] rounded-b-lg py-2 px-4 font-semibold flex items-center justify-center gap-2 bg-[#F2B233] ${
-                          !product.variants.nodes[0]?.id ||
-                          (selectedBonus &&
-                            selectedBonusVariantId !==
-                              product.variants.nodes[0]?.id)
-                            ? 'opacity-70 pointer-events-none'
-                            : ''
-                        }`}
-                        disabled={
-                          !product.variants.nodes[0]?.id ||
-                          (selectedBonus &&
-                            selectedBonusVariantId !==
-                              product.variants.nodes[0]?.id)
-                        }
-                      >
-                        Select <BsPlusCircleFill />
-                      </button>
+                      <>
+                        <button
+                          type="submit"
+                          className={`w-full text-[#071F24] rounded-b-lg py-2 px-4 font-semibold flex items-center justify-center gap-2 bg-[#F2B233] ${
+                            !product.variants.nodes[0]?.id || cartIsEmpty
+                              ? 'opacity-70 pointer-events-none'
+                              : ''
+                          }`}
+                          disabled={
+                            !product.variants.nodes[0]?.id || cartIsEmpty
+                          }
+                        >
+                          Select <BsPlusCircleFill />
+                        </button>
+                        {!product.variants.nodes[0]?.id || cartIsEmpty ? (
+                          <span className="text-xs text-gray-600 mt-1">
+                            Select a main product first to add a bonus vacation.
+                          </span>
+                        ) : null}
+                      </>
                     )}
                   </form>
                 </div>
