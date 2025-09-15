@@ -851,23 +851,34 @@ export default function Cart() {
   }
 
   // Countdown hook
-  function useCountdown(targetTime: string | null) {
+  function useCountdownLocalStorage(key: string) {
     const [timeLeft, setTimeLeft] = useState<number>(0);
+    const [expired, setExpired] = useState(false);
     useEffect(() => {
-      if (!targetTime) return;
-      const interval = setInterval(() => {
-        const diff = new Date(targetTime).getTime() - Date.now();
+      function update() {
+        const expiresAt = localStorage.getItem(key);
+        if (!expiresAt) {
+          setTimeLeft(0);
+          setExpired(false);
+          return;
+        }
+        const diff = new Date(expiresAt).getTime() - Date.now();
         setTimeLeft(diff > 0 ? diff : 0);
-      }, 1000);
+        setExpired(diff <= 0);
+      }
+      update();
+      const interval = setInterval(update, 1000);
       return () => clearInterval(interval);
-    }, [targetTime]);
+    }, [key]);
     const hours = Math.floor(timeLeft / (1000 * 60 * 60));
     const minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
     const seconds = Math.floor((timeLeft / 1000) % 60);
-    return {hours, minutes, seconds, expired: timeLeft <= 0};
+    return {hours, minutes, seconds, expired, timeLeft};
   }
 
-  const {hours, minutes, seconds, expired} = useCountdown(cartOffer?.expiresAt);
+  const OFFER_EXPIRY_KEY = 'cartOfferExpiresAt';
+  const {hours, minutes, seconds, expired, timeLeft} =
+    useCountdownLocalStorage(OFFER_EXPIRY_KEY);
   const cartIsEmpty = !cart?.lines?.nodes?.length;
 
   // Helper to get all line IDs for clearing the cart
@@ -922,6 +933,25 @@ export default function Cart() {
     if (!location) return '';
     return location.split(',')[0].trim().toLowerCase().replace(/\s+/g, '-');
   }
+
+  // Set offer expiration in localStorage when cart is populated and not expired
+  useEffect(() => {
+    if (!cartIsEmpty) {
+      const expiresAt = localStorage.getItem(OFFER_EXPIRY_KEY);
+      if (!expiresAt || new Date(expiresAt).getTime() < Date.now()) {
+        // Set new expiry 30 minutes from now
+        const newExpiry = new Date(Date.now() + 30 * 60 * 1000).toISOString();
+        localStorage.setItem(OFFER_EXPIRY_KEY, newExpiry);
+      }
+    }
+  }, [cartIsEmpty]);
+
+  // Clear offer expiration from localStorage when cart is emptied
+  useEffect(() => {
+    if (cartIsEmpty) {
+      localStorage.removeItem(OFFER_EXPIRY_KEY);
+    }
+  }, [cartIsEmpty]);
 
   return (
     <div className="min-h-screen ">
@@ -1449,7 +1479,7 @@ export default function Cart() {
             <div className="bg-[#2AB7B7] text-white rounded-t-xl px-4 py-2 h-[50px] flex items-center justify-center gap-4">
               <span className="font-[500] text-[21px]">Offer Expires:</span>
               <div className="font-mono flex items-center gap-1 mt-1">
-                {cartOffer?.expiresAt ? (
+                {timeLeft > 0 ? (
                   expired ? (
                     <span className="text-red-500">Expired</span>
                   ) : (
