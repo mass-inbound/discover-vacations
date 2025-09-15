@@ -167,7 +167,7 @@ export async function action({request, context}: ActionFunctionArgs) {
             merchandiseId: selectedUpsellVariantId as string,
             quantity: 1,
             attributes: [
-              {key: 'Bonus Vacation', value: 'true'},
+              // {key: 'Bonus Vacation', value: 'true'},
               {key: 'Product Type', value: 'Bonus Vacation'},
               {key: 'Main Offer Title', value: String(offerTitle || '')},
               {key: 'Offer Title', value: String(selectedUpsellTitle || '')},
@@ -184,7 +184,7 @@ export async function action({request, context}: ActionFunctionArgs) {
                 key: 'Offer Location',
                 value: String(selectedUpsellLocation || ''),
               },
-              {key: 'Offer Expires At', value: expiresAt},
+              // {key: 'Offer Expires At', value: expiresAt},
             ],
           },
         ]);
@@ -267,7 +267,7 @@ export async function action({request, context}: ActionFunctionArgs) {
       // Update the existing line with new attributes
       const attributes = isBonusProduct
         ? [
-            {key: 'Bonus Vacation', value: 'true'},
+            // {key: 'Bonus Vacation', value: 'true'},
             {key: 'Product Type', value: 'Bonus Vacation'},
             {
               key: 'Offer Title',
@@ -295,7 +295,7 @@ export async function action({request, context}: ActionFunctionArgs) {
               key: 'Offer Location',
               value: String(formData.get('offerLocation') || ''),
             },
-            {key: 'Offer Expires At', value: expiresAt},
+            // {key: 'Offer Expires At', value: expiresAt},
           ]
         : isDirectAddToCart
           ? [
@@ -404,7 +404,7 @@ export async function action({request, context}: ActionFunctionArgs) {
       // Add new line if product doesn't exist in cart
       const attributes = isBonusProduct
         ? [
-            {key: 'Bonus Vacation', value: 'true'},
+            // {key: 'Bonus Vacation', value: 'true'},
             {key: 'Product Type', value: 'Bonus Vacation'},
             {
               key: 'Offer Title',
@@ -432,7 +432,7 @@ export async function action({request, context}: ActionFunctionArgs) {
               key: 'Offer Location',
               value: String(formData.get('offerLocation') || ''),
             },
-            {key: 'Offer Expires At', value: expiresAt},
+            // {key: 'Offer Expires At', value: expiresAt},
           ]
         : isDirectAddToCart
           ? [
