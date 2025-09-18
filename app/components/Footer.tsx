@@ -92,9 +92,6 @@ export function Footer({
                   Florida ST-17213 · California CST 2025290-40 · Washington UBI
                   602 005 020 · Hawaii TAR-5681
                 </p>
-                <p className="text-lg text-bold text-white">
-                THIS ADVERTISING MATERIAL IS BEING USED FOR THE PURPOSE OF SOLICITING SALES OF TIMESHARE INTERESTS OR PLANS
-                </p>
               </div>
               {/* About */}
               <div>
@@ -180,11 +177,14 @@ export function Footer({
               </div>
             </div>
             <div className="border-t border-white/20 mt-10 mb-10 sm:mb-0 pt-4 md:pb-6 flex flex-col md:flex-row items-center justify-between max-w-7xl mx-auto px-4 text-xs opacity-80">
+              <div className="flex flex-col text-left md:text-left text-lg text-white">
+              <span>THIS ADVERTISING MATERIAL IS BEING USED FOR THE PURPOSE OF SOLICITING SALES OF TIMESHARE INTERESTS OR PLANS
+              </span>
+              </div>
+            </div>
+            <div className="border-t border-white/20 mt-10 mb-10 sm:mb-0 pt-4 md:pb-6 flex flex-col md:flex-row items-center justify-between max-w-7xl mx-auto px-4 text-xs opacity-80">
               <div className="flex flex-col text-center md:text-left">
               <span>©2024 My Discover Vacations. All rights reserved</span>
-              <span className="mt-2 max-w-3xl text-lg font-bold">
-               THIS ADVERTISING MATERIAL IS BEING USED FOR THE PURPOSE OF SOLICITING SALES OF TIMESHARE INTERESTS OR PLANS
-              </span>
               </div>
               <div className="flex gap-12 mt-2 md:mt-0">
                 <Link to="/policies/privacy-policy" className="hover:underline">
