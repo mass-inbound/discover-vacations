@@ -176,11 +176,10 @@ export function Footer({
                 </form>
               </div>
             </div>
-            <div className="border-t border-white/20 mt-10 mb-10 sm:mb-0 pt-4 md:pb-6 flex flex-col md:flex-row items-center justify-between max-w-7xl mx-auto px-4 text-xs opacity-80">
-              <div className="flex flex-col text-left md:text-left text-lg text-white">
-              <span>THIS ADVERTISING MATERIAL IS BEING USED FOR THE PURPOSE OF SOLICITING SALES OF TIMESHARE INTERESTS OR PLANS
-              </span>
-              </div>
+            <div className="mt-10 mb-4 flex justify-center max-w-7xl mx-auto px-4">
+              <span className="text-xs md:text-sm font-bold tracking-wide text-center text-white">
+              THIS ADVERTISING MATERIAL IS BEING USED FOR THE PURPOSE OF SOLICITING SALES OF TIMESHARE INTERESTS OR PLANS
+            </span>
             </div>
             <div className="border-t border-white/20 mt-10 mb-10 sm:mb-0 pt-4 md:pb-6 flex flex-col md:flex-row items-center justify-between max-w-7xl mx-auto px-4 text-xs opacity-80">
               <div className="flex flex-col text-center md:text-left">
