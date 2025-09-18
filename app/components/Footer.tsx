@@ -176,7 +176,7 @@ export function Footer({
                 </form>
               </div>
             </div>
-            <div className="mt-10 mb-4 flex justify-center max-w-7xl mx-auto px-4">
+            <div className="mt-10 mb-4 flex justify-left max-w-7xl mx-auto px-4">
               <span className="text-xs md:text-sm font-bold tracking-wide text-center text-white">
               THIS ADVERTISING MATERIAL IS BEING USED FOR THE PURPOSE OF SOLICITING SALES OF TIMESHARE INTERESTS OR PLANS
             </span>
