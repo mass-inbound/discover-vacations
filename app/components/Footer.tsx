@@ -92,6 +92,9 @@ export function Footer({
                   Florida ST-17213 · California CST 2025290-40 · Washington UBI
                   602 005 020 · Hawaii TAR-5681
                 </p>
+                <p className="text-lg text-bold text-white">
+                THIS ADVERTISING MATERIAL IS BEING USED FOR THE PURPOSE OF SOLICITING SALES OF TIMESHARE INTERESTS OR PLANS
+                </p>
               </div>
               {/* About */}
               <div>
