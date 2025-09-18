@@ -179,7 +179,7 @@ export function Footer({
             <div className="border-t border-white/20 mt-10 mb-10 sm:mb-0 pt-4 md:pb-6 flex flex-col md:flex-row items-center justify-between max-w-7xl mx-auto px-4 text-xs opacity-80">
               <span>©2024 My Discover Vacations. All rights reserved</span>
               <span className="text-center md:text-left mt-2 md:mt-0 max-w-3xl">
-               THIS ADVERTISING MATERIAL IS BEING USED FOR THE PURPOSE OF SOLICITING SALES OF TIMESHARE INTERESTS OR PLANS
+               / THIS ADVERTISING MATERIAL IS BEING USED FOR THE PURPOSE OF SOLICITING SALES OF TIMESHARE INTERESTS OR PLANS /
               </span>
               <div className="flex gap-12 mt-2 md:mt-0">
                 <Link to="/policies/privacy-policy" className="hover:underline">
