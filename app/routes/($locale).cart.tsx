@@ -1131,9 +1131,7 @@ export default function Cart() {
                     (text/data and other charges may apply) at the
                     address/numbers provided regardless of that number being on
                     any Do not Call Registry. Your consent is not a condition of
-                    any purchase. As an alternative to the consent above you may
-                    enter the Promotion here. and , both of which I agree I have
-                    read, understand and agree to. As an alternate to the above
+                    any purchase. As an alternate to the above
                     consent, click here for other ways to take advantage of this
                     Promotion{' '}
                     <button
