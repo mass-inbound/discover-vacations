@@ -185,7 +185,7 @@ export default function Homepage() {
           </div>
           <h1 className="text-4xl md:text-[61px] font-[500] text-white mb-4 drop-shadow-lg">
             {/* Travel, Discover, Experience */}
-            abiral
+            abiralkoju
           </h1>
           <p className="text-white text-[20px] font-[400] max-w-4xl mx-auto mb-6 drop-shadow">
             Discover exclusive vacation offers with simple pricing and a
