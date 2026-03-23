@@ -1,5 +1,5 @@
-import {redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {Link, useLoaderData, useParams, type MetaFunction} from 'react-router';
+import { redirect, type LoaderFunctionArgs } from '@shopify/remix-oxygen';
+import { Link, useLoaderData, useParams, type MetaFunction } from 'react-router';
 import {
   getSelectedProductOptions,
   Analytics,
@@ -8,23 +8,23 @@ import {
   getAdjacentAndFirstAvailableVariants,
   useSelectedOptionInUrlParam,
 } from '@shopify/hydrogen';
-import {ProductPrice} from '~/components/ProductPrice';
-import {ProductImage} from '~/components/ProductImage';
-import {ProductForm} from '~/components/ProductForm';
-import {redirectIfHandleIsLocalized} from '~/lib/redirect';
-import {useState, useEffect} from 'react';
-import {FaCheck, FaGift} from 'react-icons/fa';
-import {useNavigate, useRouteLoaderData} from 'react-router';
+import { ProductPrice } from '~/components/ProductPrice';
+import { ProductImage } from '~/components/ProductImage';
+import { ProductForm } from '~/components/ProductForm';
+import { redirectIfHandleIsLocalized } from '~/lib/redirect';
+import { useState, useEffect } from 'react';
+import { FaCheck, FaGift } from 'react-icons/fa';
+import { useNavigate, useRouteLoaderData } from 'react-router';
 import FooterCarousel from '~/components/FooterCarousel';
-import {Suspense} from 'react';
-import {Await} from 'react-router';
-import {useOptimisticCart} from '@shopify/hydrogen';
+import { Suspense } from 'react';
+import { Await } from 'react-router';
+import { useOptimisticCart } from '@shopify/hydrogen';
 import cartIcon from '/assets/icon-cart.svg';
 import VacationProcess from '~/components/VacationProcess';
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
-    {title: `Hydrogen | ${data?.product.title ?? ''}`},
+    { title: `Hydrogen | ${data?.product.title ?? ''}` },
     {
       rel: 'canonical',
       href: `/products/${data?.product.handle}`,
@@ -39,7 +39,7 @@ export async function loader(args: LoaderFunctionArgs) {
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
 
-  const {context} = args;
+  const { context } = args;
   // Fetch upsell products
   const UPSELL_PRODUCTS_QUERY = `#graphql
     fragment MoneyProductItem on MoneyV2 {
@@ -82,11 +82,11 @@ export async function loader(args: LoaderFunctionArgs) {
     }
   `;
   const upsellRes = await context.storefront.query(UPSELL_PRODUCTS_QUERY, {
-    variables: {query: 'tag:upsell'},
+    variables: { query: 'tag:upsell' },
   });
   const upsellProducts = upsellRes?.products?.nodes || [];
 
-  return {...deferredData, ...criticalData, upsellProducts};
+  return { ...deferredData, ...criticalData, upsellProducts };
 }
 
 /**
@@ -98,26 +98,26 @@ async function loadCriticalData({
   params,
   request,
 }: LoaderFunctionArgs) {
-  const {handle} = params;
-  const {storefront} = context;
+  const { handle } = params;
+  const { storefront } = context;
 
   if (!handle) {
     throw new Error('Expected product handle to be defined');
   }
 
-  const [{product}] = await Promise.all([
+  const [{ product }] = await Promise.all([
     storefront.query(PRODUCT_QUERY, {
-      variables: {handle, selectedOptions: getSelectedProductOptions(request)},
+      variables: { handle, selectedOptions: getSelectedProductOptions(request) },
     }),
     // Add other queries here, so that they are loaded in parallel
   ]);
 
   if (!product?.id) {
-    throw new Response(null, {status: 404});
+    throw new Response(null, { status: 404 });
   }
 
   // The API handle might be localized, so redirect to the localized handle
-  redirectIfHandleIsLocalized(request, {handle, data: product});
+  redirectIfHandleIsLocalized(request, { handle, data: product });
 
   return {
     product,
@@ -129,7 +129,7 @@ async function loadCriticalData({
  * fetched after the initial page load. If it's unavailable, the page should still 200.
  * Make sure to not throw any errors here, as it will cause the page to 500.
  */
-function loadDeferredData({context, params}: LoaderFunctionArgs) {
+function loadDeferredData({ context, params }: LoaderFunctionArgs) {
   // Put any API calls that is not critical to be available on first page render
   // For example: product reviews, product recommendations, social feeds.
 
@@ -150,11 +150,11 @@ function useCountdown(targetTime: string | null) {
   const hours = Math.floor(timeLeft / (1000 * 60 * 60));
   const minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
   const seconds = Math.floor((timeLeft / 1000) % 60);
-  return {hours, minutes, seconds, expired: timeLeft <= 0};
+  return { hours, minutes, seconds, expired: timeLeft <= 0 };
 }
 
 export default function Product() {
-  const {product, upsellProducts} = useLoaderData<typeof loader>();
+  const { product, upsellProducts } = useLoaderData<typeof loader>();
   const images = product.images?.nodes || [];
   const mainImage =
     product.selectedOrFirstAvailableVariant?.image?.url ||
@@ -166,11 +166,11 @@ export default function Product() {
   // Use all product images, fallback to variant image if none
   const slides =
     images.length > 0
-      ? images.map((img: {url: string; altText?: string}) => ({
-          src: img.url,
-          alt: img.altText || product.title,
-        }))
-      : [{src: mainImage, alt: mainImageAlt}];
+      ? images.map((img: { url: string; altText?: string }) => ({
+        src: img.url,
+        alt: img.altText || product.title,
+      }))
+      : [{ src: mainImage, alt: mainImageAlt }];
 
   const [current, setCurrent] = useState(0);
   const length = slides.length;
@@ -187,9 +187,9 @@ export default function Product() {
   // Parse description for bullet points (split by newlines)
   const bullets = product.description
     ? product.description
-        .replace(/\/n/g, '\n') // convert "/n" to real newline
-        .split(/\r?\n/)
-        .filter((b: string) => b.trim().length > 0)
+      .replace(/\/n/g, '\n') // convert "/n" to real newline
+      .split(/\r?\n/)
+      .filter((b: string) => b.trim().length > 0)
     : [];
 
   // Optimistically selects a variant with given available variant information
@@ -208,12 +208,12 @@ export default function Product() {
     selectedOrFirstAvailableVariant: selectedVariant,
   });
 
-  const {title, descriptionHtml} = product;
+  const { title, descriptionHtml } = product;
 
   const navigate = useNavigate();
   const rootData = useRouteLoaderData('root');
 
-  const {handle} = product;
+  const { handle } = product;
   // Timer logic: persistent per product handle
   const [expiresAt, setExpiresAt] = useState<string | null>(null);
   useEffect(() => {
@@ -234,7 +234,7 @@ export default function Product() {
     }
     setExpiresAt(expires);
   }, [handle]);
-  const {hours, minutes, seconds, expired} = useCountdown(expiresAt);
+  const { hours, minutes, seconds, expired } = useCountdown(expiresAt);
 
   return (
     <div className="mx-auto md:mt-20">
@@ -263,7 +263,7 @@ export default function Product() {
                 src={slides[current].src}
                 alt={slides[current].alt}
                 className="md:h-full h-[500px] w-full object-cover rounded-lg"
-                style={{transition: 'opacity 0.3s'}}
+                style={{ transition: 'opacity 0.3s' }}
               />
             </div>
           </div>
@@ -375,8 +375,8 @@ export default function Product() {
                         value={
                           Array.isArray(product.tags)
                             ? product.tags.find((t: string) =>
-                                t.match(/,|FL|PA/),
-                              ) || ''
+                              t.match(/,|FL|PA/),
+                            ) || ''
                             : ''
                         }
                       />
@@ -428,8 +428,8 @@ export default function Product() {
   );
 }
 
-function Tabs({upsellProducts}: {upsellProducts: any[]}) {
-  const {handle} = useParams<{handle: string}>(); // Extract the handle from the URL
+function Tabs({ upsellProducts }: { upsellProducts: any[] }) {
+  const { handle } = useParams<{ handle: string }>(); // Extract the handle from the URL
   const [active, setActive] = useState(0);
 
   const tabs = [
@@ -449,7 +449,8 @@ function Tabs({upsellProducts}: {upsellProducts: any[]}) {
       <h1 className="text-[#0E424E] font-[500] text-[24px] md:text-[36px]">
         {handle === 'orlando'
           ? '🌾 Discover Orlando – 4 Days / 3 Nights + Vacation Bonus'
-          : '🌾 Poconos Mountain Getaway – 4 Days / 3 Nights'}
+          : handle === 'poconos' ? '🌾 Poconos Mountain Getaway – 4 Days / 3 Nights'
+            : '🌾 3 Destinations (1 Decision made later)'}
       </h1>
       <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] max-w-[95%] md:max-w-[85%] mx-auto">
         {handle === 'orlando' ? (
@@ -463,22 +464,30 @@ function Tabs({upsellProducts}: {upsellProducts: any[]}) {
             like in-room coffee and mini fridges. Trusted brands and friendly
             service - perfect for your getaway.
           </div>
-        ) : (
+        ) : handle === 'poconos' ? (
           'Escape to the peaceful beauty of the Pocono Mountains with a 4-Day / 3-Night vacation designed for two adults. Cozy accommodations at participating hotels provide the perfect setting for a relaxing weekend, nature exploration, or a scenic escape.'
+        ) : (
+          `This exclusive getaway was designed for those who value flexibility and meaningful travel experiences. Secure your 4 Days / 3 Nights vacation today and choose from Gatlinburg, Williamsburg, or Branson when you're ready to plan your trip. Whether you're looking for mountain views, historic charm, or entertainment and dining, this package allows you to decide later—without missing out now.`
         )}
       </p>
-      <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] max-w-[95%] md:max-w-[80%] mx-auto mt-2">
-        As our thank-you, you'll also receive a Vacation Bonus — your choice of:
-      </p>
-      <ul className="list-disc list-inside text-[#0E424E] text-[14px] md:text-[18px] font-[400]">
-        <li>A Cruise Getaway (4–7 nights)</li>
-        <li>A 7-Night Resort Condo Stay</li>
-        <li>A Hotel Escape + $100 Hotel Perks Card</li>
-      </ul>
-      <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] max-w-[95%] md:max-w-[80%] mx-auto">
-        Catch the Wave. Make it yours. Make it easy. That&apos;s My Discover
-        Vacation.
-      </p>
+
+      {handle === "3-destinations-1-decision-made-later" ? (
+        null
+      ) : (
+        <>
+          <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] max-w-[95%] md:max-w-[80%] mx-auto mt-2">
+            As our thank-you, you'll also receive a Vacation Bonus — your choice of:
+          </p>
+          <ul className="list-disc list-inside text-[#0E424E] text-[14px] md:text-[18px] font-[400]">
+            <li>A Cruise Getaway (4–7 nights)</li>
+            <li>A 7-Night Resort Condo Stay</li>
+            <li>A Hotel Escape + $100 Hotel Perks Card</li>
+          </ul>
+          <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] max-w-[95%] md:max-w-[80%] mx-auto">
+            Catch the Wave. Make it yours. Make it easy. That&apos;s My Discover
+            Vacation.
+          </p></>
+      )}
     </div>,
     <div
       key="included"
@@ -519,7 +528,7 @@ function Tabs({upsellProducts}: {upsellProducts: any[]}) {
                 VACATIONS MADE POSSIBLE
               </h2>
               <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] font-avenir">
-                 In partnership with top vacation resorts, this package includes
+                In partnership with top vacation resorts, this package includes
                 a presentation at one of our partner resorts during your stay —
                 it’s what makes these incredible perks possible.
                 <br />
@@ -536,7 +545,7 @@ function Tabs({upsellProducts}: {upsellProducts: any[]}) {
             </div>
           </div>
         </>
-      ) : (
+      ) : handle === 'poconos' ? (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 px-4">
             <div>
@@ -560,7 +569,7 @@ function Tabs({upsellProducts}: {upsellProducts: any[]}) {
                 VACATIONS MADE POSSIBLE
               </h2>
               <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] font-avenir">
-                 In partnership with top vacation resorts, this package includes
+                In partnership with top vacation resorts, this package includes
                 a presentation at one of our partner resorts during your stay —
                 it’s what makes these incredible perks possible.
                 <br />
@@ -577,11 +586,65 @@ function Tabs({upsellProducts}: {upsellProducts: any[]}) {
             </div>
           </div>
         </>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 px-4">
+            <div>
+              <div className='mb-4'>
+                <h2 className="text-[#0E424E] font-[500] text-[24px] md:text-[36px] mb-3">
+                  🧳 What&apos;s Included
+                </h2>
+                <div className='mb-4'>
+                  <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[600] font-avenir mb-1">
+                    ✔ 4 Days / 3 Nights Accommodations
+                  </p>
+                  <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] font-avenir"> Enjoy a comfortable hotel  stay with access to trusted hotel partners in your selected destination.
+                  </p>
+                </div>
+
+                <div>
+                  <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[600] font-avenir mb-1">
+                    ✔ Flexible Destination Selection
+                  </p>
+                  <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] font-avenir"> Choose from Gatlinburg, Williamsburg, or Branson when you're ready to plan your trip. There is no need to decide at purchase.
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <h2 className="text-[#0E424E] font-[500] text-[24px] md:text-[36px] mb-3">
+                  🎁 Bonus Vacation Included
+                </h2>
+                <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] font-avenir"> As part of your package, you will also receive a <span className="font-bold">Bonus Vacation valued up to $1,800,</span> giving you an additional opportunity to travel beyond your initial stay.
+                  <br />This added benefit is designed to extend your experience and provide even more flexibility for future travel.
+                </p>
+              </div>
+            </div>
+            <div>
+              <h2 className="text-[#0E424E] font-[500] text-[24px] md:text-[36px] mb-3">
+                🌟 Vacations Made Possible
+              </h2>
+              <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] font-avenir">
+                In partnership with top vacation resorts, this package includes a presentation at one of our partner resorts during your stay. It’s what makes these incredible perks possible.
+                <br />
+                <br />
+                ✨ Deeply discounted accommodations.
+                <br />
+                🎁 A bonus vacation valued up to $1,800.
+                <br />
+                🌍 Travel insights to help you vacation better, more often, and more efficiently.
+                <br />
+                We respect your time and aim to make this an informative and worthwhile part of your experience.
+
+              </p>
+            </div>
+          </div>
+        </>
       )}
     </div>,
     <div
       key="attractions"
-      className="bg-gray-100 p-4 md:p-8 text-center flex flex-col gap-4 rounded"
+      className="bg-gray-100 p-4 md:p-8 text-justify flex flex-col gap-4 rounded"
     >
       <h2 className="text-[#0E424E] font-[500] text-[24px] md:text-[36px] mb-2">
         Nearby Attractions
@@ -655,7 +718,7 @@ function Tabs({upsellProducts}: {upsellProducts: any[]}) {
             </div>
           </div>
         </>
-      ) : (
+      ) : handle === 'poconos' ? (
         <>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-[#0E424E] font-avenir text-[16px] md:text-[20px] font-[400] max-w-5xl mx-auto">
             <div className="flex flex-col items-start">
@@ -726,6 +789,72 @@ function Tabs({upsellProducts}: {upsellProducts: any[]}) {
             </div>
           </div>
         </>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 text-[#0E424E] font-avenir text-[16px] md:text-[20px] font-[400] max-w-6xl mx-auto">
+
+            {/* Gatlinburg */}
+            <div className="flex flex-col items-start gap-2">
+              <p className="text-start font-semibold">🌄 Gatlinburg, Tennessee</p>
+              <p className="text-[16px] text-start">
+                Surrounded by natural beauty and outdoor adventure, Gatlinburg offers a peaceful escape into the mountains.
+              </p>
+
+              <ul className="list-disc pl-5 space-y-2 text-[16px]">
+                <li>
+                  <span className="font-medium">Great Smoky Mountains National Park:</span> Explore scenic overlooks, wildlife, and endless hiking opportunities.
+                </li>
+                <li>
+                  <span className="font-medium">Waterfalls & Scenic Trails:</span> Discover hidden waterfalls, quiet paths, and breathtaking views.
+                </li>
+                <li>
+                  <span className="font-medium">Downtown Gatlinburg:</span> Charming shops, dining, and entertainment in a cozy mountain town.
+                </li>
+              </ul>
+            </div>
+
+            {/* Williamsburg */}
+            <div className="flex flex-col items-start gap-2">
+              <p className="text-start font-semibold">🏛️ Williamsburg, Virginia</p>
+              <p className="text-[16px] text-start">
+                A destination where history and charm come together.
+              </p>
+
+              <ul className="list-disc pl-5 space-y-2 text-[16px]">
+                <li>
+                  <span className="font-medium">Colonial Williamsburg:</span> Experience early America through reenactments and exhibits.
+                </li>
+                <li>
+                  <span className="font-medium">Busch Gardens Williamsburg:</span> A European-themed park with rides, shows, and dining.
+                </li>
+                <li>
+                  <span className="font-medium">Historic Triangle:</span> Explore Jamestown & Yorktown and the origins of American history.
+                </li>
+              </ul>
+            </div>
+
+            {/* Branson */}
+            <div className="flex flex-col items-start gap-2">
+              <p className="text-start font-semibold">🎶 Branson, Missouri</p>
+              <p className="text-[16px] text-start">
+                Known for entertainment, scenic beauty, and family-friendly experiences.
+              </p>
+
+              <ul className="list-disc pl-5 space-y-2 text-[16px]">
+                <li>
+                  <span className="font-medium">Live Entertainment Shows:</span> Music, comedy, and performances for all ages.
+                </li>
+                <li>
+                  <span className="font-medium">Table Rock Lake:</span> Relax by the water, go boating, or enjoy nature.
+                </li>
+                <li>
+                  <span className="font-medium">Branson Landing:</span> Shopping, dining, and waterfront experiences.
+                </li>
+              </ul>
+            </div>
+
+          </div>
+        </>
       )}
     </div>,
     <div
@@ -771,7 +900,7 @@ function Tabs({upsellProducts}: {upsellProducts: any[]}) {
               timelines, booking, and what to expect.
             </p>
           </>
-        ) : (
+        ) : handle === 'poconos' ? (
           <>
             <ul className="list-disc list-inside text-[#0E424E] text-[16px] md:text-[20px] font-[400] text-center font-avenir">
               <li>
@@ -806,52 +935,132 @@ function Tabs({upsellProducts}: {upsellProducts: any[]}) {
               timelines, booking, and what to expect.
             </p>
           </>
+        ) : (
+          <>
+            <div className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] font-avenir text-justify max-w-[95%] md:max-w-[80%] mx-auto flex flex-col gap-4">
+
+              <p>
+                🌊 Once you’ve completed your purchase, here’s everything you need to know to plan your trip smoothly.
+              </p>
+
+              {/* Booking */}
+              <div>
+                <p className="font-semibold">🧭 Booking Your Trip</p>
+                <p>
+                  When you're ready, access your portal:
+                  <a
+                    href="https://portal.mydiscovervacations.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline ml-1"
+                  >
+                    https://portal.mydiscovervacations.com/
+                  </a>
+                </p>
+
+                <ul className="list-disc pl-5 space-y-2 mt-2">
+                  <li>Log in using your purchase email to receive your access code (verification required)</li>
+                  <li>Select your destination, travel dates, and hotel</li>
+                  <li>Review options including resort upgrades and extra nights</li>
+                  <li>Confirm your reservation</li>
+                </ul>
+              </div>
+
+              {/* Key Info */}
+              <div>
+                <p className="font-semibold">🌊 Key Things to Know</p>
+                <ul className="list-disc pl-5 space-y-2 mt-2">
+                  <li>You have 12 months to travel from the date of purchase</li>
+                  <li>There are no blackout dates</li>
+                  <li>Hotels are available based on your selected travel dates</li>
+                  <li>Your trip is booked through your customer portal when you're ready</li>
+                  <li>Your Bonus Vacation is provided after your stay and resort preview</li>
+                  <li>You’ll have 6 months to register your Bonus Vacation and 18 months to travel</li>
+                </ul>
+              </div>
+
+              {/* Fees */}
+              <div>
+                <p className="font-semibold">💳 Fees & Charges</p>
+                <ul className="list-disc pl-5 space-y-2 mt-2">
+                  <li>Hotel taxes of approximately $59–$75 are paid at the time of booking</li>
+                  <li>Resort fees, deposits, parking, or incidentals are paid directly to the hotel at check-in</li>
+                </ul>
+              </div>
+
+              {/* Contact */}
+              <p>
+                🤝 Still have questions? Explore our FAQs for more details on travel timelines, booking, and what to expect, or contact us at{' '}
+                <a
+                  href="mailto:customercare@mydiscovervacations.com"
+                  className="font-medium underline"
+                >
+                  customercare@mydiscovervacations.com
+                </a> or call{' '}
+                <span className="font-medium">(954) 210-7952</span>.
+              </p>
+
+            </div>
+          </>
         )}
       </p>
     </div>,
     <div key="gift">
-      <h1 className="text-[#0E424E] font-[500] text-[24px] md:text-[36px] flex items-center justify-center gap-4 mb-3">
-        <FaGift /> Your Bonus, Your Choice!
-      </h1>
-      <p className="text-[#676767] font-avenir text-[16px] md:text-[20px] mb-6 text-center max-w-5xl mx-auto">
-        Your Bonus Vacation is included with your purchase today — it's the
-        vacation after your vacation! You'll choose your favorite at checkout
-        and unlock it after completing your Featured Getaway. Catch the wave,
-        enjoy the journey, and discover just how rewarding travel can be.
-      </p>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        {upsellProducts.length > 0 ? (
-          upsellProducts.map((product: any, idx: number) => (
-            <div
-              key={product.id}
-              className="rounded-[10px] bg-white shadow flex flex-col"
-            >
-              <div className="bg-[#F2B233] py-1 text-[#071F24] font-[500] text-[21px] flex justify-center items-center gap-3 rounded-t-[10px]">
-                <span>
-                  <FaGift />
-                </span>
-                <span>{product.title}</span>
-              </div>
-              <div className="relative bg-gray-100 min-h-[180px] md:min-h-[280px] overflow-hidden flex items-center justify-center rounded-b-[10px]">
-                <img
-                  src={product.featuredImage?.url || '/assets/orlando.jpg'}
-                  alt={product.title}
-                  className="w-full h-full object-cover absolute inset-0"
-                />
-                <div className="absolute bottom-0 w-full bg-white/20 backdrop-blur-md py-4 px-2">
-                  <p className="font-[400] text-[16px] text-[#FEFEFE] text-center">
-                    {product.description?.split('\n')[0]}
-                  </p>
+      {handle === "poconos" || handle === "orlando" ? (
+        <>
+          <h1 className="text-[#0E424E] font-[500] text-[24px] md:text-[36px] flex items-center justify-center gap-4 mb-3">
+            <FaGift /> Your Bonus, Your Choice!
+          </h1>
+          <p className="text-[#676767] font-avenir text-[16px] md:text-[20px] mb-6 text-center max-w-5xl mx-auto">
+            Your Bonus Vacation is included with your purchase today — it's the
+            vacation after your vacation! You'll choose your favorite at checkout
+            and unlock it after completing your Featured Getaway. Catch the wave,
+            enjoy the journey, and discover just how rewarding travel can be.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            {upsellProducts.length > 0 ? (
+              upsellProducts.map((product: any, idx: number) => (
+                <div
+                  key={product.id}
+                  className="rounded-[10px] bg-white shadow flex flex-col"
+                >
+                  <div className="bg-[#F2B233] py-1 text-[#071F24] font-[500] text-[21px] flex justify-center items-center gap-3 rounded-t-[10px]">
+                    <span>
+                      <FaGift />
+                    </span>
+                    <span>{product.title}</span>
+                  </div>
+                  <div className="relative bg-gray-100 min-h-[180px] md:min-h-[280px] overflow-hidden flex items-center justify-center rounded-b-[10px]">
+                    <img
+                      src={product.featuredImage?.url || '/assets/orlando.jpg'}
+                      alt={product.title}
+                      className="w-full h-full object-cover absolute inset-0"
+                    />
+                    <div className="absolute bottom-0 w-full bg-white/20 backdrop-blur-md py-4 px-2">
+                      <p className="font-[400] text-[16px] text-[#FEFEFE] text-center">
+                        {product.description?.split('\n')[0]}
+                      </p>
+                    </div>
+                  </div>
                 </div>
+              ))
+            ) : (
+              <div className="col-span-3 text-center text-gray-500 py-12">
+                No upsell gifts available.
               </div>
-            </div>
-          ))
-        ) : (
-          <div className="col-span-3 text-center text-gray-500 py-12">
-            No upsell gifts available.
+            )}
           </div>
-        )}
-      </div>
+        </>
+      ) : (
+        <div className="bg-gray-100 p-4 md:p-8 text-center flex flex-col gap-4 rounded">
+          <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] font-avenir text-center max-w-[95%] md:max-w-[80%] mx-auto">
+            As part of your Discover Vacations package, you will receive a <span className="font-bold">Bonus Vacation valued up to $1,800,</span> giving you the opportunity to enjoy an additional getaway in the future.
+            <br /><br />
+            Your Bonus Vacation is included with your purchase today! It's the vacation after your vacation! You'll choose your favorite at checkout and unlock it after completing your featured presentation and getaway. Catch the wave, enjoy the journey, and discover just how rewarding travel can be.
+
+          </p>
+        </div>
+      )}
     </div>,
   ];
 
@@ -859,18 +1068,17 @@ function Tabs({upsellProducts}: {upsellProducts: any[]}) {
     <div>
       <div
         className="flex mb-12 border-b border-[#135868] overflow-x-auto scrollbar-hide md:overflow-x-visible md:scrollbar-default gap-2 md:gap-0"
-        style={{WebkitOverflowScrolling: 'touch'}}
+        style={{ WebkitOverflowScrolling: 'touch' }}
       >
         {tabs.map((tab, idx) => (
           <button
             key={tab}
             onClick={() => setActive(idx)}
-            className={`flex-1 min-w-[48%] md:min-w-0 px-2 md:px-4 py-2 font-[500] text-[16px] md:text-[21px] border-b-2 transition text-[#1A202C] opacity-60 whitespace-nowrap ${
-              active === idx
-                ? 'border-[#135868] text-[#135868] opacity-100'
-                : 'border-transparent bg-transparent'
-            }`}
-            style={{scrollbarWidth: 'none'}}
+            className={`flex-1 min-w-[48%] md:min-w-0 px-2 md:px-4 py-2 font-[500] text-[16px] md:text-[21px] border-b-2 transition text-[#1A202C] opacity-60 whitespace-nowrap ${active === idx
+              ? 'border-[#135868] text-[#135868] opacity-100'
+              : 'border-transparent bg-transparent'
+              }`}
+            style={{ scrollbarWidth: 'none' }}
           >
             {tab}
           </button>

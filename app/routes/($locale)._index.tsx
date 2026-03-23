@@ -1,4 +1,4 @@
-import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import { type LoaderFunctionArgs } from '@shopify/remix-oxygen';
 import {
   Await,
   useLoaderData,
@@ -8,29 +8,29 @@ import {
   useRouteLoaderData,
   useAsyncValue,
 } from 'react-router';
-import {Suspense, useRef, useEffect, useState} from 'react';
-import {Image, Money} from '@shopify/hydrogen';
+import { Suspense, useRef, useEffect, useState } from 'react';
+import { Image, Money } from '@shopify/hydrogen';
 import type {
   FeaturedCollectionFragment,
   RecommendedProductsQuery,
   CatalogQuery,
   CartApiQueryFragment,
 } from 'storefrontapi.generated';
-import {ProductItem} from '~/components/ProductItem';
-import {FaChevronDown} from 'react-icons/fa';
-import {FaLocationDot, FaCheck, FaGift} from 'react-icons/fa6';
-import {IoDiamond, IoShieldHalf} from 'react-icons/io5';
-import {RiCustomerService2Line} from 'react-icons/ri';
-import {IoMdPricetags} from 'react-icons/io';
-import {GiPalmTree} from 'react-icons/gi';
-import {HiOutlineChevronLeft, HiOutlineChevronRight} from 'react-icons/hi';
-import {OfferCard} from '../components/OfferCard';
+import { ProductItem } from '~/components/ProductItem';
+import { FaChevronDown } from 'react-icons/fa';
+import { FaLocationDot, FaCheck, FaGift } from 'react-icons/fa6';
+import { IoDiamond, IoShieldHalf } from 'react-icons/io5';
+import { RiCustomerService2Line } from 'react-icons/ri';
+import { IoMdPricetags } from 'react-icons/io';
+import { GiPalmTree } from 'react-icons/gi';
+import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
+import { OfferCard } from '../components/OfferCard';
 import FooterCarousel from '~/components/FooterCarousel';
-import {useOptimisticCart} from '@shopify/hydrogen';
+import { useOptimisticCart } from '@shopify/hydrogen';
 import VacationProcess from '~/components/VacationProcess';
 
 export const meta: MetaFunction = () => {
-  return [{title: 'My Discovery Vacations'}];
+  return [{ title: 'My Discovery Vacations' }];
 };
 
 const COLLECTION_PRODUCT_FRAGMENT = `#graphql
@@ -95,20 +95,20 @@ export async function loader(args: LoaderFunctionArgs) {
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
 
-  return {...deferredData, ...criticalData};
+  return { ...deferredData, ...criticalData };
 }
 
 /**
  * Load data necessary for rendering content above the fold. This is the critical data
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
-async function loadCriticalData({context}: LoaderFunctionArgs) {
+async function loadCriticalData({ context }: LoaderFunctionArgs) {
   const HOMEPAGE_COLLECTION_HANDLE = 'vacation-package';
 
   const [featuredResponse, homepageResponse] = await Promise.all([
     context.storefront.query(FEATURED_COLLECTION_QUERY),
     context.storefront.query(HOMEPAGE_COLLECTION_QUERY, {
-      variables: {handle: HOMEPAGE_COLLECTION_HANDLE},
+      variables: { handle: HOMEPAGE_COLLECTION_HANDLE },
     }),
   ]);
 
@@ -139,7 +139,7 @@ async function loadCriticalData({context}: LoaderFunctionArgs) {
  * fetched after the initial page load. If it's unavailable, the page should still 200.
  * Make sure to not throw any errors here, as it will cause the page to 500.
  */
-function loadDeferredData({context}: LoaderFunctionArgs) {
+function loadDeferredData({ context }: LoaderFunctionArgs) {
   const recommendedProducts = context.storefront
     .query(RECOMMENDED_PRODUCTS_QUERY)
     .catch((error) => {
@@ -165,7 +165,7 @@ export default function Homepage() {
     if (element) {
       const top =
         element.getBoundingClientRect().top + window.pageYOffset - offset;
-      window.scrollTo({top, behavior: 'smooth'});
+      window.scrollTo({ top, behavior: 'smooth' });
     }
   };
 
@@ -175,7 +175,7 @@ export default function Homepage() {
       {/* Hero Section */}
       <section
         className="relative h-[calc(100vh-100px)] flex items-center justify-center bg-cover bg-center"
-        style={{backgroundImage: 'url(/assets/HeroImage5.png)'}}
+        style={{ backgroundImage: 'url(/assets/HeroImage5.png)' }}
       >
         {/* Overlay */}
         <div className="absolute inset-0 bg-black/40 z-0" />
@@ -424,8 +424,8 @@ function RecommendedProducts({
             <div className="recommended-products-grid">
               {response
                 ? response.products.nodes.map((product) => (
-                    <ProductItem key={product.id} product={product} />
-                  ))
+                  <ProductItem key={product.id} product={product} />
+                ))
                 : null}
             </div>
           )}
@@ -446,11 +446,11 @@ function Tabs({
     handle: string;
     title: string;
     description?: string;
-    featuredImage?: {url: string; altText?: string};
+    featuredImage?: { url: string; altText?: string };
     tags?: string[];
     priceRange: {
-      minVariantPrice: {amount: string};
-      maxVariantPrice: {amount: string};
+      minVariantPrice: { amount: string };
+      maxVariantPrice: { amount: string };
     };
   }>;
   cartIsEmpty: boolean;
@@ -488,25 +488,24 @@ function Tabs({
     <div>
       <div
         className="flex mb-12 border-b border-[#135868] overflow-x-auto scrollbar-hide md:overflow-x-visible md:scrollbar-default gap-2 md:gap-0"
-        style={{WebkitOverflowScrolling: 'touch'}}
+        style={{ WebkitOverflowScrolling: 'touch' }}
       >
         {tabs.map((tab, idx) => (
           <button
             key={tab}
             onClick={() => setActive(idx)}
             className={`flex-1 min-w-[48%] md:min-w-0 px-2 md:px-4 py-2 font-[500] text-[16px] md:text-[21px] border-b-2 transition text-[#1A202C] opacity-60 whitespace-nowrap ${active === idx ? 'border-[#135868] text-[#135868] opacity-100' : 'border-transparent bg-transparent'}`}
-            style={{scrollbarWidth: 'none'}}
+            style={{ scrollbarWidth: 'none' }}
           >
             {tab}
           </button>
         ))}
       </div>
       <div
-        className={`grid gap-8 ${
-          tabs[active] === 'Popular'
-            ? 'md:grid-cols-[2fr_1fr] grid-cols-1'
-            : 'grid-cols-1'
-        }`}
+        className={`grid gap-8 ${tabs[active] === 'Popular'
+          ? 'md:grid-cols-[2fr_1fr] grid-cols-1'
+          : 'grid-cols-1'
+          }`}
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           {filteredProducts.length > 0 ? (
@@ -532,8 +531,8 @@ function Tabs({
         {/* Hide sidebar card on mobile */}
         {tabs[active] === 'Popular' && (
           <div
-            className="hidden md:block relative bg-[#0E424E] rounded-lg shadow p-6 text-white bg-cover min-h-[400px]"
-            style={{backgroundImage: 'url(/assets/PlanImage.png)'}}
+            className="hidden md:block max-h-[670px] relative bg-[#0E424E] rounded-lg shadow p-6 text-white bg-cover min-h-[400px]"
+            style={{ backgroundImage: 'url(/assets/PlanImage.png)' }}
           >
             <h4 className="font-[500] text-[24px] md:text-[47px]">
               Plan Less. Travel More.
