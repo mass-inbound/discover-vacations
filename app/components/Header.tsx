@@ -1,14 +1,14 @@
-import {Suspense, useState, useRef, useEffect} from 'react';
-import {Await, NavLink, useAsyncValue} from 'react-router';
+import { Suspense, useState, useRef, useEffect } from 'react';
+import { Await, NavLink, useAsyncValue } from 'react-router';
 import {
   type CartViewPayload,
   useAnalytics,
   useOptimisticCart,
 } from '@shopify/hydrogen';
-import type {HeaderQuery, CartApiQueryFragment} from 'storefrontapi.generated';
-import {useAside} from '~/components/Aside';
-import {FaLocationDot} from 'react-icons/fa6';
-import {HiChevronDown, HiMenu, HiX} from 'react-icons/hi';
+import type { HeaderQuery, CartApiQueryFragment } from 'storefrontapi.generated';
+import { useAside } from '~/components/Aside';
+import { FaLocationDot } from 'react-icons/fa6';
+import { HiChevronDown, HiMenu, HiX } from 'react-icons/hi';
 import CartIcon from '/assets/icon-cart.svg';
 
 interface HeaderProps {
@@ -85,29 +85,28 @@ export function Header({
       dropdown: true,
       button: true,
       items: [
-        {label: 'Orlando, FL', href: '/destinations/orlando'},
-        {label: 'Poconos, PA', href: '/destinations/poconos'},
+        { label: 'Orlando, FL', href: '/destinations/orlando' },
+        { label: 'Poconos, PA', href: '/destinations/poconos' },
       ],
     },
-    {label: 'How it Works', href: '/how-it-works'},
+    { label: 'How it Works', href: '/how-it-works' },
     {
       label: 'Help',
       dropdown: true,
       items: [
-        {label: 'FAQ', href: '/faq'},
-        {label: 'Contact Us', href: '/contact-us'},
+        { label: 'FAQ', href: '/faq' },
+        { label: 'Contact Us', href: '/contact-us' },
       ],
     },
-    {label: 'Log in', href: '/account'},
+    { label: 'Log in', href: '/account' },
   ];
 
   return (
     <header
-      className={` ${
-        isScrolled
-          ? 'bg-[rgba(255,255,255,0.70)] shadow-lg backdrop-blur-[4px] fixed top-4 left-8 right-8 h-[68px] rounded-[10px]'
-          : 'bg-white shadow-sm w-full sticky top-0 h-[100px]'
-      }  z-50 transition-all duration-300`}
+      className={` ${isScrolled
+        ? 'bg-[rgba(255,255,255,0.70)] shadow-lg backdrop-blur-[4px] fixed top-4 left-8 right-8 h-[68px] rounded-[10px]'
+        : 'bg-white shadow-sm w-full sticky top-0 h-[100px]'
+        }  z-50 transition-all duration-300`}
     >
       <div className="max-w-8xl mx-auto md:px-12 px-3 flex items-center justify-between h-full">
         {/* Logo */}
@@ -320,9 +319,9 @@ export function Header({
   );
 }
 
-function CartBadge({count}: {count: number | null}) {
-  const {open} = useAside();
-  const {publish, shop, cart, prevCart} = useAnalytics();
+function CartBadge({ count }: { count: number | null }) {
+  const { open } = useAside();
+  const { publish, shop, cart, prevCart } = useAnalytics();
 
   return (
     <NavLink
@@ -345,7 +344,7 @@ function CartBadge({count}: {count: number | null}) {
   );
 }
 
-function CartToggle({cart}: Pick<HeaderProps, 'cart'>) {
+function CartToggle({ cart }: Pick<HeaderProps, 'cart'>) {
   return (
     <Suspense fallback={<CartBadge count={null} />}>
       <Await resolve={cart}>
