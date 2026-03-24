@@ -202,7 +202,7 @@ export default function Homepage() {
               to="/discover-offers"
               className="flex items-center text-white underline text-[16px] md:text-[20px] font-[400] hover:text-gray-300"
             >
-              See All Offer
+              See All Offers
             </Link>
           </div>
         </div>
