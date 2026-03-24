@@ -531,7 +531,7 @@ function Tabs({
         {/* Hide sidebar card on mobile */}
         {tabs[active] === 'Popular' && (
           <div
-            className="hidden md:block max-h-[670px] relative bg-[#0E424E] rounded-lg shadow p-6 text-white bg-cover min-h-[400px]"
+            className="hidden md:block max-h-[698px] relative bg-[#0E424E] rounded-lg shadow p-6 text-white bg-cover min-h-[400px]"
             style={{ backgroundImage: 'url(/assets/PlanImage.png)' }}
           >
             <h4 className="font-[500] text-[24px] md:text-[47px]">

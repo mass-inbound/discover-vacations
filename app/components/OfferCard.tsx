@@ -69,7 +69,7 @@ export function OfferCard({
             Details
           </Link>
         </div>
-        <ul className="text-4 font-[400] tracking-wide text-[#000] mb-4 list-disc list-inside pl-4 space-y-2">
+        <ul className="text-4 h-[150px] max-h-[150px] overflow-y-auto font-[400] tracking-wide text-[#000] mb-4 list-disc list-inside pl-4 space-y-2">
           {bullets.map((b: string, i: number) => (
             <li key={i} className="flex gap-2 items-center">
               {/* <FaCheck className="text-amber-400" />{' '} */}
