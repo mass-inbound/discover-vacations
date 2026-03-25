@@ -5,32 +5,32 @@ import {
   redirect,
   Link,
 } from 'react-router';
-import type {CartQueryDataReturn} from '@shopify/hydrogen';
-import {CartForm} from '@shopify/hydrogen';
+import type { CartQueryDataReturn } from '@shopify/hydrogen';
+import { CartForm } from '@shopify/hydrogen';
 import {
   data,
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
   type HeadersFunction,
 } from '@shopify/remix-oxygen';
-import {CartMain} from '~/components/CartMain';
-import {useMemo, useState, useEffect, useRef} from 'react';
-import {MdOutlineShoppingCart} from 'react-icons/md';
-import {format, startOfMonth, endOfMonth, getDay, addMonths} from 'date-fns';
-import {addDays} from 'date-fns';
-import {BiChevronLeft, BiChevronRight} from 'react-icons/bi';
-import {BsCreditCard2BackFill, BsPlusCircleFill} from 'react-icons/bs';
-import {FaGift} from 'react-icons/fa6';
-import {useCartForm} from '~/components/CartFormContext';
+import { CartMain } from '~/components/CartMain';
+import { useMemo, useState, useEffect, useRef } from 'react';
+import { MdOutlineShoppingCart } from 'react-icons/md';
+import { format, startOfMonth, endOfMonth, getDay, addMonths } from 'date-fns';
+import { addDays } from 'date-fns';
+import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
+import { BsCreditCard2BackFill, BsPlusCircleFill } from 'react-icons/bs';
+import { FaGift } from 'react-icons/fa6';
+import { useCartForm } from '~/components/CartFormContext';
 
 export const meta: MetaFunction = () => {
-  return [{title: `Hydrogen | Cart`}];
+  return [{ title: `Hydrogen | Cart` }];
 };
 
-export const headers: HeadersFunction = ({actionHeaders}) => actionHeaders;
+export const headers: HeadersFunction = ({ actionHeaders }) => actionHeaders;
 
-export async function action({request, context}: ActionFunctionArgs) {
-  const {cart} = context;
+export async function action({ request, context }: ActionFunctionArgs) {
+  const { cart } = context;
   const formData = await request.formData();
   // Handle clear cart
   const actionType = formData.get('action');
@@ -42,7 +42,7 @@ export async function action({request, context}: ActionFunctionArgs) {
     const cartData = await cart.get();
     if (cartData?.id) {
       const headers = cart.setCartId(cartData.id);
-      return redirect('/cart', {headers});
+      return redirect('/cart', { headers });
     }
     return redirect('/cart');
   }
@@ -92,7 +92,7 @@ export async function action({request, context}: ActionFunctionArgs) {
         const mainProductLine = existingCart.lines.nodes.find((line: any) => {
           const attrs = Object.fromEntries(
             (line.attributes || []).map(
-              (attr: {key: string; value: string}) => [attr.key, attr.value],
+              (attr: { key: string; value: string }) => [attr.key, attr.value],
             ),
           );
           return (
@@ -124,23 +124,23 @@ export async function action({request, context}: ActionFunctionArgs) {
           merchandiseId: mainVariantId as string,
           quantity: 1,
           attributes: [
-            {key: 'First Name', value: String(firstName || '')},
-            {key: 'Last Name', value: String(lastName || '')},
-            {key: 'Email', value: String(email || '')},
-            {key: 'Phone', value: String(phone || '')},
-            {key: 'Adults', value: String(adults || '')},
-            {key: 'Kids', value: String(kids || '')},
-            {key: 'Check In', value: String(checkIn || '')},
-            {key: 'Check Out', value: String(checkOut || '')},
-            {key: 'Offer Title', value: String(offerTitle || '')},
-            {key: 'Offer Location', value: String(offerLocation || '')},
-            {key: 'Offer Image', value: String(offerImage || '')},
-            {key: 'Offer Price', value: String(offerPrice || '')},
-            {key: 'offerNights', value: String(offerNights || '')},
-            {key: 'offerDays', value: String(offerDays || '')},
-            {key: 'offerDescription', value: String(offerDescription || '')},
+            { key: 'First Name', value: String(firstName || '') },
+            { key: 'Last Name', value: String(lastName || '') },
+            { key: 'Email', value: String(email || '') },
+            { key: 'Phone', value: String(phone || '') },
+            { key: 'Adults', value: String(adults || '') },
+            { key: 'Kids', value: String(kids || '') },
+            { key: 'Check In', value: String(checkIn || '') },
+            { key: 'Check Out', value: String(checkOut || '') },
+            { key: 'Offer Title', value: String(offerTitle || '') },
+            { key: 'Offer Location', value: String(offerLocation || '') },
+            { key: 'Offer Image', value: String(offerImage || '') },
+            { key: 'Offer Price', value: String(offerPrice || '') },
+            { key: 'offerNights', value: String(offerNights || '') },
+            { key: 'offerDays', value: String(offerDays || '') },
+            { key: 'offerDescription', value: String(offerDescription || '') },
             // {key: 'Offer Expires At', value: expiresAt},
-            {key: 'Product Type', value: 'Main Vacation Package'},
+            { key: 'Product Type', value: 'Main Vacation Package' },
             // {key: 'Price', value: String(offerPrice || '')},
             // {key: 'Bonus Vacation', value: 'false'},
             {
@@ -168,14 +168,14 @@ export async function action({request, context}: ActionFunctionArgs) {
             quantity: 1,
             attributes: [
               // {key: 'Bonus Vacation', value: 'true'},
-              {key: 'Product Type', value: 'Bonus Vacation'},
-              {key: 'Main Offer Title', value: String(offerTitle || '')},
-              {key: 'Offer Title', value: String(selectedUpsellTitle || '')},
-              {key: 'Offer Image', value: String(selectedUpsellImage || '')},
-              {key: 'Offer Price', value: 'Free'},
-              {key: 'Original Price', value: '$300+'},
-              {key: 'offerNights', value: String(selectedUpsellNights || '')},
-              {key: 'offerDays', value: String(selectedUpsellDays || '')},
+              { key: 'Product Type', value: 'Bonus Vacation' },
+              { key: 'Main Offer Title', value: String(offerTitle || '') },
+              { key: 'Offer Title', value: String(selectedUpsellTitle || '') },
+              { key: 'Offer Image', value: String(selectedUpsellImage || '') },
+              { key: 'Offer Price', value: 'Free' },
+              { key: 'Original Price', value: '$300+' },
+              { key: 'offerNights', value: String(selectedUpsellNights || '') },
+              { key: 'offerDays', value: String(selectedUpsellDays || '') },
               {
                 key: 'offerDescription',
                 value: String(selectedUpsellDescription || ''),
@@ -192,12 +192,12 @@ export async function action({request, context}: ActionFunctionArgs) {
 
       // Add cart-level attributes for Shopify Admin visibility
       await cart.updateAttributes([
-        {key: 'First Name', value: String(firstName || '')},
-        {key: 'Last Name', value: String(lastName || '')},
-        {key: 'Email', value: String(email || '')},
-        {key: 'Phone', value: String(phone || '')},
-        {key: 'Adults', value: String(adults || '')},
-        {key: 'Kids', value: String(kids || '')},
+        { key: 'First Name', value: String(firstName || '') },
+        { key: 'Last Name', value: String(lastName || '') },
+        { key: 'Email', value: String(email || '') },
+        { key: 'Phone', value: String(phone || '') },
+        { key: 'Adults', value: String(adults || '') },
+        { key: 'Kids', value: String(kids || '') },
         {
           key: 'Consent',
           value: String(
@@ -208,14 +208,14 @@ export async function action({request, context}: ActionFunctionArgs) {
                 : 'Not Approved',
           ),
         },
-        {key: 'Check In', value: String(checkIn || '')},
-        {key: 'Check Out', value: String(checkOut || '')},
+        { key: 'Check In', value: String(checkIn || '') },
+        { key: 'Check Out', value: String(checkOut || '') },
       ]);
 
       const updatedCart = await cart.get();
       if (updatedCart?.checkoutUrl) {
         const headers = cart.setCartId(updatedCart.id);
-        return redirect(updatedCart.checkoutUrl, {headers});
+        return redirect(updatedCart.checkoutUrl, { headers });
       }
       return redirect('/cart');
     }
@@ -243,7 +243,7 @@ export async function action({request, context}: ActionFunctionArgs) {
     if (isBonusProduct) {
       const hasMainInCart = existingCart?.lines?.nodes?.some((line: any) => {
         const attrs = Object.fromEntries(
-          (line.attributes || []).map((attr: {key: string; value: string}) => [
+          (line.attributes || []).map((attr: { key: string; value: string }) => [
             attr.key,
             attr.value,
           ]),
@@ -267,130 +267,130 @@ export async function action({request, context}: ActionFunctionArgs) {
       // Update the existing line with new attributes
       const attributes = isBonusProduct
         ? [
-            // {key: 'Bonus Vacation', value: 'true'},
-            {key: 'Product Type', value: 'Bonus Vacation'},
+          // {key: 'Bonus Vacation', value: 'true'},
+          { key: 'Product Type', value: 'Bonus Vacation' },
+          {
+            key: 'Offer Title',
+            value: String(formData.get('offerTitle') || ''),
+          },
+          {
+            key: 'Offer Image',
+            value: String(formData.get('offerImage') || ''),
+          },
+          { key: 'Offer Price', value: 'Free' },
+          {
+            key: 'Original Price',
+            value: String(formData.get('Original Price') || '$300+'),
+          },
+          {
+            key: 'offerNights',
+            value: String(formData.get('offerNights') || ''),
+          },
+          { key: 'offerDays', value: String(formData.get('offerDays') || '') },
+          {
+            key: 'offerDescription',
+            value: String(formData.get('offerDescription') || ''),
+          },
+          {
+            key: 'Offer Location',
+            value: String(formData.get('offerLocation') || ''),
+          },
+          // {key: 'Offer Expires At', value: expiresAt},
+        ]
+        : isDirectAddToCart
+          ? [
+            // Direct add-to-cart (from OfferCard or product detail page)
             {
               key: 'Offer Title',
               value: String(formData.get('offerTitle') || ''),
             },
             {
+              key: 'Offer Location',
+              value: String(formData.get('offerLocation') || ''),
+            },
+            {
               key: 'Offer Image',
               value: String(formData.get('offerImage') || ''),
             },
-            {key: 'Offer Price', value: 'Free'},
             {
-              key: 'Original Price',
-              value: String(formData.get('Original Price') || '$300+'),
+              key: 'Offer Price',
+              value: String(formData.get('offerPrice') || ''),
             },
             {
               key: 'offerNights',
               value: String(formData.get('offerNights') || ''),
             },
-            {key: 'offerDays', value: String(formData.get('offerDays') || '')},
+            {
+              key: 'offerDays',
+              value: String(formData.get('offerDays') || ''),
+            },
             {
               key: 'offerDescription',
               value: String(formData.get('offerDescription') || ''),
+            },
+            // {key: 'Offer Expires At', value: expiresAt},
+            { key: 'Product Type', value: 'Main Vacation Package' },
+            // {key: 'Price', value: String(formData.get('offerPrice') || '')},
+            // {key: 'Bonus Vacation', value: 'false'},
+            { key: 'TCPA Status', value: 'Not Approved' },
+          ]
+          : [
+            // Full form submission with personal information
+            {
+              key: 'First Name',
+              value: String(formData.get('firstName') || ''),
+            },
+            { key: 'Last Name', value: String(formData.get('lastName') || '') },
+            { key: 'Email', value: String(formData.get('email') || '') },
+            { key: 'Phone', value: String(formData.get('phone') || '') },
+            { key: 'Adults', value: String(formData.get('adults') || '') },
+            { key: 'Kids', value: String(formData.get('kids') || '') },
+            { key: 'Check In', value: String(formData.get('checkIn') || '') },
+            { key: 'Check Out', value: String(formData.get('checkOut') || '') },
+            {
+              key: 'Offer Title',
+              value: String(formData.get('offerTitle') || ''),
             },
             {
               key: 'Offer Location',
               value: String(formData.get('offerLocation') || ''),
             },
+            {
+              key: 'Offer Image',
+              value: String(formData.get('offerImage') || ''),
+            },
+            {
+              key: 'Offer Price',
+              value: String(formData.get('offerPrice') || ''),
+            },
+            {
+              key: 'offerNights',
+              value: String(formData.get('offerNights') || ''),
+            },
+            {
+              key: 'offerDays',
+              value: String(formData.get('offerDays') || ''),
+            },
+            {
+              key: 'offerDescription',
+              value: String(formData.get('offerDescription') || ''),
+            },
             // {key: 'Offer Expires At', value: expiresAt},
-          ]
-        : isDirectAddToCart
-          ? [
-              // Direct add-to-cart (from OfferCard or product detail page)
-              {
-                key: 'Offer Title',
-                value: String(formData.get('offerTitle') || ''),
-              },
-              {
-                key: 'Offer Location',
-                value: String(formData.get('offerLocation') || ''),
-              },
-              {
-                key: 'Offer Image',
-                value: String(formData.get('offerImage') || ''),
-              },
-              {
-                key: 'Offer Price',
-                value: String(formData.get('offerPrice') || ''),
-              },
-              {
-                key: 'offerNights',
-                value: String(formData.get('offerNights') || ''),
-              },
-              {
-                key: 'offerDays',
-                value: String(formData.get('offerDays') || ''),
-              },
-              {
-                key: 'offerDescription',
-                value: String(formData.get('offerDescription') || ''),
-              },
-              // {key: 'Offer Expires At', value: expiresAt},
-              {key: 'Product Type', value: 'Main Vacation Package'},
-              // {key: 'Price', value: String(formData.get('offerPrice') || '')},
-              // {key: 'Bonus Vacation', value: 'false'},
-              {key: 'TCPA Status', value: 'Not Approved'},
-            ]
-          : [
-              // Full form submission with personal information
-              {
-                key: 'First Name',
-                value: String(formData.get('firstName') || ''),
-              },
-              {key: 'Last Name', value: String(formData.get('lastName') || '')},
-              {key: 'Email', value: String(formData.get('email') || '')},
-              {key: 'Phone', value: String(formData.get('phone') || '')},
-              {key: 'Adults', value: String(formData.get('adults') || '')},
-              {key: 'Kids', value: String(formData.get('kids') || '')},
-              {key: 'Check In', value: String(formData.get('checkIn') || '')},
-              {key: 'Check Out', value: String(formData.get('checkOut') || '')},
-              {
-                key: 'Offer Title',
-                value: String(formData.get('offerTitle') || ''),
-              },
-              {
-                key: 'Offer Location',
-                value: String(formData.get('offerLocation') || ''),
-              },
-              {
-                key: 'Offer Image',
-                value: String(formData.get('offerImage') || ''),
-              },
-              {
-                key: 'Offer Price',
-                value: String(formData.get('offerPrice') || ''),
-              },
-              {
-                key: 'offerNights',
-                value: String(formData.get('offerNights') || ''),
-              },
-              {
-                key: 'offerDays',
-                value: String(formData.get('offerDays') || ''),
-              },
-              {
-                key: 'offerDescription',
-                value: String(formData.get('offerDescription') || ''),
-              },
-              // {key: 'Offer Expires At', value: expiresAt},
-              {key: 'Product Type', value: 'Main Vacation Package'},
-              // {key: 'Price', value: String(formData.get('offerPrice') || '')},
-              // {key: 'Bonus Vacation', value: 'false'},
-              {
-                key: 'TCPA Status',
-                value: String(
-                  formData.get('bypassConsent') === 'true'
-                    ? 'Not Approved'
-                    : formData.get('consent') === 'on' ||
-                        formData.get('consent') === 'true'
-                      ? 'Approved'
-                      : 'Not Approved',
-                ),
-              },
-            ];
+            { key: 'Product Type', value: 'Main Vacation Package' },
+            // {key: 'Price', value: String(formData.get('offerPrice') || '')},
+            // {key: 'Bonus Vacation', value: 'false'},
+            {
+              key: 'TCPA Status',
+              value: String(
+                formData.get('bypassConsent') === 'true'
+                  ? 'Not Approved'
+                  : formData.get('consent') === 'on' ||
+                    formData.get('consent') === 'true'
+                    ? 'Approved'
+                    : 'Not Approved',
+              ),
+            },
+          ];
 
       await cart.updateLines([
         {
@@ -404,130 +404,130 @@ export async function action({request, context}: ActionFunctionArgs) {
       // Add new line if product doesn't exist in cart
       const attributes = isBonusProduct
         ? [
-            // {key: 'Bonus Vacation', value: 'true'},
-            {key: 'Product Type', value: 'Bonus Vacation'},
+          // {key: 'Bonus Vacation', value: 'true'},
+          { key: 'Product Type', value: 'Bonus Vacation' },
+          {
+            key: 'Offer Title',
+            value: String(formData.get('offerTitle') || ''),
+          },
+          {
+            key: 'Offer Image',
+            value: String(formData.get('offerImage') || ''),
+          },
+          { key: 'Offer Price', value: 'Free' },
+          {
+            key: 'Original Price',
+            value: String(formData.get('Original Price') || '$300+'),
+          },
+          {
+            key: 'offerNights',
+            value: String(formData.get('offerNights') || ''),
+          },
+          { key: 'offerDays', value: String(formData.get('offerDays') || '') },
+          {
+            key: 'offerDescription',
+            value: String(formData.get('offerDescription') || ''),
+          },
+          {
+            key: 'Offer Location',
+            value: String(formData.get('offerLocation') || ''),
+          },
+          // {key: 'Offer Expires At', value: expiresAt},
+        ]
+        : isDirectAddToCart
+          ? [
+            // Direct add-to-cart (from OfferCard or product detail page)
             {
               key: 'Offer Title',
               value: String(formData.get('offerTitle') || ''),
             },
             {
+              key: 'Offer Location',
+              value: String(formData.get('offerLocation') || ''),
+            },
+            {
               key: 'Offer Image',
               value: String(formData.get('offerImage') || ''),
             },
-            {key: 'Offer Price', value: 'Free'},
             {
-              key: 'Original Price',
-              value: String(formData.get('Original Price') || '$300+'),
+              key: 'Offer Price',
+              value: String(formData.get('offerPrice') || ''),
             },
             {
               key: 'offerNights',
               value: String(formData.get('offerNights') || ''),
             },
-            {key: 'offerDays', value: String(formData.get('offerDays') || '')},
+            {
+              key: 'offerDays',
+              value: String(formData.get('offerDays') || ''),
+            },
             {
               key: 'offerDescription',
               value: String(formData.get('offerDescription') || ''),
+            },
+            // {key: 'Offer Expires At', value: expiresAt},
+            { key: 'Product Type', value: 'Main Vacation Package' },
+            // {key: 'Price', value: String(formData.get('offerPrice') || '')},
+            // {key: 'Bonus Vacation', value: 'false'},
+            { key: 'TCPA Status', value: 'Not Approved' },
+          ]
+          : [
+            // Full form submission with personal information
+            {
+              key: 'First Name',
+              value: String(formData.get('firstName') || ''),
+            },
+            { key: 'Last Name', value: String(formData.get('lastName') || '') },
+            { key: 'Email', value: String(formData.get('email') || '') },
+            { key: 'Phone', value: String(formData.get('phone') || '') },
+            { key: 'Adults', value: String(formData.get('adults') || '') },
+            { key: 'Kids', value: String(formData.get('kids') || '') },
+            { key: 'Check In', value: String(formData.get('checkIn') || '') },
+            { key: 'Check Out', value: String(formData.get('checkOut') || '') },
+            {
+              key: 'Offer Title',
+              value: String(formData.get('offerTitle') || ''),
             },
             {
               key: 'Offer Location',
               value: String(formData.get('offerLocation') || ''),
             },
+            {
+              key: 'Offer Image',
+              value: String(formData.get('offerImage') || ''),
+            },
+            {
+              key: 'Offer Price',
+              value: String(formData.get('offerPrice') || ''),
+            },
+            {
+              key: 'offerNights',
+              value: String(formData.get('offerNights') || ''),
+            },
+            {
+              key: 'offerDays',
+              value: String(formData.get('offerDays') || ''),
+            },
+            {
+              key: 'offerDescription',
+              value: String(formData.get('offerDescription') || ''),
+            },
             // {key: 'Offer Expires At', value: expiresAt},
-          ]
-        : isDirectAddToCart
-          ? [
-              // Direct add-to-cart (from OfferCard or product detail page)
-              {
-                key: 'Offer Title',
-                value: String(formData.get('offerTitle') || ''),
-              },
-              {
-                key: 'Offer Location',
-                value: String(formData.get('offerLocation') || ''),
-              },
-              {
-                key: 'Offer Image',
-                value: String(formData.get('offerImage') || ''),
-              },
-              {
-                key: 'Offer Price',
-                value: String(formData.get('offerPrice') || ''),
-              },
-              {
-                key: 'offerNights',
-                value: String(formData.get('offerNights') || ''),
-              },
-              {
-                key: 'offerDays',
-                value: String(formData.get('offerDays') || ''),
-              },
-              {
-                key: 'offerDescription',
-                value: String(formData.get('offerDescription') || ''),
-              },
-              // {key: 'Offer Expires At', value: expiresAt},
-              {key: 'Product Type', value: 'Main Vacation Package'},
-              // {key: 'Price', value: String(formData.get('offerPrice') || '')},
-              // {key: 'Bonus Vacation', value: 'false'},
-              {key: 'TCPA Status', value: 'Not Approved'},
-            ]
-          : [
-              // Full form submission with personal information
-              {
-                key: 'First Name',
-                value: String(formData.get('firstName') || ''),
-              },
-              {key: 'Last Name', value: String(formData.get('lastName') || '')},
-              {key: 'Email', value: String(formData.get('email') || '')},
-              {key: 'Phone', value: String(formData.get('phone') || '')},
-              {key: 'Adults', value: String(formData.get('adults') || '')},
-              {key: 'Kids', value: String(formData.get('kids') || '')},
-              {key: 'Check In', value: String(formData.get('checkIn') || '')},
-              {key: 'Check Out', value: String(formData.get('checkOut') || '')},
-              {
-                key: 'Offer Title',
-                value: String(formData.get('offerTitle') || ''),
-              },
-              {
-                key: 'Offer Location',
-                value: String(formData.get('offerLocation') || ''),
-              },
-              {
-                key: 'Offer Image',
-                value: String(formData.get('offerImage') || ''),
-              },
-              {
-                key: 'Offer Price',
-                value: String(formData.get('offerPrice') || ''),
-              },
-              {
-                key: 'offerNights',
-                value: String(formData.get('offerNights') || ''),
-              },
-              {
-                key: 'offerDays',
-                value: String(formData.get('offerDays') || ''),
-              },
-              {
-                key: 'offerDescription',
-                value: String(formData.get('offerDescription') || ''),
-              },
-              // {key: 'Offer Expires At', value: expiresAt},
-              {key: 'Product Type', value: 'Main Vacation Package'},
-              // {key: 'Price', value: String(formData.get('offerPrice') || '')},
-              // {key: 'Bonus Vacation', value: 'false'},
-              {
-                key: 'TCPA Status',
-                value: String(
-                  formData.get('bypassConsent') === 'true'
-                    ? 'Not Approved'
-                    : formData.get('consent') === 'on' ||
-                        formData.get('consent') === 'true'
-                      ? 'Approved'
-                      : 'Not Approved',
-                ),
-              },
-            ];
+            { key: 'Product Type', value: 'Main Vacation Package' },
+            // {key: 'Price', value: String(formData.get('offerPrice') || '')},
+            // {key: 'Bonus Vacation', value: 'false'},
+            {
+              key: 'TCPA Status',
+              value: String(
+                formData.get('bypassConsent') === 'true'
+                  ? 'Not Approved'
+                  : formData.get('consent') === 'on' ||
+                    formData.get('consent') === 'true'
+                    ? 'Approved'
+                    : 'Not Approved',
+              ),
+            },
+          ];
 
       const result = await cart.addLines([
         {
@@ -540,36 +540,36 @@ export async function action({request, context}: ActionFunctionArgs) {
     // Add cart-level attributes for Shopify Admin visibility
     if (isDirectAddToCart) {
       // For direct add-to-cart, set minimal cart-level attributes
-      await cart.updateAttributes([{key: 'Consent', value: 'Not Approved'}]);
+      await cart.updateAttributes([{ key: 'Consent', value: 'Not Approved' }]);
     } else {
       // For full form submissions, set all cart-level attributes
       await cart.updateAttributes([
-        {key: 'First Name', value: String(formData.get('firstName') || '')},
-        {key: 'Last Name', value: String(formData.get('lastName') || '')},
-        {key: 'Email', value: String(formData.get('email') || '')},
-        {key: 'Phone', value: String(formData.get('phone') || '')},
-        {key: 'Adults', value: String(formData.get('adults') || '')},
-        {key: 'Kids', value: String(formData.get('kids') || '')},
+        { key: 'First Name', value: String(formData.get('firstName') || '') },
+        { key: 'Last Name', value: String(formData.get('lastName') || '') },
+        { key: 'Email', value: String(formData.get('email') || '') },
+        { key: 'Phone', value: String(formData.get('phone') || '') },
+        { key: 'Adults', value: String(formData.get('adults') || '') },
+        { key: 'Kids', value: String(formData.get('kids') || '') },
         {
           key: 'Consent',
           value: String(
             formData.get('bypassConsent') === 'true'
               ? 'Not Approved'
               : formData.get('consent') === 'on' ||
-                  formData.get('consent') === 'true'
+                formData.get('consent') === 'true'
                 ? 'Approved'
                 : 'Not Approved',
           ),
         },
-        {key: 'Check In', value: String(formData.get('checkIn') || '')},
-        {key: 'Check Out', value: String(formData.get('checkOut') || '')},
+        { key: 'Check In', value: String(formData.get('checkIn') || '') },
+        { key: 'Check Out', value: String(formData.get('checkOut') || '') },
       ]);
     }
     // For regular add-to-cart, just redirect back to cart page
     const cartData = await cart.get();
     if (cartData?.id) {
       const headers = cart.setCartId(cartData.id);
-      return redirect('/cart', {headers});
+      return redirect('/cart', { headers });
     }
     return redirect('/cart');
   }
@@ -577,13 +577,13 @@ export async function action({request, context}: ActionFunctionArgs) {
   const cartData = await cart.get();
   if (cartData?.id) {
     const headers = cart.setCartId(cartData.id);
-    return redirect('/cart', {headers});
+    return redirect('/cart', { headers });
   }
   return redirect('/cart');
 }
 
-export async function loader({context}: LoaderFunctionArgs) {
-  const {cart, storefront} = context;
+export async function loader({ context }: LoaderFunctionArgs) {
+  const { cart, storefront } = context;
   // Fetch upsell products (tag: 'upsell')
   const UPSELL_PRODUCTS_QUERY = `#graphql
     fragment MoneyProductItem on MoneyV2 {
@@ -626,15 +626,15 @@ export async function loader({context}: LoaderFunctionArgs) {
     }
   `;
   const upsellRes = await storefront.query(UPSELL_PRODUCTS_QUERY, {
-    variables: {query: 'tag:upsell'},
+    variables: { query: 'tag:upsell' },
   });
   const upsellProducts = upsellRes?.products?.nodes || [];
   const cartData = await cart.get();
-  return {cart: cartData, upsellProducts};
+  return { cart: cartData, upsellProducts };
 }
 
 export default function Cart() {
-  const {cart, upsellProducts} = useLoaderData<typeof loader>();
+  const { cart, upsellProducts } = useLoaderData<typeof loader>();
   // console.log('cart==>', cart);
   const location = useLocation();
 
@@ -645,7 +645,7 @@ export default function Cart() {
     // Find the main product (not bonus vacation)
     const mainProductLine = cart.lines.nodes.find((line: any) => {
       const attrs = Object.fromEntries(
-        (line.attributes || []).map((attr: {key: string; value: string}) => [
+        (line.attributes || []).map((attr: { key: string; value: string }) => [
           attr.key,
           attr.value,
         ]),
@@ -659,7 +659,7 @@ export default function Cart() {
     // If no main product found, use the first line
     const line = mainProductLine || cart.lines.nodes[0];
     const attrs = Object.fromEntries(
-      (line.attributes || []).map((attr: {key: string; value: string}) => [
+      (line.attributes || []).map((attr: { key: string; value: string }) => [
         attr.key,
         attr.value,
       ]),
@@ -679,7 +679,7 @@ export default function Cart() {
   const cartOffer = getOfferFromCart(cart);
 
   // Form state via Context (sessionStorage-backed)
-  const {form, setForm, showDatePicker, setShowDatePicker} = useCartForm();
+  const { form, setForm, showDatePicker, setShowDatePicker } = useCartForm();
 
   // State to track if "here" button was clicked (bypass consent)
   const [bypassConsent, setBypassConsent] = useState(false);
@@ -834,7 +834,7 @@ export default function Cart() {
 
   // Update handleInput function
   function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
-    const {name, value, type, checked} = e.target;
+    const { name, value, type, checked } = e.target;
     if (name === 'phone') {
       const digits = value.replace(/\D/g, '');
       setForm((prev) => ({
@@ -873,11 +873,11 @@ export default function Cart() {
     const hours = Math.floor(timeLeft / (1000 * 60 * 60));
     const minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
     const seconds = Math.floor((timeLeft / 1000) % 60);
-    return {hours, minutes, seconds, expired, timeLeft};
+    return { hours, minutes, seconds, expired, timeLeft };
   }
 
   const OFFER_EXPIRY_KEY = 'cartOfferExpiresAt';
-  const {hours, minutes, seconds, expired, timeLeft} =
+  const { hours, minutes, seconds, expired, timeLeft } =
     useCountdownLocalStorage(OFFER_EXPIRY_KEY);
   const cartIsEmpty = !cart?.lines?.nodes?.length;
 
@@ -889,7 +889,7 @@ export default function Cart() {
     if (!cart?.lines?.nodes?.length) return [];
     return cart.lines.nodes.filter((line: any) => {
       const attrs = Object.fromEntries(
-        (line.attributes || []).map((attr: {key: string; value: string}) => [
+        (line.attributes || []).map((attr: { key: string; value: string }) => [
           attr.key,
           attr.value,
         ]),
@@ -924,14 +924,20 @@ export default function Cart() {
         window.pageYOffset +
         yOffset;
 
-      window.scrollTo({top: y, behavior: 'smooth'});
+      window.scrollTo({ top: y, behavior: 'smooth' });
     }
   };
 
   // Add this helper inside or above the Cart component
   function getLocationSlug(location: string | undefined) {
     if (!location) return '';
-    return location.split(',')[0].trim().toLowerCase().replace(/\s+/g, '-');
+    return location
+      .split(',')[0]
+      .trim()
+      .toLowerCase()
+      .replace(/['’]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
   }
 
   // Set offer expiration in localStorage when cart is populated and not expired
@@ -1104,8 +1110,8 @@ export default function Cart() {
                       to={
                         cartOffer?.title
                           ? `/policies/terms-conditions-${getLocationSlug(
-                              cartOffer.title,
-                            )}`
+                            cartOffer.title,
+                          )}`
                           : '/cart'
                       }
                       className="underline"
@@ -1131,9 +1137,7 @@ export default function Cart() {
                     (text/data and other charges may apply) at the
                     address/numbers provided regardless of that number being on
                     any Do not Call Registry. Your consent is not a condition of
-                    any purchase. As an alternative to the consent above you may
-                    enter the Promotion here. and , both of which I agree I have
-                    read, understand and agree to. As an alternate to the above
+                    any purchase. As an alternate to the above
                     consent, click here for other ways to take advantage of this
                     Promotion{' '}
                     <button
@@ -1263,8 +1267,8 @@ export default function Cart() {
                   value={
                     Array.isArray(selectedBonus?.tags)
                       ? selectedBonus.tags.find((t: string) =>
-                          t.match(/,|FL|PA/),
-                        ) || ''
+                        t.match(/,|FL|PA/),
+                      ) || ''
                       : ''
                   }
                 />
@@ -1290,23 +1294,20 @@ export default function Cart() {
                     />
                     <div className="w-16 h-8 bg-gray-200 peer-checked:bg-[#2AB7B7] rounded-full p-1 flex items-center transition-colors">
                       <span
-                        className={`w-1/2 text-xs font-semibold text-center transition-colors ${
-                          showDatePicker ? 'text-white' : 'text-white'
-                        }`}
+                        className={`w-1/2 text-xs font-semibold text-center transition-colors ${showDatePicker ? 'text-white' : 'text-white'
+                          }`}
                       >
                         YES
                       </span>
                       <span
-                        className={`w-1/2 text-xs font-semibold text-center transition-colors ${
-                          showDatePicker ? 'text-white' : 'text-[#2AB7B7]'
-                        }`}
+                        className={`w-1/2 text-xs font-semibold text-center transition-colors ${showDatePicker ? 'text-white' : 'text-[#2AB7B7]'
+                          }`}
                       >
                         NO
                       </span>
                       <div
-                        className={`absolute top-1 left-1 w-6 h-6 bg-white rounded-full shadow transform transition-transform ${
-                          showDatePicker ? 'translate-x-8' : ''
-                        }`}
+                        className={`absolute top-1 left-1 w-6 h-6 bg-white rounded-full shadow transform transition-transform ${showDatePicker ? 'translate-x-8' : ''
+                          }`}
                       />
                     </div>
                   </label>
@@ -1379,15 +1380,14 @@ export default function Cart() {
                                   !isDisabled && handleDateClick(day, e)
                                 }
                                 className={`w-8 h-8 flex items-center justify-center rounded-full text-sm transition
-                                ${
-                                  isStart || isEnd
+                                ${isStart || isEnd
                                     ? 'bg-[#2AB7B7] text-white'
                                     : inRange
                                       ? 'bg-[#2AB7B7]/30 text-white'
                                       : isDisabled
                                         ? 'text-gray-400 !cursor-not-allowed'
                                         : 'hover:bg-[#2AB7B7]/30'
-                                }
+                                  }
                               `}
                                 disabled={isDisabled}
                               >
@@ -1430,46 +1430,45 @@ export default function Cart() {
                 {/* Show submit button if there's a variant ID or if cart has items */}
                 {(new URLSearchParams(location.search).get('variantId') ||
                   !cartIsEmpty) && (
-                  <div className="w-full py-3 mt-auto flex items-center justify-center gap-2">
-                    <div className="flex flex-col gap-8 mt-2">
-                      {upsellProductsInCart.length == 0 && !cartIsEmpty && (
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handleUpsellScroll();
-                          }}
-                          className="flex items-center justify-center gap-2 text-white border-b-3 border-[#F2B233] text-[16px] font-[600] font-plusjakarta cursor-pointer transition-transform duration-300 hover:-translate-y-1"
-                        >
-                          <FaGift className="min-w-5 mb-1" />
-                          <span className="tracking-wide text-shadow-2xs">
-                            Select Bonus Vacation
-                          </span>
-                        </button>
-                      )}
-                      <div className="flex flex-col items-center gap-2">
-                        <button
-                          type="submit"
-                          disabled={upsellProductsInCart.length === 0}
-                          className={`w-full rounded-lg p-3 mt-auto font-semibold flex items-center justify-center gap-2 text-base ${
-                            upsellProductsInCart.length === 0
+                    <div className="w-full py-3 mt-auto flex items-center justify-center gap-2">
+                      <div className="flex flex-col gap-8 mt-2">
+                        {upsellProductsInCart.length == 0 && !cartIsEmpty && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleUpsellScroll();
+                            }}
+                            className="flex items-center justify-center gap-2 text-white border-b-3 border-[#F2B233] text-[16px] font-[600] font-plusjakarta cursor-pointer transition-transform duration-300 hover:-translate-y-1"
+                          >
+                            <FaGift className="min-w-5 mb-1" />
+                            <span className="tracking-wide text-shadow-2xs">
+                              Select Bonus Vacation
+                            </span>
+                          </button>
+                        )}
+                        <div className="flex flex-col items-center gap-2">
+                          <button
+                            type="submit"
+                            disabled={upsellProductsInCart.length === 0}
+                            className={`w-full rounded-lg p-3 mt-auto font-semibold flex items-center justify-center gap-2 text-base ${upsellProductsInCart.length === 0
                               ? 'bg-[#2ab7b79d] text-white !cursor-not-allowed pointer-events-none'
                               : 'bg-[#2AB7B7] text-white hover:bg-[#239f9f]'
-                          }`}
-                        >
-                          <BsCreditCard2BackFill size={20} />
-                          Proceed to Checkout
-                        </button>
+                              }`}
+                          >
+                            <BsCreditCard2BackFill size={20} />
+                            Proceed to Checkout
+                          </button>
 
-                        {upsellProductsInCart.length === 0 && (
-                          <p className="text-[12px] font-[500] text-gray-200">
-                            (*Select Bonus Vacation First)
-                          </p>
-                        )}
+                          {upsellProductsInCart.length === 0 && (
+                            <p className="text-[12px] font-[500] text-gray-200">
+                              (*Select Bonus Vacation First)
+                            </p>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )}
+                  )}
               </div>
             </form>
           </div>
@@ -1525,7 +1524,7 @@ export default function Cart() {
                       <button
                         type="submit"
                         className="bg-red-500 text-white px-4 py-2 rounded-lg font-semibold shadow hover:bg-red-600 transition"
-                        style={{marginLeft: 'auto'}}
+                        style={{ marginLeft: 'auto' }}
                       >
                         Clear Cart
                       </button>
@@ -1599,7 +1598,7 @@ export default function Cart() {
                     {upsellProductsInCart.map((line: any, idx: number) => {
                       const attrs = Object.fromEntries(
                         (line.attributes || []).map(
-                          (attr: {key: string; value: string}) => [
+                          (attr: { key: string; value: string }) => [
                             attr.key,
                             attr.value,
                           ],
@@ -1737,8 +1736,8 @@ export default function Cart() {
                       value={
                         Array.isArray(product.tags)
                           ? product.tags.find((t: string) =>
-                              t.match(/,|FL|PA/),
-                            ) || ''
+                            t.match(/,|FL|PA/),
+                          ) || ''
                           : ''
                       }
                     />
@@ -1760,7 +1759,7 @@ export default function Cart() {
                     <input type="hidden" name="Bonus Vacation" value="true" />
                     <input type="hidden" name="Original Price" value="$300+" />
                     {selectedBonus &&
-                    selectedBonusVariantId === product.variants.nodes[0]?.id ? (
+                      selectedBonusVariantId === product.variants.nodes[0]?.id ? (
                       <button
                         type="button"
                         className="w-full text-[#071F24] rounded-b-lg py-2 px-4 font-semibold flex items-center justify-center gap-2 bg-[#F2B233] opacity-50 cursor-not-allowed"
@@ -1772,11 +1771,10 @@ export default function Cart() {
                       <>
                         <button
                           type="submit"
-                          className={`w-full text-[#071F24] rounded-b-lg py-2 px-4 font-semibold flex items-center justify-center gap-2 bg-[#F2B233] ${
-                            !product.variants.nodes[0]?.id || cartIsEmpty
-                              ? 'opacity-70 pointer-events-none'
-                              : ''
-                          }`}
+                          className={`w-full text-[#071F24] rounded-b-lg py-2 px-4 font-semibold flex items-center justify-center gap-2 bg-[#F2B233] ${!product.variants.nodes[0]?.id || cartIsEmpty
+                            ? 'opacity-70 pointer-events-none'
+                            : ''
+                            }`}
                           disabled={
                             !product.variants.nodes[0]?.id || cartIsEmpty
                           }

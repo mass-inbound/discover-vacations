@@ -1,6 +1,6 @@
-import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {Link, useLoaderData, type MetaFunction} from 'react-router';
-import {type Shop} from '@shopify/hydrogen/storefront-api-types';
+import { type LoaderFunctionArgs } from '@shopify/remix-oxygen';
+import { Link, useLoaderData, type MetaFunction } from 'react-router';
+import { type Shop } from '@shopify/hydrogen/storefront-api-types';
 
 type SelectedPolicies = keyof Pick<
   Shop,
@@ -37,14 +37,14 @@ const PAGE_QUERY = `#graphql
   }
 ` as const;
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
   const title = data?.page?.title || data?.policy?.title || '';
-  return [{title: `Hydrogen | ${title}`}];
+  return [{ title: `Hydrogen | ${title}` }];
 };
 
-export async function loader({params, context}: LoaderFunctionArgs) {
+export async function loader({ params, context }: LoaderFunctionArgs) {
   if (!params.handle) {
-    throw new Response('No handle was passed in', {status: 404});
+    throw new Response('No handle was passed in', { status: 404 });
   }
 
   // Check if the handle is a dynamic terms-conditions handle or matches known handles
@@ -53,7 +53,7 @@ export async function loader({params, context}: LoaderFunctionArgs) {
   const isKnownHandle = SHOPIFY_PAGE_HANDLES.includes(params.handle);
 
   if (isKnownHandle || isDynamicTermsConditions) {
-    const {page} = await context.storefront.query(PAGE_QUERY, {
+    const { page } = await context.storefront.query(PAGE_QUERY, {
       variables: {
         handle: params.handle,
         language: context.storefront.i18n?.language,
@@ -61,9 +61,9 @@ export async function loader({params, context}: LoaderFunctionArgs) {
       },
     });
     if (!page) {
-      throw new Response('Page not found', {status: 404});
+      throw new Response('Page not found', { status: 404 });
     }
-    return {page};
+    return { page };
   }
 
   // Otherwise, fallback to policy logic
@@ -86,10 +86,10 @@ export async function loader({params, context}: LoaderFunctionArgs) {
   const policy = data.shop?.[policyName];
 
   if (!policy) {
-    throw new Response('Could not find the policy', {status: 404});
+    throw new Response('Could not find the policy', { status: 404 });
   }
 
-  return {policy};
+  return { policy };
 }
 
 export default function Policy() {
@@ -105,7 +105,7 @@ export default function Policy() {
         <br />
         <h1 className="font-600 text-xl">{data.page.title}</h1>
         <div
-          dangerouslySetInnerHTML={{__html: data.page.body}}
+          dangerouslySetInnerHTML={{ __html: data.page.body }}
           className="border-2 border-gray-400 p-4 text-justify mt-4 mb-8 rounded-lg shadow-2xl"
         />
       </div>
@@ -123,7 +123,7 @@ export default function Policy() {
         </div>
         <br />
         <h1>{data.policy.title}</h1>
-        <div dangerouslySetInnerHTML={{__html: data.policy.body}} />
+        <div dangerouslySetInnerHTML={{ __html: data.policy.body }} />
       </div>
     );
   }

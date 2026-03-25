@@ -1,6 +1,6 @@
-import {IoDiamond} from 'react-icons/io5';
-import {FaCheck, FaGift} from 'react-icons/fa6';
-import {Link} from 'react-router';
+import { IoDiamond } from 'react-icons/io5';
+import { FaCheck, FaGift } from 'react-icons/fa6';
+import { Link } from 'react-router';
 import React from 'react';
 
 export function OfferCard({
@@ -15,9 +15,9 @@ export function OfferCard({
   // Parse description as bullet points
   const bullets = product.description
     ? product.description
-        .replace(/\/n/g, '\n')
-        .split(/\r?\n/)
-        .filter((b: string) => b.trim().length > 0)
+      .replace(/\/n/g, '\n')
+      .split(/\r?\n/)
+      .filter((b: string) => b.trim().length > 0)
     : [];
   const isExclusive = product.tags.includes('Exclusive');
   return (
@@ -58,7 +58,7 @@ export function OfferCard({
             </div>
           )}
           {/* Destination title */}
-          <h4 className="absolute top-5 left-5 font-[700] text-white text-[22px] z-10 drop-shadow-2xl">
+          <h4 className="absolute top-5 left-5 font-[700] text-white text-[22px] z-10 drop-shadow-2xl max-w-[80%]">
             {product.title}
           </h4>
           {/* Details button */}
@@ -69,7 +69,7 @@ export function OfferCard({
             Details
           </Link>
         </div>
-        <ul className="text-4 font-[400] tracking-wide text-[#000] mb-4 list-disc list-inside pl-4 space-y-2">
+        <ul className="text-4 h-[150px] max-h-[150px] overflow-y-auto font-[400] tracking-wide text-[#000] mb-4 list-disc list-inside pl-4 space-y-2">
           {bullets.map((b: string, i: number) => (
             <li key={i} className="flex gap-2 items-center">
               {/* <FaCheck className="text-amber-400" />{' '} */}
