@@ -502,12 +502,13 @@ function Tabs({
         ))}
       </div>
       <div
-        className={`grid gap-8 ${tabs[active] === 'Popular'
-          ? 'md:grid-cols-[2fr_1fr] grid-cols-1'
-          : 'grid-cols-1'
-          }`}
+      // className={`grid gap-8 ${tabs[active] === 'Popular'
+      //   ? 'md:grid-cols-[2fr_1fr] grid-cols-1'
+      //   : 'grid-cols-1'
+      //   }`}
+      // className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-x-8 md:gap-y-12">
           {filteredProducts.length > 0 ? (
             filteredProducts.map((product, idx) => (
               <div key={product.id} className="md:pb-0 pb-6">
@@ -529,7 +530,7 @@ function Tabs({
           )}
         </div>
         {/* Hide sidebar card on mobile */}
-        {tabs[active] === 'Popular' && (
+        {/* {tabs[active] === 'Popular' && (
           <div
             className="hidden md:block max-h-[698px] relative bg-[#0E424E] rounded-lg shadow p-6 text-white bg-cover min-h-[400px]"
             style={{ backgroundImage: 'url(/assets/PlanImage.png)' }}
@@ -550,7 +551,7 @@ function Tabs({
               Contact Us
             </Link>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );
