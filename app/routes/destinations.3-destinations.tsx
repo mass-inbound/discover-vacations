@@ -57,14 +57,13 @@ export default function ProductDetail() {
     return (
         <div>
             <div
-                className="w-full flex items-center justify-center px-2 md:px-0 py-8 md:py-0"
+                className="
+    w-full flex items-center justify-center px-2 md:px-0 py-8 md:py-0
+    h-[360px] md:h-[460px] lg:h-[600px] xl:h-[720px]
+    bg-cover bg-center text-white text-center
+  "
                 style={{
-                    backgroundImage: `url('/assets/DestinationImage3.jpeg')`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    height: '580px',
-                    color: 'white',
-                    textAlign: 'center',
+                    backgroundImage: "url('/assets/DestinationImage3.jpeg')",
                 }}
             >
                 {/* <div className="flex flex-col items-center">
