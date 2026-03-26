@@ -1059,6 +1059,39 @@ function Tabs({ upsellProducts }: { upsellProducts: any[] }) {
             Your Bonus Vacation is included with your purchase today! It's the vacation after your vacation! You'll choose your favorite at checkout and unlock it after completing your featured presentation and getaway. Catch the wave, enjoy the journey, and discover just how rewarding travel can be.
 
           </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-4">
+            {upsellProducts.length > 0 ? (
+              upsellProducts.map((product: any, idx: number) => (
+                <div
+                  key={product.id}
+                  className="rounded-[10px] bg-white shadow flex flex-col"
+                >
+                  <div className="bg-[#F2B233] py-1 text-[#071F24] font-[500] text-[21px] flex justify-center items-center gap-3 rounded-t-[10px]">
+                    <span>
+                      <FaGift />
+                    </span>
+                    <span>{product.title}</span>
+                  </div>
+                  <div className="relative bg-gray-100 min-h-[180px] md:min-h-[280px] overflow-hidden flex items-center justify-center rounded-b-[10px]">
+                    <img
+                      src={product.featuredImage?.url || '/assets/orlando.jpg'}
+                      alt={product.title}
+                      className="w-full h-full object-cover absolute inset-0"
+                    />
+                    <div className="absolute bottom-0 w-full bg-white/20 backdrop-blur-md py-4 px-2">
+                      <p className="font-[400] text-[16px] text-[#FEFEFE] text-center">
+                        {product.description?.split('\n')[0]}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="col-span-3 text-center text-gray-500 py-12">
+                No upsell gifts available.
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>,
