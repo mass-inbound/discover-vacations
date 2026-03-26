@@ -57,29 +57,28 @@ export default function ProductDetail() {
     return (
         <div>
             <div
-                className="
-    w-full flex items-center justify-center px-2 md:px-0 py-8 md:py-0
-    h-[360px] md:h-[460px] lg:h-[600px] xl:h-[720px]
-    bg-cover bg-center text-white text-center
-  "
+                className="w-full flex items-center justify-center px-2 md:px-0 py-8 md:py-0"
                 style={{
-                    backgroundImage: "url('/assets/DestinationImage3.jpeg')",
+                    backgroundImage: `url('/assets/DestinationImage3.1.jpg')`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    height: '400px',
+                    color: 'white',
+                    textAlign: 'center',
                 }}
             >
-                {/* <div className="flex flex-col items-center">
+                <div className="flex flex-col items-center">
                     <p className="font-[500] text-[12px] md:text-[14px]">
-                        Sunshine, Theme Parks, and Family Fun
+                        Three Places, One Decision Made Later
                     </p>
                     <h1 className="font-[800] text-[28px] md:text-[46px]">
                         {' '}
-                        OFFERS IN ORLANDO, FL
+                        OFFERS IN 3 DESTINATIONS
                     </h1>
                     <p className="max-w-3xl font-[400] text-[13px] md:text-[16px] text-center">
-                        Explore our Orlando packages designed for families, couples, and
-                        adventurers. From world-famous attractions to relaxing resorts, find
-                        a getaway that fits your style, starting at an unbeatable price.
+                        Can't pick just one? You don't have to. Choose from Branson, MO, Gatlinburg, TN, or Historic Williamsburg, VA — and decide when you're ready. From mountain views to live entertainment to historic charm, these flexible getaway packages let you lock in the value now and plan later.
                     </p>
-                </div> */}
+                </div>
             </div>
 
             <section className="relative overflow-x-hidden py-20 mt-5 bg-[#EAF8F84D]">

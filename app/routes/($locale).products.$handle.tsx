@@ -1053,6 +1053,9 @@ function Tabs({ upsellProducts }: { upsellProducts: any[] }) {
         </>
       ) : (
         <div className="bg-gray-100 p-4 md:p-8 text-center flex flex-col gap-4 rounded">
+          <h1 className="text-[#0E424E] font-[500] text-[24px] md:text-[36px] flex items-center justify-center gap-4 mb-3">
+            <FaGift /> Your Bonus, Your Choice!
+          </h1>
           <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] font-avenir text-center max-w-[95%] md:max-w-[80%] mx-auto">
             As part of your Discover Vacations package, you will receive a <span className="font-bold">Bonus Vacation valued up to $1,800,</span> giving you the opportunity to enjoy an additional getaway in the future.
             <br /><br />
