@@ -1,14 +1,15 @@
-import {Suspense, useState, useRef, useEffect} from 'react';
-import {Await, NavLink, useAsyncValue} from 'react-router';
+import { Suspense, useState, useRef, useEffect } from 'react';
+import { Await, NavLink, useAsyncValue } from 'react-router';
 import {
   type CartViewPayload,
   useAnalytics,
   useOptimisticCart,
 } from '@shopify/hydrogen';
-import type {HeaderQuery, CartApiQueryFragment} from 'storefrontapi.generated';
-import {useAside} from '~/components/Aside';
-import {FaLocationDot} from 'react-icons/fa6';
-import {HiChevronDown, HiMenu, HiX} from 'react-icons/hi';
+import type { HeaderQuery, CartApiQueryFragment } from 'storefrontapi.generated';
+import { useAside } from '~/components/Aside';
+import { FaLocationDot } from 'react-icons/fa6';
+import { HiChevronDown, HiMenu, HiX } from 'react-icons/hi';
+import CartIcon from '/assets/icon-cart.svg';
 
 interface HeaderProps {
   header: HeaderQuery;
@@ -84,29 +85,29 @@ export function Header({
       dropdown: true,
       button: true,
       items: [
-        {label: 'Orlando, FL', href: '/destinations/orlando'},
-        {label: 'Poconos, PA', href: '/destinations/poconos'},
+        { label: 'Orlando, FL', href: '/destinations/orlando' },
+        { label: 'Poconos, PA', href: '/destinations/poconos' },
+        { label: '3 Destinations (1 Decision made later)', href: '/destinations/3-destinations' },
       ],
     },
-    {label: 'How it Works', href: '/how-it-works'},
+    { label: 'How it Works', href: '/how-it-works' },
     {
       label: 'Help',
       dropdown: true,
       items: [
-        {label: 'FAQ', href: '/faq'},
-        {label: 'Contact Us', href: '/contact-us'},
+        { label: 'FAQ', href: '/faq' },
+        { label: 'Contact Us', href: '/contact-us' },
       ],
     },
-    {label: 'Log in', href: '/account'},
+    { label: 'Log in', href: '/account' },
   ];
 
   return (
     <header
-      className={` ${
-        isScrolled
+      className={` ${isScrolled
           ? 'bg-[rgba(255,255,255,0.70)] shadow-lg backdrop-blur-[4px] fixed top-4 left-8 right-8 h-[68px] rounded-[10px]'
           : 'bg-white shadow-sm w-full sticky top-0 h-[100px]'
-      }  z-9 transition-all duration-300`}
+        }  z-50 transition-all duration-300`}
     >
       <div className="max-w-8xl mx-auto md:px-12 px-3 flex items-center justify-between h-full">
         {/* Logo */}
@@ -114,7 +115,7 @@ export function Header({
           <img
             src="/assets/navLogo.png"
             alt="Discover Vacations"
-            className="w-[100px] md:w-[170px]"
+            className="w-[130px] md:w-[230px]"
           />
         </NavLink>
         {/* Desktop Nav */}
@@ -207,11 +208,11 @@ export function Header({
             <CartToggle cart={cart} />
           </div>
           <button className="p-2" onClick={() => setShowMobileMenu((v) => !v)}>
-            {showMobileMenu ? (
+            {/* {showMobileMenu ? (
               <HiX className="w-7 h-7" />
-            ) : (
-              <HiMenu className="w-7 h-7" />
-            )}
+            ) : ( */}
+            <HiMenu className="w-7 h-7" />
+            {/* )} */}
           </button>
           {/* Always show cart button on mobile */}
         </div>
@@ -219,7 +220,9 @@ export function Header({
       {/* Mobile Drawer */}
       {showMobileMenu && (
         <div ref={mobileMenuRef} className="fixed inset-0 bg-black/40 z-50">
-          <div className="fixed top-0 left-0 w-72 h-full bg-white shadow-lg p-6 flex flex-col gap-6 animate-slideIn">
+          <div
+            className={`fixed ${isScrolled ? '-top-4 -left-8' : 'top-0 left-0'} w-72 min-h-screen bg-white shadow-lg p-6 flex flex-col gap-6 animate-slideIn`}
+          >
             <button
               className="self-end mb-4"
               onClick={() => setShowMobileMenu(false)}
@@ -263,6 +266,13 @@ export function Header({
                 onClick={() => setShowMobileMenu(false)}
               >
                 How it Works
+              </NavLink>
+              <NavLink
+                to="/about-us"
+                className="text-[#151515] text-[16px] font-[400] hover:underline"
+                onClick={() => setShowMobileMenu(false)}
+              >
+                About Us
               </NavLink>
               {/* Help Dropdown */}
               <div>
@@ -310,9 +320,9 @@ export function Header({
   );
 }
 
-function CartBadge({count}: {count: number | null}) {
-  const {open} = useAside();
-  const {publish, shop, cart, prevCart} = useAnalytics();
+function CartBadge({ count }: { count: number | null }) {
+  const { open } = useAside();
+  const { publish, shop, cart, prevCart } = useAnalytics();
 
   return (
     <NavLink
@@ -327,27 +337,15 @@ function CartBadge({count}: {count: number | null}) {
       //     url: window.location.href || '',
       //   } as CartViewPayload);
       // }}
-      className="relative flex items-center text-white font-[500] text-[14px]"
+      className="relative flex gap-2 items-center text-white font-[500] text-[14px]"
     >
-      <svg
-        className="w-6 h-6 mr-1"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        viewBox="0 0 24 24"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.35 2.7A2 2 0 0 0 7.48 19h9.04a2 2 0 0 0 1.83-1.3L21 13M7 13V6a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v7"
-        />
-      </svg>
+      <img src={CartIcon} alt="" className="w-[20px]" />
       Cart {count === null ? <span>&nbsp;</span> : count}
     </NavLink>
   );
 }
 
-function CartToggle({cart}: Pick<HeaderProps, 'cart'>) {
+function CartToggle({ cart }: Pick<HeaderProps, 'cart'>) {
   return (
     <Suspense fallback={<CartBadge count={null} />}>
       <Await resolve={cart}>

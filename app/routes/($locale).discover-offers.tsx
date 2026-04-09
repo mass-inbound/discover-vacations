@@ -1,9 +1,16 @@
-import {useEffect, useRef, useState} from 'react';
-import {IoDiamond} from 'react-icons/io5';
-import {FaCheck, FaGift} from 'react-icons/fa6';
-import {Link, useLoaderData, useNavigate} from 'react-router';
-import type {LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {OfferCard} from '~/components/OfferCard';
+import { useEffect, useRef, useState, Suspense } from 'react';
+import { IoDiamond } from 'react-icons/io5';
+import { FaCheck, FaGift } from 'react-icons/fa6';
+import {
+  Link,
+  useLoaderData,
+  useNavigate,
+  useRouteLoaderData,
+  Await,
+} from 'react-router';
+import type { LoaderFunctionArgs } from '@shopify/remix-oxygen';
+import { OfferCard } from '~/components/OfferCard';
+import { useOptimisticCart } from '@shopify/hydrogen';
 
 // --- GraphQL fragment and query ---
 const PRODUCT_FRAGMENT = `#graphql
@@ -63,7 +70,7 @@ const DISCOVER_OFFERS_QUERY = `#graphql
 ` as const;
 
 // --- Loader ---
-export async function loader({context, request}: LoaderFunctionArgs) {
+export async function loader({ context, request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   // Support multi-select for destination and vacationType
   const destinationParam = url.searchParams.get('destination');
@@ -79,7 +86,7 @@ export async function loader({context, request}: LoaderFunctionArgs) {
   const sort = url.searchParams.get('sort') || 'Price';
 
   // Fetch all products in the collection
-  const {collection} = await context.storefront.query(DISCOVER_OFFERS_QUERY, {
+  const { collection } = await context.storefront.query(DISCOVER_OFFERS_QUERY, {
     variables: {
       handle: 'vacation-package',
       first: 50, // adjust as needed
@@ -168,10 +175,11 @@ export async function loader({context, request}: LoaderFunctionArgs) {
 
 // --- Main Component ---
 export default function DiscoverOfferPage() {
-  const {products, destinations, vacationTypes, maxProductPrice, selected} =
+  const { products, destinations, vacationTypes, maxProductPrice, selected } =
     useLoaderData<typeof loader>();
   const navigate = useNavigate();
   const mainDivRef = useRef<HTMLDivElement>(null);
+  const rootData = useRouteLoaderData('root');
 
   // --- Filter state (controlled by URL) ---
   const [selectedDestinations, setSelectedDestinations] = useState<string[]>(
@@ -180,11 +188,11 @@ export default function DiscoverOfferPage() {
   const [selectedVacationTypes, setSelectedVacationTypes] = useState<string[]>(
     selected.vacationType || [],
   );
-  const [inputValues, setInputValues] = useState<{min: string; max: string}>({
+  const [inputValues, setInputValues] = useState<{ min: string; max: string }>({
     min: String(selected.min ?? 0),
     max: String(selected.max ?? maxProductPrice),
   });
-  const [priceRange, setPriceRange] = useState<{min: number; max: number}>({
+  const [priceRange, setPriceRange] = useState<{ min: number; max: number }>({
     min: selected.min ?? 0,
     max: selected.max ?? maxProductPrice,
   });
@@ -207,20 +215,20 @@ export default function DiscoverOfferPage() {
     params.set('min', String(priceRange.min));
     params.set('max', String(priceRange.max));
     params.set('sort', sort);
-    navigate(`?${params.toString()}`, {replace: true});
+    navigate(`?${params.toString()}`, { replace: true });
     // Scroll to main offers div after filter change
-    setTimeout(() => {
-      if (mainDivRef.current) {
-        const topOffset = 120; // height of the navbar
-        const elementPosition = mainDivRef.current.getBoundingClientRect().top;
-        const offsetPosition = window.scrollY + elementPosition - topOffset;
+    // setTimeout(() => {
+    //   if (mainDivRef.current) {
+    //     const topOffset = 120; // height of the navbar
+    //     const elementPosition = mainDivRef.current.getBoundingClientRect().top;
+    //     const offsetPosition = window.scrollY + elementPosition - topOffset;
 
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: 'smooth',
-        });
-      }
-    }, 400);
+    //     window.scrollTo({
+    //       top: offsetPosition,
+    //       behavior: 'smooth',
+    //     });
+    //   }
+    // }, 400);
     // eslint-disable-next-line
   }, [
     selectedDestinations,
@@ -244,13 +252,13 @@ export default function DiscoverOfferPage() {
   // Handle price input changes
   const handlePriceInputChange = (type: 'min' | 'max', value: string) => {
     if (!/^[0-9]*$/.test(value)) return;
-    setInputValues((prev) => ({...prev, [type]: value}));
+    setInputValues((prev) => ({ ...prev, [type]: value }));
     if (value !== '') {
       const numValue = parseInt(value, 10);
       if (type === 'min' && numValue <= priceRange.max) {
-        setPriceRange((prev) => ({...prev, min: numValue}));
+        setPriceRange((prev) => ({ ...prev, min: numValue }));
       } else if (type === 'max' && numValue >= priceRange.min) {
-        setPriceRange((prev) => ({...prev, max: numValue}));
+        setPriceRange((prev) => ({ ...prev, max: numValue }));
       }
     }
   };
@@ -281,12 +289,12 @@ export default function DiscoverOfferPage() {
       const value = Math.round(pos * maxProductPrice);
       if (type === 'min') {
         const newMin = Math.min(value, priceRange.max);
-        setPriceRange((prev) => ({...prev, min: newMin}));
-        setInputValues((prev) => ({...prev, min: newMin.toString()}));
+        setPriceRange((prev) => ({ ...prev, min: newMin }));
+        setInputValues((prev) => ({ ...prev, min: newMin.toString() }));
       } else {
         const newMax = Math.max(value, priceRange.min);
-        setPriceRange((prev) => ({...prev, max: newMax}));
-        setInputValues((prev) => ({...prev, max: newMax.toString()}));
+        setPriceRange((prev) => ({ ...prev, max: newMax }));
+        setInputValues((prev) => ({ ...prev, max: newMax.toString() }));
       }
     };
     const onMouseUp = () => {
@@ -330,7 +338,7 @@ export default function DiscoverOfferPage() {
             real value, trusted accommodations, and an easy path to booking.
           </p>
           New locations are added regularly, so check back often — or catch the
-          wave with the destination that’s calling you now.
+          wave with the destination that's calling you now.
         </div>
       </div>
 
@@ -355,7 +363,7 @@ export default function DiscoverOfferPage() {
 
         <div className="flex flex-col md:flex-row gap-14 my-14">
           {/* Filters */}
-          <div className="hidden md:block w-[400px] p-6 border border-[#E5E5E5] rounded-[10px] shadow-md">
+          <div className="hidden md:block max-h-[600px] w-[400px] p-6 border border-[#E5E5E5] rounded-[10px] shadow-md">
             {/* Destination Filter */}
             <div className="mb-6">
               <h2 className="text-[#0E424E] text-[18px] font-[500] mb-4">
@@ -497,24 +505,28 @@ export default function DiscoverOfferPage() {
 
           {/* Product Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full px-1 sm:px-0">
-            {products.length === 0 && (
-              <div className="col-span-2 text-center text-red-600 font-bold py-12">
-                No offers found for selected filters.
-              </div>
-            )}
-
-            {products.map((product: any) => (
-              <div key={product.id} className="py-8 md:py-0">
-                <OfferCard
-                  product={product}
-                  onSelect={(prod) =>
-                    navigate(
-                      `/cart?title=${encodeURIComponent(prod.title)}&location=${encodeURIComponent(prod.tags?.find((t: string) => t.match(/,|FL|PA/)) || '')}&image=${encodeURIComponent(prod.featuredImage?.url || '')}&price=${prod.priceRange.minVariantPrice.amount}`,
-                    )
-                  }
-                />
-              </div>
-            ))}
+            <Suspense fallback={<div>Loading cart...</div>}>
+              <Await resolve={rootData.cart}>
+                {(originalCart) => {
+                  const cart = useOptimisticCart(originalCart);
+                  const cartCount = cart?.totalQuantity ?? 0;
+                  const cartIsEmpty = !cartCount || cartCount === 0;
+                  return products.map((product: any) => (
+                    <div key={product.id} className="py-8 md:py-0">
+                      <OfferCard
+                        product={product}
+                        cartIsEmpty={cartIsEmpty}
+                        onSelect={(prod) =>
+                          navigate(
+                            `/cart?title=${encodeURIComponent(prod.title)}&location=${encodeURIComponent(prod.tags?.find((t: string) => t.match(/,|FL|PA/)) || '')}&image=${encodeURIComponent(prod.featuredImage?.url || '')}&price=${prod.priceRange.minVariantPrice.amount}`,
+                          )
+                        }
+                      />
+                    </div>
+                  ));
+                }}
+              </Await>
+            </Suspense>
           </div>
         </div>
         <div className="flex justify-center mt-[4rem] mb-8">

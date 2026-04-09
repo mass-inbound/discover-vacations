@@ -1,31 +1,36 @@
-import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import { type LoaderFunctionArgs } from '@shopify/remix-oxygen';
 import {
   Await,
   useLoaderData,
   Link,
   type MetaFunction,
   useNavigate,
+  useRouteLoaderData,
+  useAsyncValue,
 } from 'react-router';
-import {Suspense, useRef} from 'react';
-import {Image, Money} from '@shopify/hydrogen';
+import { Suspense, useRef, useEffect, useState } from 'react';
+import { Image, Money } from '@shopify/hydrogen';
 import type {
   FeaturedCollectionFragment,
   RecommendedProductsQuery,
   CatalogQuery,
+  CartApiQueryFragment,
 } from 'storefrontapi.generated';
-import {ProductItem} from '~/components/ProductItem';
-import {FaChevronDown} from 'react-icons/fa';
-import {FaLocationDot, FaCheck, FaGift} from 'react-icons/fa6';
-import {IoDiamond, IoShieldHalf} from 'react-icons/io5';
-import {RiCustomerService2Line} from 'react-icons/ri';
-import {IoMdPricetags} from 'react-icons/io';
-import {GiPalmTree} from 'react-icons/gi';
-import {HiOutlineChevronLeft, HiOutlineChevronRight} from 'react-icons/hi';
-import {useState} from 'react';
-import {OfferCard} from '../components/OfferCard';
+import { ProductItem } from '~/components/ProductItem';
+import { FaChevronDown } from 'react-icons/fa';
+import { FaLocationDot, FaCheck, FaGift } from 'react-icons/fa6';
+import { IoDiamond, IoShieldHalf } from 'react-icons/io5';
+import { RiCustomerService2Line } from 'react-icons/ri';
+import { IoMdPricetags } from 'react-icons/io';
+import { GiPalmTree } from 'react-icons/gi';
+import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
+import { OfferCard } from '../components/OfferCard';
+import FooterCarousel from '~/components/FooterCarousel';
+import { useOptimisticCart } from '@shopify/hydrogen';
+import VacationProcess from '~/components/VacationProcess';
 
 export const meta: MetaFunction = () => {
-  return [{title: 'Hydrogen | Home'}];
+  return [{ title: 'My Discovery Vacations' }];
 };
 
 const COLLECTION_PRODUCT_FRAGMENT = `#graphql
@@ -90,20 +95,20 @@ export async function loader(args: LoaderFunctionArgs) {
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
 
-  return {...deferredData, ...criticalData};
+  return { ...deferredData, ...criticalData };
 }
 
 /**
  * Load data necessary for rendering content above the fold. This is the critical data
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
-async function loadCriticalData({context}: LoaderFunctionArgs) {
+async function loadCriticalData({ context }: LoaderFunctionArgs) {
   const HOMEPAGE_COLLECTION_HANDLE = 'vacation-package';
 
   const [featuredResponse, homepageResponse] = await Promise.all([
     context.storefront.query(FEATURED_COLLECTION_QUERY),
     context.storefront.query(HOMEPAGE_COLLECTION_QUERY, {
-      variables: {handle: HOMEPAGE_COLLECTION_HANDLE},
+      variables: { handle: HOMEPAGE_COLLECTION_HANDLE },
     }),
   ]);
 
@@ -134,7 +139,7 @@ async function loadCriticalData({context}: LoaderFunctionArgs) {
  * fetched after the initial page load. If it's unavailable, the page should still 200.
  * Make sure to not throw any errors here, as it will cause the page to 500.
  */
-function loadDeferredData({context}: LoaderFunctionArgs) {
+function loadDeferredData({ context }: LoaderFunctionArgs) {
   const recommendedProducts = context.storefront
     .query(RECOMMENDED_PRODUCTS_QUERY)
     .catch((error) => {
@@ -152,6 +157,7 @@ export default function Homepage() {
   const navigate = useNavigate();
   const data = useLoaderData<typeof loader>();
   const bookingRef = useRef<HTMLDivElement>(null);
+  const rootData = useRouteLoaderData('root');
 
   const handleScroll = () => {
     const offset = 130; // height of your fixed navbar
@@ -159,33 +165,17 @@ export default function Homepage() {
     if (element) {
       const top =
         element.getBoundingClientRect().top + window.pageYOffset - offset;
-      window.scrollTo({top, behavior: 'smooth'});
+      window.scrollTo({ top, behavior: 'smooth' });
     }
   };
 
-  const slides = [
-    {src: '/assets/carouselImage1.jpg', alt: 'Laptop Screenshot 1'},
-    {src: '/assets/carouselImage2.jpg', alt: 'Laptop Screenshot 2'},
-    {src: '/assets/peaceMindImg.jpg', alt: 'Laptop Screenshot 3'},
-  ];
-
-  const [current, setCurrent] = useState(0);
-  const length = slides.length;
-
-  const prevSlide = () => {
-    setCurrent(current === 0 ? length - 1 : current - 1);
-  };
-
-  const nextSlide = () => {
-    setCurrent(current === length - 1 ? 0 : current + 1);
-  };
-
+  <FooterCarousel />;
   return (
     <div className="w-full">
       {/* Hero Section */}
       <section
         className="relative h-[calc(100vh-100px)] flex items-center justify-center bg-cover bg-center"
-        style={{backgroundImage: 'url(/assets/hero-new.png)'}}
+        style={{ backgroundImage: 'url(/assets/HeroImage5.png)' }}
       >
         {/* Overlay */}
         <div className="absolute inset-0 bg-black/40 z-0" />
@@ -197,10 +187,9 @@ export default function Homepage() {
             Travel, Discover, Experience
           </h1>
           <p className="text-white text-[20px] font-[400] max-w-4xl mx-auto mb-6 drop-shadow">
-            Discover curated vacation offers with simple pricing and a simple
-            and stress-free booking experience — designed to make planning easy.
-            Whether you&apos;re ready to travel now or 12 months from now, your
-            getaway starts here.
+            Discover exclusive vacation offers with simple pricing and a
+            stress-free booking experience — designed to make planning easy.
+            Your getaway starts here.
           </p>
           <div className="flex gap-12 justify-center my-8">
             <Link
@@ -219,9 +208,9 @@ export default function Homepage() {
         </div>
         {/* Logo at bottom right */}
         <img
-          src="/assets/heroImageLogo.png"
+          src="/assets/heroImageLogo1.png"
           alt="Logo"
-          className="absolute right-8 bottom-8 w-32 h-auto z-20"
+          className="absolute right-4 md:right-8 bottom-8 w-32 md:w-[225px] h-auto z-20"
         />
         {/* Scroll Button */}
         <button
@@ -234,114 +223,12 @@ export default function Homepage() {
       </section>
 
       {/* Vacation Booking, Simplified Section */}
-      <div className="py-8 px-4 md:py-14 md:px-8">
-        <div className="relative z-8 max-w-5xl mx-auto text-center">
-          {/* Tree Icon BG behind heading */}
-          <img
-            src="/assets/treebgIcon.png"
-            alt="Tree Icon"
-            className="hidden md:block absolute left-[90px] top-[30px] w-42 h-52 opacity-80 -z-10 pointer-events-none"
-          />
-          <img
-            src="/assets/treebgIcon.png"
-            alt="Tree Icon"
-            className="block md:hidden absolute left-1 top-[18px] w-42 h-52 opacity-80 -z-10 pointer-events-none"
-          />
-          <p className="text-[16px] font-[500] text-[#208989]">
-            Plan Less. Enjoy More.
-          </p>
-          <h2 className="text-3xl md:text-[47px] font-[500] text-[#0E424E] my-5 relative">
-            Vacation Booking, Simplified
-          </h2>
-          <p className="text-[#1A202C] mb-[3.5rem] max-w-2xl mx-auto font-[400] text-[20px] opacity-80">
-            Curated offers. Real value. Flexible dates and room options to fit
-            your travel plans — without overcomplicating the process.
-          </p>
-          <div className="flex flex-col md:flex-row items-start justify-center relative">
-            {/* Curly line connecting icons */}
-            {/* Columns */}
-            <div className="relative flex flex-col items-center bg-transparent min-w-[250px]">
-              <div className="w-[106px] h-[106px] bg-[#DFF4F4] rounded-[30px] flex items-center justify-center shadow-lg">
-                <FaLocationDot size={40} fill="#135868" />
-              </div>
-              <h3 className="font-semibold text-[24px] my-3 text-[#135868]">
-                Discover Your Next Vacation
-              </h3>
-              <p className="text-[#151515] text-[14px] font-[400] opacity-80">
-                Choose a day trip based on your location and interests.
-              </p>
-            </div>
-            {/* After first card: horizontal for desktop, vertical for mobile */}
-            <img
-              src="/assets/curlyLine.png"
-              alt="Curly Line"
-              className="hidden md:block mt-8"
-            />
-            {/* Mobile vertical curly line after first card */}
-            <img
-              src="/assets/curlyLine-vertical.png"
-              alt="Curly Line"
-              className="block md:hidden my-6 h-16 w-auto mx-auto pb-4"
-            />
-            <div className="relative flex flex-col items-center bg-transparent min-w-[250px]">
-              <div className="w-[106px] h-[106px] bg-[#DFF4F4] rounded-[30px] flex items-center justify-center shadow-lg">
-                <img
-                  src="/assets/calendarIcon.svg"
-                  alt="Calendar"
-                  className="w-10 h-10"
-                />
-              </div>
-              <h3 className="font-semibold text-[24px] my-3 text-[#135868]">
-                Pick a Date
-              </h3>
-              <p className="text-[#151515] text-[14px] font-[400] opacity-80">
-                Know your dates? Select them on the calendar before checkout.
-                Not ready yet? No problem — purchase now and choose your dates
-                anytime in the Booking Hub.
-              </p>
-            </div>
-            {/* After second card: horizontal for desktop, vertical for mobile */}
-            <img
-              src="/assets/curlyLine.png"
-              alt="Curly Line"
-              className="hidden md:block mt-8"
-            />
-            {/* Mobile vertical curly line after second card */}
-            <img
-              src="/assets/curlyLine-vertical.png"
-              alt="Curly Line"
-              className="block md:hidden my-6 h-16 w-auto mx-auto pb-4"
-            />
-            <div className="relative flex flex-col items-center bg-transparent min-w-[250px]">
-              <div className="w-[106px] h-[106px] bg-[#DFF4F4] rounded-[30px] flex items-center justify-center shadow-lg">
-                <img
-                  src="/assets/parmTreeIcon.svg"
-                  alt="Palm Tree"
-                  className="w-10 h-10"
-                />
-              </div>
-              <h3 className="font-semibold text-[24px] my-3 text-[#135868]">
-                Book Your Getaway
-              </h3>
-              <p className="text-[#151515] text-[14px] font-[400] opacity-80">
-                Complete your purchase and get instant access to your personal
-                Booking Portal, where reserving your trip is quick, easy, and
-                secure.
-              </p>
-              {/* Wave Pattern below the last card */}
-              <img
-                src="/assets/wavePattern.png"
-                alt="Wave Pattern"
-                className="md:block hidden absolute -right-1 -bottom-10 w-48 md:w-72 opacity-90 pointer-events-none"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
+      <VacationProcess />
+
       {/* Find Your Next Escape Section */}
       <section
         ref={bookingRef}
-        className="relative overflow-x-hidden py-10 md:py-20 mt-5 bg-[#EAF8F84D]"
+        className="relative overflow-x-hidden py-10 md:pb-20 md:pt-25 mt-5 bg-[#EAF8F84D]"
       >
         <img
           src="/assets/starPattern.png"
@@ -351,25 +238,38 @@ export default function Homepage() {
         <img
           src="/assets/shipPattern.png"
           alt=""
-          className="md:block hidden absolute top-10 -right-12 opacity-30 w-[280px]"
+          className="md:block hidden absolute top-15 -right-20 opacity-30 w-[280px]"
         />
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-3xl md:text-[61px] font-[500] text-center mb-4 text-[#0E424E]">
             Discover Your Next Vacation{' '}
           </h2>
-          <p className="font-[400] text-[20px] text-[#676767] mx-auto max-w-3xl text-center mb-10 ">
+          <p className="font-[400] text-[20px] text-[#101010] mx-auto max-w-3xl text-center mb-10 ">
             Discover a collection of vacations
           </p>
           {/* Tabs */}
-          {data.homepageProducts && data.homepageProducts.length > 0 ? (
-            <Tabs products={data.homepageProducts} />
-          ) : (
-            <div className="text-center text-red-600 font-bold py-12">
-              No products found for the Home page collection.
-              <br />
-              {/* You can check your server logs for more info. */}
-            </div>
-          )}
+          <Suspense fallback={<div>Loading cart...</div>}>
+            <Await resolve={rootData.cart}>
+              {(originalCart) => {
+                const cart = useOptimisticCart(originalCart);
+                const cartCount = cart?.totalQuantity ?? 0;
+                const cartIsEmpty = !cartCount || cartCount === 0;
+                return data.homepageProducts &&
+                  data.homepageProducts.length > 0 ? (
+                  <Tabs
+                    products={data.homepageProducts}
+                    cartIsEmpty={cartIsEmpty}
+                  />
+                ) : (
+                  <div className="text-center text-red-600 font-bold py-12">
+                    No products found for the Home page collection.
+                    <br />
+                    {/* You can check your server logs for more info. */}
+                  </div>
+                );
+              }}
+            </Await>
+          </Suspense>
         </div>
 
         <div className="flex justify-center mt-[4rem] mb-8">
@@ -391,15 +291,15 @@ export default function Homepage() {
           <h2 className="text-3xl md:text-[61px] font-[500] text-center mb-4 text-[#0E424E]">
             Peace of Mind, Included
           </h2>
-          <div className="flex items-center justify-center gap-3 mb-6">
+          {/* <div className="flex items-center justify-center gap-3 mb-6">
             <FaGift size={48} className="text-[#2AB7B7]" />
             <span className="text-[#135868] text-[22px] font-semibold">
               Includes a bonus gift
             </span>
-          </div>
-          <p className="font-[400] text-[20px] text-[#676767] mx-auto max-w-3xl text-center mb-10">
-            Your vacation should be stress-free from start to finish. That’s why
-            we’ve built in support, security, and convenience every step of the
+          </div> */}
+          <p className="font-[400] text-[20px] text-[#151515] mx-auto max-w-3xl text-center mb-10">
+            Your vacation should be stress-free from start to finish. That's why
+            we've built in support, security, and convenience every step of the
             way.
           </p>
         </div>
@@ -415,10 +315,10 @@ export default function Homepage() {
                 <RiCustomerService2Line size={25} />
               </div>
               <div className="flex flex-col gap-1">
-                <h3 className="text-[#1A202C] font-[600] text-[22px]">
+                <h3 className="text-[#1A202C] font-[600] text-[22px] font-plusjakarta">
                   Personal Support, When You Need It
                 </h3>
-                <div className="text-[#1A202C] text-[16px] font-[400] pl-4">
+                <div className="text-[#1A202C] text-[16px] font-[400] pl-4 font-plusjakarta">
                   Whether you have a question before booking or need help
                   finalizing your travel dates, our team is here for you — real
                   people, ready to help.
@@ -431,10 +331,10 @@ export default function Homepage() {
                 <IoMdPricetags size={25} />
               </div>
               <div className="flex flex-col gap-1">
-                <h3 className="text-[#1A202C] font-[600] text-[22px]">
+                <h3 className="text-[#1A202C] font-[600] text-[22px] font-plusjakarta">
                   Guided Self-Service Booking
                 </h3>
-                <div className="text-[#1A202C] text-[16px] font-[400] pl-4">
+                <div className="text-[#1A202C] text-[16px] font-[400] pl-4 font-plusjakarta">
                   Use our secure booking portal to select your travel dates,
                   view available hotels, and manage your reservation at your
                   convenience.
@@ -450,10 +350,10 @@ export default function Homepage() {
                 <IoShieldHalf size={25} />
               </div>
               <div className="flex flex-col gap-1">
-                <h3 className="text-[#1A202C] font-[600] text-[22px]">
+                <h3 className="text-[#1A202C] font-[600] text-[22px] font-plusjakarta">
                   Secure, Encrypted Checkout
                 </h3>
-                <div className="text-[#1A202C] text-[16px] font-[400] pl-4">
+                <div className="text-[#1A202C] text-[16px] font-[400] pl-4 font-plusjakarta">
                   Your payment is processed using secure, encrypted checkout
                   technology — giving you peace of mind when making your
                   purchase.
@@ -466,10 +366,10 @@ export default function Homepage() {
                 <GiPalmTree size={25} />
               </div>
               <div className="flex flex-col gap-1">
-                <h3 className="text-[#1A202C] font-[600] text-[22px]">
+                <h3 className="text-[#1A202C] font-[600] text-[22px] font-plusjakarta">
                   Simple, Flexible Travel Options
                 </h3>
-                <div className="text-[#1A202C] text-[16px] font-[400] pl-4">
+                <div className="text-[#1A202C] text-[16px] font-[400] pl-4 font-plusjakarta">
                   We know plans can shift — that&apos;s why we allow you to
                   choose travel dates that work for your schedule, add extra
                   nights, and upgrade your accommodations when available.
@@ -483,93 +383,7 @@ export default function Homepage() {
       </section>
 
       {/* carousel section  */}
-      <section className="relative bg-[#EAF8F8] px-4 md:py-0 min-h-[460px]">
-        <div
-          className="relative w-full py-16 max-w-7xl overflow-hidden rounded-lg mx-auto"
-          style={{maxHeight: 360}}
-        >
-          {/* Slides */}
-          <div
-            className="flex transition-transform duration-500 gap-8"
-            style={{transform: `translateX(-${current * 100}%)`}}
-          >
-            {slides.map((slide, idx) => (
-              <div
-                key={idx}
-                className="min-w-full md:min-w-1/2 flex-shrink-0 flex items-center justify-center"
-                style={{height: 360}}
-              >
-                <img
-                  src={slide.src}
-                  alt={slide.alt}
-                  className="object-cover w-full h-full rounded-lg"
-                  style={{maxHeight: 360, maxWidth: 640}}
-                />
-              </div>
-            ))}
-          </div>
-          {/* Left Arrow */}
-          <button
-            onClick={prevSlide}
-            className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-2 shadow focus:outline-none z-10"
-          >
-            <HiOutlineChevronLeft size={24} />
-          </button>
-          {/* Right Arrow */}
-          <button
-            onClick={nextSlide}
-            className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-2 shadow focus:outline-none z-10"
-          >
-            <HiOutlineChevronRight size={24} />
-          </button>
-        </div>
-        {/* Indicator Dots */}
-        <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex space-x-2 z-8">
-          {slides.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrent(idx)}
-              className={`w-3 h-3 rounded-full focus:outline-none transition-opacity duration-300 ${current === idx ? 'bg-[#2AB7B7] opacity-100' : 'bg-gray-300 opacity-50'}`}
-            />
-          ))}
-        </div>
-      </section>
-
-      {/* Ready to Plan Your Next Getaway Section */}
-      {/* <section
-        className="relative flex flex-col md:flex-row justify-between bg-cover bg-center h-[760px]"
-        style={{
-          backgroundImage: 'url(/assets/readyPlanImg.jpg)',
-        }}
-      >
-        <div className="flex-1" />
-        <div className="flex-1 flex flex-col justify-center items-start gap-2 px-8 py-16 md:py-0 md:pr-20 z-8">
-          <div className="inline-block px-5 py-2 mb-4 bg-[#EAF8F8] text-[#0E424E] text-[21px] font-[500] rounded-[10px] uppercase tracking-wider">
-            CATCH THE WAVE, DISCOVER MORE FOR LESS
-          </div>
-          <h2 className="text-4xl md:text-[48px] font-[500] text-white mb-4 drop-shadow-lg">
-            Ready to Discover Your Next Vacation?
-          </h2>
-          <p className="text-white text-start text-[20px] font-[400] max-w-xl mb-6 drop-shadow">
-            Browse our Value Added offers and Discover your Vacation in just a
-            few clicks!
-          </p>
-          <div className="flex gap-8 justify-end">
-            <Link
-              to={'/discover-offers'}
-              className="bg-[#2AB7B7] text-white px-6 py-2 rounded-[10px] shadow text-[20px] font-[400] hover:bg-[#229a9a] transition"
-            >
-              Discover Offers
-            </Link>
-            <Link
-              to={'/contact-us'}
-              className="text-white underline text-[20px] font-[400] flex items-center"
-            >
-              Contact Us
-            </Link>
-          </div>
-        </div>
-      </section> */}
+      <FooterCarousel />
     </div>
   );
 }
@@ -610,8 +424,8 @@ function RecommendedProducts({
             <div className="recommended-products-grid">
               {response
                 ? response.products.nodes.map((product) => (
-                    <ProductItem key={product.id} product={product} />
-                  ))
+                  <ProductItem key={product.id} product={product} />
+                ))
                 : null}
             </div>
           )}
@@ -625,29 +439,31 @@ function RecommendedProducts({
 // Simple Tabs implementation for demo
 function Tabs({
   products,
+  cartIsEmpty,
 }: {
   products: Array<{
     id: string;
     handle: string;
     title: string;
     description?: string;
-    featuredImage?: {url: string; altText?: string};
+    featuredImage?: { url: string; altText?: string };
     tags?: string[];
     priceRange: {
-      minVariantPrice: {amount: string};
-      maxVariantPrice: {amount: string};
+      minVariantPrice: { amount: string };
+      maxVariantPrice: { amount: string };
     };
   }>;
+  cartIsEmpty: boolean;
 }) {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
-  const tabs = ['Popular', 'Hotels', 'Cruise', 'Exclusive Deals'];
+  const tabs = ['Popular', 'Orlando, FL', 'Poconos, PA', 'Exclusive Deals'];
 
   // Map tab index to tag
   const tabTagMap: Record<number, string> = {
     0: 'Popular',
-    1: 'Hotels',
-    2: 'Cruise',
+    1: 'Orlando',
+    2: 'Poconos',
     3: 'Exclusive',
   };
 
@@ -672,32 +488,33 @@ function Tabs({
     <div>
       <div
         className="flex mb-12 border-b border-[#135868] overflow-x-auto scrollbar-hide md:overflow-x-visible md:scrollbar-default gap-2 md:gap-0"
-        style={{WebkitOverflowScrolling: 'touch'}}
+        style={{ WebkitOverflowScrolling: 'touch' }}
       >
         {tabs.map((tab, idx) => (
           <button
             key={tab}
             onClick={() => setActive(idx)}
             className={`flex-1 min-w-[48%] md:min-w-0 px-2 md:px-4 py-2 font-[500] text-[16px] md:text-[21px] border-b-2 transition text-[#1A202C] opacity-60 whitespace-nowrap ${active === idx ? 'border-[#135868] text-[#135868] opacity-100' : 'border-transparent bg-transparent'}`}
-            style={{scrollbarWidth: 'none'}}
+            style={{ scrollbarWidth: 'none' }}
           >
             {tab}
           </button>
         ))}
       </div>
       <div
-        className={`grid gap-8 ${
-          tabs[active] === 'Popular'
-            ? 'md:grid-cols-[2fr_1fr] grid-cols-1'
-            : 'grid-cols-1'
-        }`}
+      // className={`grid gap-8 ${tabs[active] === 'Popular'
+      //   ? 'md:grid-cols-[2fr_1fr] grid-cols-1'
+      //   : 'grid-cols-1'
+      //   }`}
+      // className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-x-8 md:gap-y-12">
           {filteredProducts.length > 0 ? (
             filteredProducts.map((product, idx) => (
               <div key={product.id} className="md:pb-0 pb-6">
                 <OfferCard
                   product={product}
+                  cartIsEmpty={cartIsEmpty}
                   onSelect={(prod) =>
                     navigate(
                       `/cart?title=${encodeURIComponent(prod.title)}&location=${encodeURIComponent(Array.isArray(prod.tags) ? prod.tags.find((t: string) => t.match(/,|FL|PA/)) || '' : '')}&image=${encodeURIComponent(prod.featuredImage?.url || '')}&price=${prod.priceRange.minVariantPrice.amount}`,
@@ -713,10 +530,10 @@ function Tabs({
           )}
         </div>
         {/* Hide sidebar card on mobile */}
-        {tabs[active] === 'Popular' && (
+        {/* {tabs[active] === 'Popular' && (
           <div
-            className="hidden md:block relative bg-[#0E424E] rounded-lg shadow p-6 text-white bg-cover min-h-[400px]"
-            style={{backgroundImage: 'url(/assets/PlanImage.png)'}}
+            className="hidden md:block max-h-[698px] relative bg-[#0E424E] rounded-lg shadow p-6 text-white bg-cover min-h-[400px]"
+            style={{ backgroundImage: 'url(/assets/PlanImage.png)' }}
           >
             <h4 className="font-[500] text-[24px] md:text-[47px]">
               Plan Less. Travel More.
@@ -734,7 +551,7 @@ function Tabs({
               Contact Us
             </Link>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

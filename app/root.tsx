@@ -12,11 +12,13 @@ import {
   useRouteLoaderData,
 } from 'react-router';
 import favicon from '~/assets/favicon.svg';
+import DiscoveryFavicon from '~/assets/favicon-discovery.svg';
 import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
 import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
 import tailwindCss from './styles/tailwind.css?url';
 import {PageLayout} from './components/PageLayout';
+import {CartFormProvider} from './components/CartFormContext';
 
 export type RootLoader = typeof loader;
 
@@ -62,7 +64,7 @@ export function links() {
       rel: 'preconnect',
       href: 'https://shop.app',
     },
-    {rel: 'icon', type: 'image/svg+xml', href: favicon},
+    {rel: 'icon', type: 'image/svg+xml', href: DiscoveryFavicon},
   ];
 }
 
@@ -164,7 +166,9 @@ export function Layout({children}: {children?: React.ReactNode}) {
             shop={data.shop}
             consent={data.consent}
           >
-            <PageLayout {...data}>{children}</PageLayout>
+            <CartFormProvider>
+              <PageLayout {...data}>{children}</PageLayout>
+            </CartFormProvider>
           </Analytics.Provider>
         ) : (
           children

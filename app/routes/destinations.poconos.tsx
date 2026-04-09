@@ -1,15 +1,68 @@
 import {useState} from 'react';
 import {FaCheck, FaGift} from 'react-icons/fa6';
 import {IoDiamond} from 'react-icons/io5';
-import {Link} from 'react-router';
+import {Link, useLoaderData, useRouteLoaderData} from 'react-router';
+import {OfferCard} from '~/components/OfferCard';
+import {Suspense} from 'react';
+import {Await} from 'react-router';
+import {useOptimisticCart} from '@shopify/hydrogen';
+
+export async function loader({context}: any) {
+  const PRODUCTS_QUERY = `#graphql
+    fragment MoneyProductItem on MoneyV2 {
+      amount
+      currencyCode
+    }
+    fragment ProductItem on Product {
+      id
+      handle
+      title
+      description
+      featuredImage {
+        id
+        altText
+        url
+        width
+        height
+      }
+      priceRange {
+        minVariantPrice {
+          ...MoneyProductItem
+        }
+        maxVariantPrice {
+          ...MoneyProductItem
+        }
+      }
+      tags
+      variants(first: 1) {
+        nodes {
+          id
+        }
+      }
+    }
+    query PoconosProducts($query: String!) {
+      products(first: 20, query: $query) {
+        nodes {
+          ...ProductItem
+        }
+      }
+    }
+  `;
+  const res = await context.storefront.query(PRODUCTS_QUERY, {
+    variables: {query: 'tag:Poconos'},
+  });
+  return {products: res?.products?.nodes || []};
+}
 
 export default function ProductDetail() {
+  const {products} = useLoaderData<typeof loader>();
+  const rootData = useRouteLoaderData('root');
   return (
     <div>
       <div
         className="w-full flex items-center justify-center px-2 md:px-0 py-8 md:py-0"
         style={{
-          backgroundImage: `url('/assets/OrlandoBanner.png')`,
+          backgroundImage: `url('/assets/poconosCover.png')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           height: '400px',
@@ -19,7 +72,7 @@ export default function ProductDetail() {
       >
         <div className="flex flex-col items-center">
           <p className="font-[500] text-[12px] md:text-[14px]">
-            Sunshine, Theme Parks, and Family Fun
+            Nature, Comfort, and Cozy Escapes
           </p>
           <h1 className="font-[800] text-[28px] md:text-[46px]">
             {' '}
@@ -43,23 +96,35 @@ export default function ProductDetail() {
         <img
           src="/assets/shipPattern.png"
           alt=""
-          className="hidden md:block absolute top-10 -right-12 opacity-30 w-[280px]"
+          className="hidden md:block absolute top-10 -right-20 opacity-30 w-[280px]"
         />
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-3xl md:text-[61px] font-[500] text-center mb-4 text-[#0E424E]">
             Discover Your Next Vacation
           </h2>
-          <p className="font-[400] text-[20px] text-[#676767] mx-auto max-w-3xl text-center mb-10">
+          <p className="font-[400] text-[20px] text-[#101010] mx-auto max-w-3xl text-center mb-10">
             Discover a collection of vacations
           </p>
           {/* Tabs */}
-          <Tabs />
+          <Suspense fallback={<div>Loading cart...</div>}>
+            <Await resolve={rootData.cart}>
+              {(originalCart) => {
+                const cart = useOptimisticCart(originalCart);
+                const cartCount = cart?.totalQuantity ?? 0;
+                const cartIsEmpty = !cartCount || cartCount === 0;
+                return <Tabs products={products} cartIsEmpty={cartIsEmpty} />;
+              }}
+            </Await>
+          </Suspense>
         </div>
 
         <div className="flex justify-center mt-[4rem] mb-8">
-          <button className="text-[#2AB7B7] shadow-lg bg-white px-4 py-2 text-[16px] font-[500] rounded-md">
+          <Link
+            to={'/discover-offers'}
+            className="text-[#2AB7B7] shadow-lg bg-white px-4 py-2 text-[16px] font-[500] rounded-md border border-transparent hover:border-[#2AB7B7]"
+          >
             Show more offers
-          </button>
+          </Link>
         </div>
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2">
           <img
@@ -73,9 +138,26 @@ export default function ProductDetail() {
   );
 }
 
-function Tabs() {
+function Tabs({
+  products,
+  cartIsEmpty,
+}: {
+  products: any[];
+  cartIsEmpty: boolean;
+}) {
   const [active, setActive] = useState(0);
-  const tabs = ['Popular', 'Hotels', 'Cruise', 'Exclusive Deals'];
+  const tabs = ['Popular', 'Exclusive Deals'];
+  // Map tab index to tag
+  const tabTagMap: Record<number, string> = {
+    0: 'Popular',
+    // 1: 'Poconos',
+    2: 'Exclusive',
+  };
+  // Filter products for the active tab
+  const filteredProducts = products.filter(
+    (product) =>
+      Array.isArray(product.tags) && product.tags.includes(tabTagMap[active]),
+  );
   return (
     <div>
       <div
@@ -93,92 +175,20 @@ function Tabs() {
           </button>
         ))}
       </div>
-      <div>
-        {/* Tab content: for now, static demo cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Card design  */}
-          <div className="relative bg-white rounded-lg shadow flex flex-col">
-            <div className="absolute -top-7 left-1 flex items-center justify-center gap-1 bg-[#F2B233] text-[#FEFEFE] px-2 py-1 text-[12px] md:text-[14px] font-[400] rounded">
-              <IoDiamond /> <span>Exclusive Offer</span>
-            </div>
-
-            <div className="relative w-full h-[280px] rounded-t mb-4 overflow-hidden">
-              {/* Discount polygon badge */}
-              <img
-                src="/assets/polygonDiscount.svg"
-                alt="Discount"
-                className="absolute top-0 right-0 z-8"
-              />
-
-              {/* Destination image */}
-              <img
-                src="/assets/DestinationImage.png"
-                alt="Orlando, FL"
-                className="w-full h-full object-cover"
-              />
-
-              {/* Destination title */}
-              <h4 className="absolute top-3 left-4 font-bold text-white text-[20px] z-10">
-                Poconos, PA
-              </h4>
-
-              {/* Details button */}
-              <Link
-                to="/products/poconos"
-                className="absolute left-4 bottom-3 text-[#26A5A5] bg-white px-4 py-1 text-[16px] font-medium z-10 rounded"
-              >
-                Details
-              </Link>
-            </div>
-
-            <ul className="text-sm text-[#000] mb-4 list-disc list-inside pl-4 space-y-2">
-              <li className="flex gap-2 items-center">
-                <FaCheck className="text-amber-400" />{' '}
-                <span>2 night hotel accommodation for two adults</span>
-              </li>
-              <li className="flex gap-2 items-center">
-                <FaCheck className="text-amber-400" />{' '}
-                <span>Includes flights, Park Hopper tickets, City Bus</span>
-              </li>
-            </ul>
-            <div className="bg-[#FBE7C0] rounded-[8px] px-3 py-1 mx-4 flex gap-2 items-center justify-center">
-              <FaGift />
-              <span className="text-[16px] font-[500] text-[#151515]">
-                Includes a Bonus Gift: Your Choice Vacation Getaway
-              </span>
-            </div>
-            <div className="mt-8 p-4 bg-[#F5F5F5] flex flex-col gap-1 items-center justify-center border-t border-gray-300">
-              <span className="text-[#676767] font-[400] text-[13px]">
-                3 night/4 days
-              </span>
-              <div className="flex items-center justify-center gap-1">
-                <span className="text-[#135868] font-[500] text-[27px]">
-                  $49
-                </span>
-                <span className="text-[#135868] font-[500] text-[12px]">
-                  per <br /> family of four
-                </span>
-              </div>
-              <span className="text-[#676767] font-[400] text-[13px]"></span>
-            </div>
-            <div className="bg-[#2AB7B7] h-[28px] flex justify-center items-center rounded-b text-white font-[500] text-[12px]">
-              Select Offer
-            </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {filteredProducts.length > 0 ? (
+          filteredProducts.map((product) => (
+            <OfferCard
+              key={product.id}
+              product={product}
+              cartIsEmpty={cartIsEmpty}
+            />
+          ))
+        ) : (
+          <div className="col-span-3 text-center text-gray-500 py-12">
+            No offers found for this tab.
           </div>
-
-          <div
-            className="relative bg-[#0E424E] rounded-lg shadow p-6 text-white bg-cover"
-            style={{backgroundImage: 'url(/assets/PlanImage.png)'}}
-          >
-            <h4 className="font-[500] text-[47px]">Plan Less. Travel More.</h4>
-            <button className="absolute bottom-4 left-4 bg-[#2AB7B7] text-white px-6 py-2 rounded shadow font-semibold hover:bg-[#229a9a] transition mt-4 cursor-pointer">
-              Discover Offers
-            </button>
-            <button className="absolute bottom-4 right-4 underline text-white px-6 py-2 font-semibold transition cursor-pointer">
-              Contact Us
-            </button>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

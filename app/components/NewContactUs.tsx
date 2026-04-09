@@ -3,12 +3,7 @@ import {FaLocationDot} from 'react-icons/fa6';
 import {FaEnvelope, FaComments} from 'react-icons/fa';
 import SectionHeroBanner from './SectionHeroBanner';
 
-// Figma green color
-const green = '#8DD3C7';
-const greenHover = '#6fc1b2';
-const greyBg = '#F5F5F5';
-
-export default function ContactUs() {
+export default function NewContactUs() {
   const [checked, setChecked] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
@@ -106,129 +101,30 @@ Fill out the form below and we'll get back to you within one business day."
           style={{alignItems: 'stretch'}}
         >
           {/* Left: Form */}
-          <form
-            onSubmit={handleSubmit}
-            className="flex-1 bg-gray-100 rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6 md:p-8 flex flex-col gap-4 min-w-[0] animate-fade-in justify-between w-full max-w-full"
-            style={{minHeight: 520}}
+          <div
+            className="flex-1 bg-gray-100 rounded-xl shadow-lg border border-gray-200 sm:p-6 md:p-8 flex flex-col gap-4 min-w-[0] min-h-screen md:min-h-[820px] animate-fade-in justify-between w-full max-w-full"
+            style={{minHeight: 820}}
           >
-            <div>
-              <h2 className="text-xl sm:text-[21px] font-[500] text-[#071F24] mb-1">
-                General Inquiry Form
-              </h2>
-              <p className="text-[#111] mb-4 text-sm sm:text-[13px] font-[400] opacity-70">
-                For general questions or non-urgent help, please use our{' '}
-                <span className="font-bold">
-                  Ask Discover and one of our agents will reach out to you
-                  shortly.
-                </span>
-              </p>
-
-              {/* Success/Error Message */}
-              {submitMessage && (
-                <div
-                  className={`mb-4 p-3 rounded-[10px] text-sm ${
-                    submitMessage.includes('Thank you')
-                      ? 'bg-green-100 text-green-700 border border-green-200'
-                      : 'bg-red-100 text-red-700 border border-red-200'
-                  }`}
-                >
-                  {submitMessage}
-                </div>
-              )}
-
-              <div className="flex flex-col md:flex-row gap-4">
-                <input
-                  type="text"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleInputChange}
-                  placeholder="First Name"
-                  required
-                  className="flex-1 rounded-[10px] border border-gray-100 shadow-lg bg-gray-50 px-3 py-2 sm:px-4 sm:py-3 text-gray-800 focus:ring-2 focus:ring-green-200 focus:bg-white transition text-sm sm:text-base"
-                />
-                <input
-                  type="text"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleInputChange}
-                  placeholder="Last Name"
-                  required
-                  className="flex-1 rounded-[10px] border border-gray-100 shadow-lg bg-gray-50 px-3 py-2 sm:px-4 sm:py-3 text-gray-800 focus:ring-2 focus:ring-green-200 focus:bg-white transition text-sm sm:text-base mt-2 md:mt-0"
-                />
-              </div>
-              <div className="flex flex-col md:flex-row gap-4 mt-4">
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder="Email"
-                  required
-                  className="flex-1 rounded-[10px] border border-gray-100 shadow-lg bg-gray-50 px-3 py-2 sm:px-4 sm:py-3 text-gray-800 focus:ring-2 focus:ring-green-200 focus:bg-white transition text-sm sm:text-base"
-                />
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  placeholder="Phone Number"
-                  className="flex-1 rounded-[10px] border border-gray-100 shadow-lg bg-gray-50 px-3 py-2 sm:px-4 sm:py-3 text-gray-800 focus:ring-2 focus:ring-green-200 focus:bg-white transition text-sm sm:text-base mt-2 md:mt-0"
-                />
-              </div>
-              <div className="mt-4">
-                <label
-                  className="block text-gray-700 font-medium mb-1"
-                  htmlFor="message"
-                >
-                  Your Message
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleInputChange}
-                  placeholder="Please write here."
-                  rows={5}
-                  required
-                  className="w-full rounded-[10px] border border-gray-100 shadow-lg bg-gray-50 px-3 py-2 sm:px-4 sm:py-3 text-gray-800 focus:ring-2 focus:ring-green-200 focus:bg-white transition resize-none text-sm sm:text-base"
-                />
-              </div>
-              <div className="flex items-start gap-2 mt-2">
-                <input
-                  id="consent"
-                  type="checkbox"
-                  checked={checked}
-                  onChange={() => setChecked(!checked)}
-                  className="mt-1 accent-green-400"
-                  required
-                />
-                <label
-                  htmlFor="consent"
-                  className="text-xs text-gray-500 select-none"
-                >
-                  By submitting this form, you consent to be contacted by
-                  Discover Vacations via phone, email, or SMS. Standard
-                  messaging rates may apply.
-                </label>
-              </div>
+            <div className="w-full">
+              <iframe
+                id="JotFormIFrame-252155661988065"
+                title="General Inquiry Form"
+                allowTransparency={true}
+                allow="geolocation; microphone; camera; fullscreen; payment"
+                src="https://forms.inboundrequest.com/252155661988065"
+                style={{
+                  minWidth: '100%',
+                  maxWidth: '100%',
+                  border: 'none',
+                  height: '100%',
+                  minHeight: 800,
+                }}
+              ></iframe>
             </div>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className={`mt-2 font-semibold py-3 px-8 rounded-[10px] shadow-md transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-green-200 self-start w-full text-base sm:text-[16px] sm:font-[600] ${
-                isSubmitting
-                  ? 'bg-gray-400 cursor-not-allowed'
-                  : 'bg-[#2AB7B7] hover:bg-[#1a8f8f]'
-              }`}
-              style={{color: 'white'}}
-            >
-              {isSubmitting ? 'Submitting...' : 'Submit'}
-            </button>
-          </form>
-
+          </div>
           {/* Right: Contact Cards */}
           <div
-            className="flex flex-col flex-1 min-w-[0] max-w-full md:max-w-sm justify-between mt-8 md:mt-0 w-full"
+            className="flex flex-col flex-1 min-w-[0] max-w-full md:max-w-sm gap-8 mt-8 md:mt-0 w-full"
             style={{
               minHeight: 520,
             }}
