@@ -665,8 +665,8 @@ export default function Cart() {
       ]),
     );
     return {
-      title: attrs['Offer Title'] || 'Title N/A',
-      location: attrs['Offer Location'] || 'Location N/a',
+      title: attrs['Offer Title'] || 'Destination',
+      location: attrs['Offer Location'] || '',
       image: attrs['Offer Image'] || 'Image N/A',
       price: attrs['Offer Price'] || 'N/A',
       nights: attrs['offerNights'] || 'N/A',
