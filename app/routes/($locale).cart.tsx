@@ -81,6 +81,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
     const selectedUpsellDescription = formData.get('selectedUpsellDescription');
     const selectedUpsellLocation = formData.get('selectedUpsellLocation');
     const bonusIntroText = formData.get('bonusIntroText');
+    const offerTcpaPolicyUrl = formData.get('offerTcpaPolicyUrl');
 
     // Set offer expiration 30 minutes from now
     const expiresAt = new Date(Date.now() + 30 * 60 * 1000).toISOString();
@@ -145,6 +146,10 @@ export async function action({ request, context }: ActionFunctionArgs) {
             { key: 'offerNights', value: String(offerNights || '') },
             { key: 'offerDays', value: String(offerDays || '') },
             { key: 'offerDescription', value: String(offerDescription || '') },
+            {
+              key: 'offerTcpaPolicyUrl',
+              value: String(offerTcpaPolicyUrl || ''),
+            },
             {
               key: 'Bonus Intro Text',
               value: String(bonusIntroText || ''),
@@ -339,6 +344,10 @@ export async function action({ request, context }: ActionFunctionArgs) {
               key: 'offerDescription',
               value: String(formData.get('offerDescription') || ''),
             },
+            {
+              key: 'offerTcpaPolicyUrl',
+              value: String(formData.get('offerTcpaPolicyUrl') || ''),
+            },
             { key: 'Bonus Intro Text', value: bonusIntroText },
             // {key: 'Offer Expires At', value: expiresAt},
             { key: 'Product Type', value: 'Main Vacation Package' },
@@ -386,6 +395,10 @@ export async function action({ request, context }: ActionFunctionArgs) {
             {
               key: 'offerDescription',
               value: String(formData.get('offerDescription') || ''),
+            },
+            {
+              key: 'offerTcpaPolicyUrl',
+              value: String(formData.get('offerTcpaPolicyUrl') || ''),
             },
             { key: 'Bonus Intro Text', value: bonusIntroText },
             // {key: 'Offer Expires At', value: expiresAt},
@@ -478,6 +491,10 @@ export async function action({ request, context }: ActionFunctionArgs) {
               key: 'offerDescription',
               value: String(formData.get('offerDescription') || ''),
             },
+            {
+              key: 'offerTcpaPolicyUrl',
+              value: String(formData.get('offerTcpaPolicyUrl') || ''),
+            },
             { key: 'Bonus Intro Text', value: bonusIntroText },
             // {key: 'Offer Expires At', value: expiresAt},
             { key: 'Product Type', value: 'Main Vacation Package' },
@@ -525,6 +542,10 @@ export async function action({ request, context }: ActionFunctionArgs) {
             {
               key: 'offerDescription',
               value: String(formData.get('offerDescription') || ''),
+            },
+            {
+              key: 'offerTcpaPolicyUrl',
+              value: String(formData.get('offerTcpaPolicyUrl') || ''),
             },
             { key: 'Bonus Intro Text', value: bonusIntroText },
             // {key: 'Offer Expires At', value: expiresAt},
@@ -687,6 +708,7 @@ export default function Cart() {
       nights: attrs['offerNights'] || 'N/A',
       days: attrs['offerDays'] || 'N/A',
       description: attrs['offerDescription'] || '',
+      tcpaPolicyUrl: attrs['offerTcpaPolicyUrl'] || '',
       bonusIntroText: normalizeMetafieldText(attrs['Bonus Intro Text'] || ''),
       expiresAt: attrs['Offer Expires At'] || null,
     };
@@ -944,18 +966,6 @@ export default function Cart() {
     }
   };
 
-  // Add this helper inside or above the Cart component
-  function getLocationSlug(location: string | undefined) {
-    if (!location) return '';
-    return location
-      .split(',')[0]
-      .trim()
-      .toLowerCase()
-      .replace(/['’]/g, '')
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-+|-+$/g, '');
-  }
-
   // Set offer expiration in localStorage when cart is populated and not expired
   useEffect(() => {
     if (!cartIsEmpty) {
@@ -1122,19 +1132,15 @@ export default function Cart() {
                     Discover Vacations, LLC, may need to contact you to assist
                     in booking your vacation, and follow up on any questions. By
                     clicking this checkbox, you agree to the{' '}
-                    <Link
-                      to={
-                        cartOffer?.title
-                          ? `/policies/terms-conditions-${getLocationSlug(
-                            cartOffer.title,
-                          )}`
-                          : '/cart'
-                      }
+                    <a
+                      href={cartOffer?.tcpaPolicyUrl || '/cart'}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="underline"
                       tabIndex={-1}
                     >
                       Terms & Conditions
-                    </Link>{' '}
+                    </a>{' '}
                     &
                     <Link
                       to={'/policies/privacy-policy'}
@@ -1210,6 +1216,11 @@ export default function Cart() {
                   type="hidden"
                   name="offerDescription"
                   value={cartOffer?.description || ''}
+                />
+                <input
+                  type="hidden"
+                  name="offerTcpaPolicyUrl"
+                  value={cartOffer?.tcpaPolicyUrl || ''}
                 />
                 <input
                   type="hidden"
@@ -1524,7 +1535,7 @@ export default function Cart() {
                   className="bg-[#2AB7B7] text-white px-8 py-3 rounded-lg text-lg font-semibold shadow hover:bg-[#229a9a] transition"
                   onClick={() => (window.location.href = '/discover-offers')}
                 >
-                  Find Destination
+                  Continue Shopping
                 </button>
               </div>
             ) : (

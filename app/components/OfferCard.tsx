@@ -155,6 +155,11 @@ export function OfferCard({
         />
         <input
           type="hidden"
+          name="offerTcpaPolicyUrl"
+          value={product?.tcpaPolicyUrl?.value || ''}
+        />
+        <input
+          type="hidden"
           name="bonusIntroText"
           value={bonusIntroText || ''}
         />

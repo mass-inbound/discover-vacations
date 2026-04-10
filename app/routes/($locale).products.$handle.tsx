@@ -379,6 +379,11 @@ export default function Product() {
                       />
                       <input
                         type="hidden"
+                        name="offerTcpaPolicyUrl"
+                        value={product?.tcpaPolicyUrl?.value || ''}
+                      />
+                      <input
+                        type="hidden"
                         name="bonusIntroText"
                         value={bonusIntroText || ''}
                       />
@@ -761,6 +766,9 @@ const PRODUCT_FRAGMENT = `#graphql
       value
     }
     shortDescription: metafield(namespace: "custom", key: "short_description") {
+      value
+    }
+    tcpaPolicyUrl: metafield(namespace: "custom", key: "tcpa_policy_url") {
       value
     }
     priceLabel: metafield(namespace: "custom", key: "price_label") {

@@ -48,7 +48,10 @@ const PRODUCT_FRAGMENT = `#graphql
     shortDescription: metafield(namespace: "custom", key: "short_description") {
       value
     }
-    priceLabel: metafield(namespace: "custom", key: "price_label") {
+    tcpaPolicyUrl: metafield(namespace: "custom", key: "tcpa_policy_url") {
+    value
+  }
+  priceLabel: metafield(namespace: "custom", key: "price_label") {
       value
     }
     variants(first: 1) {
