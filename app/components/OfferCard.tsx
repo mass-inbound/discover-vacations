@@ -3,6 +3,22 @@ import { FaCheck, FaGift } from 'react-icons/fa6';
 import { Link } from 'react-router';
 import React from 'react';
 
+function normalizeMetafieldText(value?: string | null) {
+  if (!value) return '';
+  return value.replace(/\\n/g, '\n').trim();
+}
+
+function formatHeroBadge(value?: string) {
+  const badge = normalizeMetafieldText(value);
+  if (!badge) return [];
+  if (badge.includes('\n')) {
+    return badge.split('\n').map((part) => part.trim()).filter(Boolean);
+  }
+  const [first, ...rest] = badge.split(/\s+/);
+  if (rest.length === 0) return [badge];
+  return [first, rest.join(' ')];
+}
+
 export function OfferCard({
   product,
   onSelect,
@@ -12,13 +28,18 @@ export function OfferCard({
   onSelect?: (product: any) => void;
   cartIsEmpty?: boolean;
 }) {
-  // Parse description as bullet points
-  const bullets = product.description
-    ? product.description
-      .replace(/\/n/g, '\n')
-      .split(/\r?\n/)
-      .filter((b: string) => b.trim().length > 0)
+  const shortDescriptionText = normalizeMetafieldText(
+    product?.shortDescription?.value,
+  );
+  // Parse short description as bullet points
+  const bullets = shortDescriptionText
+    ? shortDescriptionText.split(/\r?\n/).filter((b: string) => b.trim().length > 0)
     : [];
+  const heroBadge = normalizeMetafieldText(product?.heroBadge?.value);
+  const heroBadgeLines = formatHeroBadge(heroBadge);
+  const durationText = normalizeMetafieldText(product?.duration?.value);
+  const priceLabelText = normalizeMetafieldText(product?.priceLabel?.value);
+  const bonusIntroText = normalizeMetafieldText(product?.bonusVacationLine?.value);
   const isExclusive = product.tags.includes('Exclusive');
   return (
     <div
@@ -42,8 +63,12 @@ export function OfferCard({
             className="absolute top-0 right-0 z-8"
           />
           <span className="absolute top-4 right-4 z-8 text-white text-[21px] font-[700] leading-6">
-            82% <br />
-            OFF
+            {heroBadgeLines.map((line, idx) => (
+              <React.Fragment key={`${line}-${idx}`}>
+                {idx > 0 && <br />}
+                {line}
+              </React.Fragment>
+            ))}
           </span>
           {/* Destination image */}
           {product.featuredImage ? (
@@ -80,20 +105,23 @@ export function OfferCard({
         <div className="bg-gradient-to-r from-[#f2b233] to-[#FFE7B8] rounded-[8px] px-3 py-1 mx-4 flex gap-2 items-start justify-center">
           <FaGift className="min-w-4 mt-1" />
           <span className="text-[16px] font-[400] text-[#08252C] font-avenir">
-            Includes a Bonus Vacation: Choice Vacation Getaway (valued at $300+)
+            {bonusIntroText ||
+              'Includes a Bonus Vacation: Choice Vacation Getaway (valued at $300+)'}
           </span>
         </div>
         <div className="mt-8 p-4 bg-[#F5F5F5] flex flex-col gap-1 items-center justify-center border-t border-gray-300">
           <span className="text-[#676767] font-[400] text-[13px]">
             {/* You can add duration info as metafield or in description if needed */}
           </span>
-          <p className="text-[13px] text-[#676767]">4 days / 3 nights</p>
+          <p className="text-[14px] text-[#676767]">
+            {durationText || ""}
+          </p>
           <div className="flex items-center justify-center gap-2">
-            <span className="text-[#135868] font-[700] text-[27px] font-monteserrat">
+            <span className="text-[#135868] font-[800] text-[30px] font-monteserrat">
               ${Math.round(product.priceRange.minVariantPrice.amount)}
             </span>
-            <span className="text-[#135868] font-[600] text-[12px] font-avenir">
-              per couple or <br /> family of four
+            <span className="text-[#135868] font-[700] text-[12px] font-avenir max-w-[100px]">
+              {priceLabelText || ""}
             </span>
           </div>
           <span className="text-[#676767] font-[400] text-[13px]"></span>
@@ -124,6 +152,11 @@ export function OfferCard({
           type="hidden"
           name="offerDescription"
           value={product.description || ''}
+        />
+        <input
+          type="hidden"
+          name="bonusIntroText"
+          value={bonusIntroText || ''}
         />
         <input
           type="hidden"

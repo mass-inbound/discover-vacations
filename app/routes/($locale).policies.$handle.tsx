@@ -39,7 +39,7 @@ const PAGE_QUERY = `#graphql
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   const title = data?.page?.title || data?.policy?.title || '';
-  return [{ title: `Hydrogen | ${title}` }];
+  return [{ title: `${title}` }];
 };
 
 export async function loader({ params, context }: LoaderFunctionArgs) {

@@ -24,7 +24,7 @@ import VacationProcess from '~/components/VacationProcess';
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
-    { title: `Hydrogen | ${data?.product.title ?? ''}` },
+    { title: `${data?.product.title ?? ''}` },
     {
       rel: 'canonical',
       href: `/products/${data?.product.handle}`,
@@ -189,6 +189,9 @@ export default function Product() {
   const shortDescriptionText = normalizeMetafieldText(
     product?.shortDescription?.value,
   );
+  const bonusIntroText = normalizeMetafieldText(
+    product?.bonusVacationLine?.value,
+  );
 
   // Use short_description metafield for bullets (fallback: product.description)
   const bulletsSource = shortDescriptionText || product.description || '';
@@ -304,20 +307,15 @@ export default function Product() {
               {product.vendor || ''}
             </p>
             <div className="bg-white rounded-[10px] my-4 p-3 flex flex-col items-center mb-8">
-              <span className="text-[#0E424E] font-[400] text-[13px]">
-                {durationText || '4 days / 3 nights'}
+              <span className="text-[#0E424E] font-[400] text-[14 px]">
+                {durationText || ''}
               </span>
-              <div className="flex items-center justify-center gap-1">
+              <div className="flex items-center justify-center gap-[6px]">
                 <span className="text-[#135868] font-[500] text-[27px]">
                   ${Math.round(price)}
                 </span>
-                <span className="text-[#135868] font-[500] text-[12px]">
-                  {priceLabelText || (
-                    <>
-                      per couple or
-                      <br /> family of four
-                    </>
-                  )}
+                <span className="text-[#135868] font-[500] text-[14px] max-w-[100px]">
+                  {priceLabelText || ''}
                 </span>
               </div>
               <span className="text-[#0E424E] font-[400] text-[13px]"></span>
@@ -337,8 +335,8 @@ export default function Product() {
             <div className="bg-gradient-to-r from-[#f2b233] to-[#FFE7B8] rounded-[8px] px-3 py-1 mb-10 flex gap-2 items-start justify-center">
               <FaGift className="min-w-4 mt-1" />
               <span className="text-[16px] font-[400] text-[#08252C]">
-                Includes a Bonus Vacation: Choice Vacation Getaway (valued at
-                $300+)
+                {bonusIntroText ||
+                  'Includes a Bonus Vacation: Choice Vacation Getaway (valued at $300+)'}
               </span>
             </div>
             {/* <Link to="/contact-us">
@@ -378,6 +376,11 @@ export default function Product() {
                         type="hidden"
                         name="offerDescription"
                         value={product.description || ''}
+                      />
+                      <input
+                        type="hidden"
+                        name="bonusIntroText"
+                        value={bonusIntroText || ''}
                       />
                       <input
                         type="hidden"
@@ -498,13 +501,46 @@ function Tabs({
   const attractionsFallback =
     'Nearby attraction details will be available soon for this offer.';
   const detailsFallback = 'Booking details will be available soon.';
+  const overviewContent = overviewText || overviewFallback;
+  const overviewLines = overviewContent
+    .split('\n')
+    .map((line: string) => line.trim())
+    .filter(Boolean);
+  const overviewHeadline = overviewLines[0] || overviewFallback;
+  const overviewBody = overviewLines.slice(1).join('\n');
+
+  const attractionsContent = attractionsText || attractionsFallback;
+  const attractionsLines = attractionsContent
+    .split('\n')
+    .map((line: string) => line.trim())
+    .filter(Boolean);
+  const attractionsListLines =
+    attractionsLines[0]?.toLowerCase() === 'nearby attractions'
+      ? attractionsLines.slice(1)
+      : attractionsLines;
+  const parsedAttractions = attractionsListLines.map((line: string) => {
+    const cleanedLine = line.replace(/^[•-]\s*/, '').trim();
+    const match = cleanedLine.match(/^(.*?)[—–-]\s*(.+)$/);
+    return {
+      title: match?.[1]?.trim() || cleanedLine,
+      description: match?.[2]?.trim() || '',
+    };
+  });
 
   const tabContents = [
-    <TabTextContent
+    <div
       key="overview"
-      title="Overview"
-      content={overviewText || overviewFallback}
-    />,
+      className="bg-gray-100 p-4 md:p-8 text-center flex flex-col gap-4 rounded"
+    >
+      <h2 className="text-[#0E424E] font-[500] text-[24px] md:text-[36px] max-w-[95%] md:max-w-[85%] mx-auto">
+        {overviewHeadline}
+      </h2>
+      {overviewBody ? (
+        <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] max-w-[95%] md:max-w-[85%] mx-auto whitespace-pre-line">
+          {overviewBody}
+        </p>
+      ) : null}
+    </div>,
     <div key="included" className="bg-gray-100 p-4 md:p-8 rounded">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
@@ -525,24 +561,37 @@ function Tabs({
         </div>
       </div>
     </div>,
-    <TabTextContent
-      key="attractions"
-      title="Nearby Attractions"
-      content={attractionsText || attractionsFallback}
-    />,
+    <div key="attractions" className="bg-gray-100 p-4 md:p-8 rounded">
+      <h2 className="text-[#0E424E] font-[500] text-[24px] md:text-[36px] text-center mb-6">
+        Nearby Attractions
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+        {parsedAttractions.map((attraction, idx) => (
+          <div key={`${attraction.title}-${idx}`} className="bg-white rounded p-4">
+            <p className="text-[#0E424E] text-[18px] md:text-[22px] font-[500] leading-tight">
+              {attraction.title}
+            </p>
+            {attraction.description ? (
+              <p className="text-[#0E424E] text-[14px] md:text-[18px] font-[400] mt-2 leading-snug">
+                {attraction.description}
+              </p>
+            ) : null}
+          </div>
+        ))}
+      </div>
+    </div>,
     <TabTextContent
       key="details"
-      title="Details"
+      title="🌊 Catch the Details"
       content={detailsText || detailsFallback}
     />,
     <div key="gift">
       <div className="bg-gray-100 p-4 md:p-8 text-center flex flex-col gap-4 rounded">
-        <h1 className="text-[#0E424E] font-[500] text-[24px] md:text-[36px] flex items-center justify-center gap-4 mb-3">
+        <h1 className="text-[#0E424E] font-[500] text-[24px] md:text-[36px] flex items-center justify-center gap-4">
           <FaGift /> Your Bonus, Your Choice!
         </h1>
-        <p className="text-[#0E424E] text-[16px] md:text-[20px] font-[400] font-avenir text-center max-w-[95%] md:max-w-[80%] mx-auto whitespace-pre-line">
-          {bonusIntroText ||
-            "Your Bonus Vacation is included with your purchase today. You'll choose your favorite at checkout and unlock it after completing your featured getaway."}
+        <p className="text-gray-700 text-[16px] md:text-[26px] font-[400] font-avenir text-center max-w-[95%] md:max-w-[80%] mx-auto whitespace-pre-line">
+          Your Bonus Vacation is included with your purchase today. You'll choose your favorite at checkout and unlock it after completing your featured getaway.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-4">
           {upsellProducts.length > 0 ? (

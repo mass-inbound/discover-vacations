@@ -59,6 +59,18 @@ const COLLECTION_PRODUCT_FRAGMENT = `#graphql
     }
   }
   tags
+  heroBadge: metafield(namespace: "custom", key: "hero_badge") {
+    value
+  }
+  duration: metafield(namespace: "custom", key: "duration") {
+    value
+  }
+  shortDescription: metafield(namespace: "custom", key: "short_description") {
+    value
+  }
+  priceLabel: metafield(namespace: "custom", key: "price_label") {
+    value
+  }
   variants(first: 1) {
     nodes {
       id

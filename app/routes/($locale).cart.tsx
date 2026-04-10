@@ -23,8 +23,13 @@ import { BsCreditCard2BackFill, BsPlusCircleFill } from 'react-icons/bs';
 import { FaGift } from 'react-icons/fa6';
 import { useCartForm } from '~/components/CartFormContext';
 
+function normalizeMetafieldText(value?: string | null) {
+  if (!value) return '';
+  return value.replace(/\\n/g, '\n').trim();
+}
+
 export const meta: MetaFunction = () => {
-  return [{ title: `Hydrogen | Cart` }];
+  return [{ title: `Cart` }];
 };
 
 export const headers: HeadersFunction = ({ actionHeaders }) => actionHeaders;
@@ -75,6 +80,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
     const selectedUpsellDays = formData.get('selectedUpsellDays');
     const selectedUpsellDescription = formData.get('selectedUpsellDescription');
     const selectedUpsellLocation = formData.get('selectedUpsellLocation');
+    const bonusIntroText = formData.get('bonusIntroText');
 
     // Set offer expiration 30 minutes from now
     const expiresAt = new Date(Date.now() + 30 * 60 * 1000).toISOString();
@@ -139,6 +145,10 @@ export async function action({ request, context }: ActionFunctionArgs) {
             { key: 'offerNights', value: String(offerNights || '') },
             { key: 'offerDays', value: String(offerDays || '') },
             { key: 'offerDescription', value: String(offerDescription || '') },
+            {
+              key: 'Bonus Intro Text',
+              value: String(bonusIntroText || ''),
+            },
             // {key: 'Offer Expires At', value: expiresAt},
             { key: 'Product Type', value: 'Main Vacation Package' },
             // {key: 'Price', value: String(offerPrice || '')},
@@ -230,6 +240,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
     // Check if this is a bonus product
     const isBonusProduct = formData.get('Bonus Vacation') === 'true';
     const productType = formData.get('Product Type') || 'Main Vacation Package';
+    const bonusIntroText = String(formData.get('bonusIntroText') || '');
 
     // Check if this is a direct add-to-cart (from OfferCard or product detail page)
     const isDirectAddToCart =
@@ -328,6 +339,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
               key: 'offerDescription',
               value: String(formData.get('offerDescription') || ''),
             },
+            { key: 'Bonus Intro Text', value: bonusIntroText },
             // {key: 'Offer Expires At', value: expiresAt},
             { key: 'Product Type', value: 'Main Vacation Package' },
             // {key: 'Price', value: String(formData.get('offerPrice') || '')},
@@ -375,6 +387,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
               key: 'offerDescription',
               value: String(formData.get('offerDescription') || ''),
             },
+            { key: 'Bonus Intro Text', value: bonusIntroText },
             // {key: 'Offer Expires At', value: expiresAt},
             { key: 'Product Type', value: 'Main Vacation Package' },
             // {key: 'Price', value: String(formData.get('offerPrice') || '')},
@@ -465,6 +478,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
               key: 'offerDescription',
               value: String(formData.get('offerDescription') || ''),
             },
+            { key: 'Bonus Intro Text', value: bonusIntroText },
             // {key: 'Offer Expires At', value: expiresAt},
             { key: 'Product Type', value: 'Main Vacation Package' },
             // {key: 'Price', value: String(formData.get('offerPrice') || '')},
@@ -512,6 +526,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
               key: 'offerDescription',
               value: String(formData.get('offerDescription') || ''),
             },
+            { key: 'Bonus Intro Text', value: bonusIntroText },
             // {key: 'Offer Expires At', value: expiresAt},
             { key: 'Product Type', value: 'Main Vacation Package' },
             // {key: 'Price', value: String(formData.get('offerPrice') || '')},
@@ -672,6 +687,7 @@ export default function Cart() {
       nights: attrs['offerNights'] || 'N/A',
       days: attrs['offerDays'] || 'N/A',
       description: attrs['offerDescription'] || '',
+      bonusIntroText: normalizeMetafieldText(attrs['Bonus Intro Text'] || ''),
       expiresAt: attrs['Offer Expires At'] || null,
     };
   }
@@ -1197,6 +1213,11 @@ export default function Cart() {
                 />
                 <input
                   type="hidden"
+                  name="bonusIntroText"
+                  value={cartOffer?.bonusIntroText || ''}
+                />
+                <input
+                  type="hidden"
                   name="variantId"
                   value={
                     new URLSearchParams(location.search).get('variantId') || ''
@@ -1578,8 +1599,8 @@ export default function Cart() {
                 <div className="relative bg-gradient-to-r from-[#f2b233] to-[#FFE7B8] rounded-[8px] px-3 py-1 mx-6 mt-4 flex gap-2 items-start justify-center">
                   <FaGift className="min-w-4 mt-1" />
                   <span className="text-[16px] font-[400] text-[#08252C] tracking-wide">
-                    Includes a Bonus Vacation: Your Choice Vacation Bonus
-                    (valued at $300+)
+                    {cartOffer?.bonusIntroText ||
+                      'Includes a Bonus Vacation: Your Choice Vacation Bonus (valued at $300+)'}
                   </span>
                   {/* {upsellProductsInCart.length == 0 && (
                     <img
