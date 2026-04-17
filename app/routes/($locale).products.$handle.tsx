@@ -23,8 +23,27 @@ import cartIcon from '/assets/icon-cart.svg';
 import VacationProcess from '~/components/VacationProcess';
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  const titleOverride = normalizeMetafieldText(
+    data?.product?.seoTitleOverride?.value,
+  );
+  const descriptionOverride = normalizeMetafieldText(
+    data?.product?.seoDescriptionOverride?.value,
+  );
+  const metaTitle =
+    titleOverride || data?.product?.seo?.title || data?.product?.title || '';
+  const metaDescription =
+    descriptionOverride || data?.product?.seo?.description || data?.product?.description || '';
+
   return [
-    { title: `${data?.product.title ?? ''}` },
+    { title: metaTitle },
+    ...(metaDescription
+      ? [
+          {
+            name: 'description',
+            content: metaDescription,
+          },
+        ]
+      : []),
     {
       rel: 'canonical',
       href: `/products/${data?.product.handle}`,
@@ -772,6 +791,12 @@ const PRODUCT_FRAGMENT = `#graphql
       value
     }
     priceLabel: metafield(namespace: "custom", key: "price_label") {
+      value
+    }
+    seoDescriptionOverride: metafield(namespace: "custom", key: "seo_description_override") {
+      value
+    }
+    seoTitleOverride: metafield(namespace: "custom", key: "seo_title_override") {
       value
     }
   }
