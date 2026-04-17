@@ -38,11 +38,11 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     { title: metaTitle },
     ...(metaDescription
       ? [
-          {
-            name: 'description',
-            content: metaDescription,
-          },
-        ]
+        {
+          name: 'description',
+          content: metaDescription,
+        },
+      ]
       : []),
     {
       rel: 'canonical',
@@ -57,55 +57,19 @@ export async function loader(args: LoaderFunctionArgs) {
 
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
+  const bonusProductHandles = [
+    criticalData.product?.bonusProduct1?.value,
+    criticalData.product?.bonusProduct2?.value,
+    criticalData.product?.bonusProduct3?.value,
+  ]
+    .map((value) => String(value || '').trim())
+    .filter(Boolean);
+  const bonusProducts = await fetchProductsByHandles(
+    args.context.storefront,
+    bonusProductHandles,
+  );
 
-  const { context } = args;
-  // Fetch upsell products
-  const UPSELL_PRODUCTS_QUERY = `#graphql
-    fragment MoneyProductItem on MoneyV2 {
-      amount
-      currencyCode
-    }
-    fragment ProductItem on Product {
-      id
-      handle
-      title
-      description
-      featuredImage {
-        id
-        altText
-        url
-        width
-        height
-      }
-      priceRange {
-        minVariantPrice {
-          ...MoneyProductItem
-        }
-        maxVariantPrice {
-          ...MoneyProductItem
-        }
-      }
-      tags
-      variants(first: 1) {
-        nodes {
-          id
-        }
-      }
-    }
-    query UpsellProducts($query: String!) {
-      products(first: 6, query: $query) {
-        nodes {
-          ...ProductItem
-        }
-      }
-    }
-  `;
-  const upsellRes = await context.storefront.query(UPSELL_PRODUCTS_QUERY, {
-    variables: { query: 'tag:upsell' },
-  });
-  const upsellProducts = upsellRes?.products?.nodes || [];
-
-  return { ...deferredData, ...criticalData, upsellProducts };
+  return { ...deferredData, ...criticalData, bonusProducts };
 }
 
 /**
@@ -173,7 +137,7 @@ function useCountdown(targetTime: string | null) {
 }
 
 export default function Product() {
-  const { product, upsellProducts } = useLoaderData<typeof loader>();
+  const { product, bonusProducts } = useLoaderData<typeof loader>();
   const images = product.images?.nodes || [];
   const mainImage =
     product.selectedOrFirstAvailableVariant?.image?.url ||
@@ -454,7 +418,7 @@ export default function Product() {
       </div>
       {/* tab section  */}
       <div className="my-8 mx-auto max-w-7xl">
-        <Tabs upsellProducts={upsellProducts} product={product} />
+        <Tabs bonusProducts={bonusProducts} product={product} />
       </div>
       {/* Vacation Booking curly line  */}
       <VacationProcess />
@@ -468,6 +432,29 @@ export default function Product() {
 function normalizeMetafieldText(value?: string | null) {
   if (!value) return '';
   return value.replace(/\\n/g, '\n').trim();
+}
+
+async function fetchProductsByHandles(storefront: any, handles: string[]) {
+  const uniqueHandles = Array.from(new Set(handles.filter(Boolean)));
+  if (uniqueHandles.length === 0) return [];
+
+  const responses = await Promise.all(
+    uniqueHandles.map((handle) =>
+      storefront.query(BONUS_PRODUCT_BY_HANDLE_QUERY, {
+        variables: { handle },
+      }),
+    ),
+  );
+  const byHandle = new Map(
+    responses
+      .map((response: any) => response?.product)
+      .filter(Boolean)
+      .map((product: { handle: string }) => [product.handle, product]),
+  );
+
+  return uniqueHandles
+    .map((handle) => byHandle.get(handle))
+    .filter((product): product is NonNullable<typeof product> => Boolean(product));
 }
 
 function TabTextContent({
@@ -488,10 +475,10 @@ function TabTextContent({
 }
 
 function Tabs({
-  upsellProducts,
+  bonusProducts,
   product,
 }: {
-  upsellProducts: any[];
+  bonusProducts: any[];
   product: any;
 }) {
   const [active, setActive] = useState(0);
@@ -618,13 +605,13 @@ function Tabs({
           Your Bonus Vacation is included with your purchase today. You'll choose your favorite at checkout and unlock it after completing your featured getaway.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-4">
-          {upsellProducts.length > 0 ? (
-            upsellProducts.map((upsellProduct: any) => (
+          {bonusProducts.length > 0 ? (
+            bonusProducts.map((upsellProduct: any) => (
               <div
                 key={upsellProduct.id}
                 className="rounded-[10px] bg-white shadow flex flex-col"
               >
-                <div className="bg-[#F2B233] py-1 text-[#071F24] font-[500] text-[21px] flex justify-center items-center gap-3 rounded-t-[10px]">
+                <div className="h-[75px] bg-[#F2B233] py-1 text-[#071F24] font-[500] text-[21px] flex justify-center items-center gap-3 rounded-t-[10px]">
                   <span>
                     <FaGift />
                   </span>
@@ -799,8 +786,56 @@ const PRODUCT_FRAGMENT = `#graphql
     seoTitleOverride: metafield(namespace: "custom", key: "seo_title_override") {
       value
     }
+    bonusProduct1: metafield(namespace: "custom", key: "bonus_product_1") {
+      value
+    }
+    bonusProduct2: metafield(namespace: "custom", key: "bonus_product_2") {
+      value
+    }
+    bonusProduct3: metafield(namespace: "custom", key: "bonus_product_3") {
+      value
+    }
   }
   ${PRODUCT_VARIANT_FRAGMENT}
+` as const;
+
+const BONUS_PRODUCT_BY_HANDLE_QUERY = `#graphql
+  fragment MoneyProductItem on MoneyV2 {
+    amount
+    currencyCode
+  }
+  fragment ProductItem on Product {
+    id
+    handle
+    title
+    description
+    featuredImage {
+      id
+      altText
+      url
+      width
+      height
+    }
+    priceRange {
+      minVariantPrice {
+        ...MoneyProductItem
+      }
+      maxVariantPrice {
+        ...MoneyProductItem
+      }
+    }
+    tags
+    variants(first: 1) {
+      nodes {
+        id
+      }
+    }
+  }
+  query BonusProductByHandle($handle: String!) {
+    product(handle: $handle) {
+      ...ProductItem
+    }
+  }
 ` as const;
 
 const PRODUCT_QUERY = `#graphql

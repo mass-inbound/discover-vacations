@@ -35,6 +35,46 @@ function normalizeMetafieldText(value?: string | null) {
   return value.replace(/\\n/g, '\n').trim();
 }
 
+async function fetchProductsByHandles(storefront: any, handles: string[]) {
+  const uniqueHandles = Array.from(new Set(handles.filter(Boolean)));
+  if (uniqueHandles.length === 0) return [];
+
+  const responses = await Promise.all(
+    uniqueHandles.map((handle) =>
+      storefront.query(BONUS_PRODUCT_BY_HANDLE_QUERY, {
+        variables: { handle },
+      }),
+    ),
+  );
+  const byHandle = new Map(
+    responses
+      .map((response: any) => response?.product)
+      .filter(Boolean)
+      .map((product: { handle: string }) => [product.handle, product]),
+  );
+
+  return uniqueHandles
+    .map((handle) => byHandle.get(handle))
+    .filter((product): product is NonNullable<typeof product> => Boolean(product));
+}
+
+async function fetchBonusProductsForMainProduct(storefront: any, productHandle?: string) {
+  if (!productHandle) return [];
+
+  const productResponse = await storefront.query(PRODUCT_BONUS_HANDLES_QUERY, {
+    variables: { handle: productHandle },
+  });
+  const bonusHandles = [
+    productResponse?.product?.bonusProduct1?.value,
+    productResponse?.product?.bonusProduct2?.value,
+    productResponse?.product?.bonusProduct3?.value,
+  ]
+    .map((value: string | null | undefined) => String(value || '').trim())
+    .filter(Boolean);
+
+  return fetchProductsByHandles(storefront, bonusHandles);
+}
+
 export const meta: MetaFunction = () => {
   return [{ title: `Cart` }];
 };
@@ -625,59 +665,88 @@ export async function action({ request, context }: ActionFunctionArgs) {
   return redirect('/cart');
 }
 
+const PRODUCT_BONUS_HANDLES_QUERY = `#graphql
+  query ProductBonusHandles($handle: String!) {
+    product(handle: $handle) {
+      bonusProduct1: metafield(namespace: "custom", key: "bonus_product_1") {
+        value
+      }
+      bonusProduct2: metafield(namespace: "custom", key: "bonus_product_2") {
+        value
+      }
+      bonusProduct3: metafield(namespace: "custom", key: "bonus_product_3") {
+        value
+      }
+    }
+  }
+` as const;
+
+const BONUS_PRODUCT_BY_HANDLE_QUERY = `#graphql
+  fragment MoneyProductItem on MoneyV2 {
+    amount
+    currencyCode
+  }
+  fragment ProductItem on Product {
+    id
+    handle
+    title
+    description
+    featuredImage {
+      id
+      altText
+      url
+      width
+      height
+    }
+    priceRange {
+      minVariantPrice {
+        ...MoneyProductItem
+      }
+      maxVariantPrice {
+        ...MoneyProductItem
+      }
+    }
+    tags
+    variants(first: 1) {
+      nodes {
+        id
+      }
+    }
+  }
+  query BonusProductByHandle($handle: String!) {
+    product(handle: $handle) {
+      ...ProductItem
+    }
+  }
+` as const;
+
 export async function loader({ context }: LoaderFunctionArgs) {
   const { cart, storefront } = context;
-  // Fetch upsell products (tag: 'upsell')
-  const UPSELL_PRODUCTS_QUERY = `#graphql
-    fragment MoneyProductItem on MoneyV2 {
-      amount
-      currencyCode
-    }
-    fragment ProductItem on Product {
-      id
-      handle
-      title
-      description
-      featuredImage {
-        id
-        altText
-        url
-        width
-        height
-      }
-      priceRange {
-        minVariantPrice {
-          ...MoneyProductItem
-        }
-        maxVariantPrice {
-          ...MoneyProductItem
-        }
-      }
-      tags
-      variants(first: 1) {
-        nodes {
-          id
-        }
-      }
-    }
-    query UpsellProducts($query: String!) {
-      products(first: 6, query: $query) {
-        nodes {
-          ...ProductItem
-        }
-      }
-    }
-  `;
-  const upsellRes = await storefront.query(UPSELL_PRODUCTS_QUERY, {
-    variables: { query: 'tag:upsell' },
-  });
-  const upsellProducts = upsellRes?.products?.nodes || [];
   const cartData = await cart.get();
-  return { cart: cartData, upsellProducts };
+
+  const mainProductLine = cartData?.lines?.nodes?.find((line: any) => {
+    const attrs = Object.fromEntries(
+      (line.attributes || []).map((attr: { key: string; value: string }) => [
+        attr.key,
+        attr.value,
+      ]),
+    );
+    return (
+      attrs['Product Type'] === 'Main Vacation Package' ||
+      attrs['Bonus Vacation'] === 'false'
+    );
+  });
+  const mainProductHandle = mainProductLine?.merchandise?.product?.handle;
+  const bonusProducts = await fetchBonusProductsForMainProduct(
+    storefront,
+    mainProductHandle,
+  );
+
+  return { cart: cartData, bonusProducts };
 }
 
 export default function Cart() {
-  const { cart, upsellProducts } = useLoaderData<typeof loader>();
+  const { cart, bonusProducts } = useLoaderData<typeof loader>();
   // console.log('cart==>', cart);
   const location = useLocation();
 
@@ -954,7 +1023,7 @@ export default function Cart() {
   const allLineIds = cart?.lines?.nodes?.map((line: any) => line.id) || [];
 
   // Helper: get all choice products in cart
-  function getUpsellProductsInCart(cart: any, upsellProducts: any[]) {
+  function getUpsellProductsInCart(cart: any) {
     if (!cart?.lines?.nodes?.length) return [];
     return cart.lines.nodes.filter((line: any) => {
       const attrs = Object.fromEntries(
@@ -971,7 +1040,7 @@ export default function Cart() {
     });
   }
 
-  const upsellProductsInCart = getUpsellProductsInCart(cart, upsellProducts);
+  const upsellProductsInCart = getUpsellProductsInCart(cart);
 
   // If an upsell is present, auto-open date picker
   useEffect(() => {
@@ -1737,13 +1806,13 @@ export default function Cart() {
         <div className="h-[1px] bg-gray-300"></div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 my-10 gap-6">
-          {upsellProducts.length > 0 ? (
-            upsellProducts.map((product: any, idx: number) => (
+          {bonusProducts.length > 0 ? (
+            bonusProducts.map((product: any, idx: number) => (
               <div
                 key={product.id}
                 className="rounded-[10px] bg-white shadow flex flex-col"
               >
-                <div className="bg-[#F2B233] py-1 text-[#071F24] font-[500] text-[21px] flex justify-center items-center gap-3 rounded-t-[10px]">
+                <div className="h-[75px] bg-[#F2B233] py-1 text-[#071F24] font-[500] text-[21px] flex justify-center items-center gap-3 rounded-t-[10px]">
                   <span>
                     <FaGift />
                   </span>
