@@ -82,21 +82,21 @@ const COLLECTION_PRODUCT_FRAGMENT = `#graphql
 }
 ` as const;
 
-const HOMEPAGE_COLLECTION_QUERY = `#graphql
-  query HomePageCollection(
-    $handle: String!
+const HOMEPAGE_PRODUCTS_QUERY = `#graphql
+  query HomePageProducts(
     $country: CountryCode
     $language: LanguageCode
+    $first: Int
+    $query: String
   ) @inContext(country: $country, language: $language) {
-    collection(handle: $handle) {
-      id
-      handle
-      title
-      description
-      products(first: 12) {
-        nodes {
-          ...ProductItem
-        }
+    products(
+      first: $first
+      query: $query
+      sortKey: UPDATED_AT
+      reverse: true
+    ) {
+      nodes {
+        ...ProductItem
       }
     }
   }
@@ -118,34 +118,19 @@ export async function loader(args: LoaderFunctionArgs) {
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
 async function loadCriticalData({ context }: LoaderFunctionArgs) {
-  const HOMEPAGE_COLLECTION_HANDLE = 'vacation-package';
-
-  const [featuredResponse, homepageResponse] = await Promise.all([
+  const [featuredResponse, homepageProductsResponse] = await Promise.all([
     context.storefront.query(FEATURED_COLLECTION_QUERY),
-    context.storefront.query(HOMEPAGE_COLLECTION_QUERY, {
-      variables: { handle: HOMEPAGE_COLLECTION_HANDLE },
+    context.storefront.query(HOMEPAGE_PRODUCTS_QUERY, {
+      variables: {first: 250, query: 'tag:Popular'},
     }),
   ]);
 
   const featuredCollection = featuredResponse.collections.nodes[0];
-  const homepageCollection = homepageResponse.collection; // this is your collection or null
-
-  if (!homepageCollection) {
-    console.error(
-      'No collection found for handle:',
-      HOMEPAGE_COLLECTION_HANDLE,
-    );
-  } else {
-    console.log(
-      'Products in homepage collection:',
-      homepageCollection.products?.nodes,
-    );
-  }
+  const homepageProducts = homepageProductsResponse?.products?.nodes || [];
 
   return {
     featuredCollection,
-    homepageCollection,
-    homepageProducts: homepageCollection?.products?.nodes || [],
+    homepageProducts,
   };
 }
 
@@ -539,7 +524,7 @@ function Tabs({
               </div>
             ))
           ) : (
-            <div className="col-span-2 text-center text-red-600 font-bold py-12">
+            <div className="col-span-3 text-center text-red-600 font-bold py-12">
               No products found for this tab.
             </div>
           )}
