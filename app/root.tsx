@@ -103,17 +103,30 @@ export async function loader(args: LoaderFunctionArgs) {
 async function loadCriticalData({context}: LoaderFunctionArgs) {
   const {storefront} = context;
 
-  const [header] = await Promise.all([
+  const [header, destinationCollectionsResponse] = await Promise.all([
     storefront.query(HEADER_QUERY, {
       cache: storefront.CacheLong(),
       variables: {
         headerMenuHandle: 'main-menu', // Adjust to your header menu handle
       },
     }),
+    storefront.query<DestinationCollectionsQuery>(DESTINATION_COLLECTIONS_QUERY, {
+      cache: storefront.CacheLong(),
+      variables: {
+        first: 20,
+      },
+    }),
     // Add other queries here, so that they are loaded in parallel
   ]);
 
-  return {header};
+  const destinationLinks = destinationCollectionsResponse.collections.nodes.map(
+    (collection) => ({
+      label: collection.title,
+      href: `/collections/${collection.handle}`,
+    }),
+  );
+
+  return {header, destinationLinks};
 }
 
 /**
@@ -143,6 +156,30 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
     footer,
   };
 }
+
+type DestinationCollectionsQuery = {
+  collections: {
+    nodes: Array<{
+      title: string;
+      handle: string;
+    }>;
+  };
+};
+
+const DESTINATION_COLLECTIONS_QUERY = `#graphql
+  query DestinationCollections(
+    $country: CountryCode
+    $first: Int!
+    $language: LanguageCode
+  ) @inContext(country: $country, language: $language) {
+    collections(first: $first) {
+      nodes {
+        title
+        handle
+      }
+    }
+  }
+` as const;
 
 export function Layout({children}: {children?: React.ReactNode}) {
   const nonce = useNonce();
