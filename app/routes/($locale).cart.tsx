@@ -16,7 +16,14 @@ import {
 import { CartMain } from '~/components/CartMain';
 import { useMemo, useState, useEffect, useRef } from 'react';
 import { MdOutlineShoppingCart } from 'react-icons/md';
-import { format, startOfMonth, endOfMonth, getDay, addMonths } from 'date-fns';
+import {
+  format,
+  startOfMonth,
+  endOfMonth,
+  getDay,
+  addMonths,
+  differenceInCalendarDays,
+} from 'date-fns';
 import { addDays } from 'date-fns';
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 import { BsCreditCard2BackFill, BsPlusCircleFill } from 'react-icons/bs';
@@ -715,6 +722,17 @@ export default function Cart() {
   }
 
   const cartOffer = getOfferFromCart(cart);
+  const parsedOfferDays = Number.parseInt(String(cartOffer?.days ?? ''), 10);
+  const parsedOfferNights = Number.parseInt(String(cartOffer?.nights ?? ''), 10);
+  const offerDurationDays = Math.max(
+    Number.isFinite(parsedOfferDays) && parsedOfferDays > 0
+      ? parsedOfferDays
+      : Number.isFinite(parsedOfferNights) && parsedOfferNights > 0
+        ? parsedOfferNights + 1
+        : 4,
+    1,
+  );
+  const maxSelectableNights = Math.max(offerDurationDays - 1, 0);
 
   // Form state via Context (sessionStorage-backed)
   const { form, setForm, showDatePicker, setShowDatePicker } = useCartForm();
@@ -795,6 +813,19 @@ export default function Cart() {
   useEffect(() => {
     updateFormWithDates();
   }, [checkIn, checkOut]);
+
+  // Keep selected range aligned with the chosen offer duration.
+  useEffect(() => {
+    if (!checkIn) return;
+
+    const expectedCheckOut = addDays(checkIn, maxSelectableNights);
+    if (
+      !checkOut ||
+      differenceInCalendarDays(checkOut, checkIn) !== maxSelectableNights
+    ) {
+      setCheckOut(expectedCheckOut);
+    }
+  }, [checkIn, checkOut, maxSelectableNights]);
   // Calendar restriction: only allow selection 9 days after today
   const today = new Date();
   const minSelectableDate = addDays(today, 8);
@@ -830,8 +861,8 @@ export default function Cart() {
     if (!checkIn || (checkIn && checkOut)) {
       // Always set checkIn to the selected day
       setCheckIn(day);
-      // Try to set checkOut to 3 days later
-      const autoCheckOut = addDays(day, 3);
+      // Auto-select checkout from selected offer duration
+      const autoCheckOut = addDays(day, maxSelectableNights);
       // Only set checkOut if autoCheckOut is not before minSelectableDate
       if (autoCheckOut >= minSelectableDate) {
         setCheckOut(autoCheckOut);
@@ -842,16 +873,16 @@ export default function Cart() {
       const diffInDays = Math.ceil(
         (day.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24),
       );
-      if (diffInDays <= 3) {
+      if (diffInDays <= maxSelectableNights) {
         setCheckOut(day);
       } else {
-        alert('You cannot select more than 4 days.');
+        alert(`You cannot select more than ${offerDurationDays} days.`);
       }
     } else {
       // clicked before existing checkIn
       setCheckIn(day);
-      // Try to set checkOut to 3 days later
-      const autoCheckOut = addDays(day, 3);
+      // Auto-select checkout from selected offer duration
+      const autoCheckOut = addDays(day, maxSelectableNights);
       if (autoCheckOut >= minSelectableDate) {
         setCheckOut(autoCheckOut);
       } else {

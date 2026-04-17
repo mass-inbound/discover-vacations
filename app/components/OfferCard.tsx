@@ -19,6 +19,57 @@ function formatHeroBadge(value?: string) {
   return [first, rest.join(' ')];
 }
 
+function parseDuration(value?: string | null) {
+  const normalized = normalizeMetafieldText(value);
+  if (!normalized) {
+    return {days: 4, nights: 3};
+  }
+
+  const dayMatch = normalized.match(/(\d+)\s*(?:day|days|d)\b/i);
+  const nightMatch = normalized.match(/(\d+)\s*(?:night|nights|n)\b/i);
+  const allNumbers = [...normalized.matchAll(/\d+/g)].map((m) => Number(m[0]));
+
+  if (dayMatch && nightMatch) {
+    return {
+      days: Number(dayMatch[1]),
+      nights: Number(nightMatch[1]),
+    };
+  }
+
+  if (dayMatch) {
+    const days = Number(dayMatch[1]);
+    return {
+      days,
+      nights: Math.max(days - 1, 1),
+    };
+  }
+
+  if (nightMatch) {
+    const nights = Number(nightMatch[1]);
+    return {
+      days: nights + 1,
+      nights,
+    };
+  }
+
+  if (allNumbers.length >= 2) {
+    const [first, second] = allNumbers;
+    const days = Math.max(first, second);
+    const nights = Math.min(first, second);
+    return {days, nights};
+  }
+
+  if (allNumbers.length === 1) {
+    const days = allNumbers[0];
+    return {
+      days,
+      nights: Math.max(days - 1, 1),
+    };
+  }
+
+  return {days: 4, nights: 3};
+}
+
 export function OfferCard({
   product,
   onSelect,
@@ -38,6 +89,7 @@ export function OfferCard({
   const heroBadge = normalizeMetafieldText(product?.heroBadge?.value);
   const heroBadgeLines = formatHeroBadge(heroBadge);
   const durationText = normalizeMetafieldText(product?.duration?.value);
+  const parsedDuration = parseDuration(product?.duration?.value);
   const priceLabelText = normalizeMetafieldText(product?.priceLabel?.value);
   const bonusIntroText = normalizeMetafieldText(product?.bonusVacationLine?.value);
   const isExclusive = product.tags.includes('Exclusive');
@@ -172,8 +224,8 @@ export function OfferCard({
               : ''
           }
         />
-        <input type="hidden" name="offerNights" value={product.nights || 3} />
-        <input type="hidden" name="offerDays" value={product.days || 4} />
+        <input type="hidden" name="offerNights" value={parsedDuration.nights} />
+        <input type="hidden" name="offerDays" value={parsedDuration.days} />
         <button
           type="submit"
           className={`bg-[#2AB7B7] h-[43px] hover:bg-[#229a9a] duration-200 w-full flex justify-center items-center rounded-b-[10px] text-white font-[500] text-[16px] cursor-pointer ${!cartIsEmpty ? 'pointer-events-none opacity-50' : ''}`}
