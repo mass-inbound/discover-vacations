@@ -59,6 +59,21 @@ const COLLECTION_PRODUCT_FRAGMENT = `#graphql
     }
   }
   tags
+  heroBadge: metafield(namespace: "custom", key: "hero_badge") {
+    value
+  }
+  duration: metafield(namespace: "custom", key: "duration") {
+    value
+  }
+  shortDescription: metafield(namespace: "custom", key: "short_description") {
+    value
+  }
+  tcpaPolicyUrl: metafield(namespace: "custom", key: "tcpa_policy_url") {
+    value
+  }
+  priceLabel: metafield(namespace: "custom", key: "price_label") {
+    value
+  }
   variants(first: 1) {
     nodes {
       id
@@ -67,21 +82,21 @@ const COLLECTION_PRODUCT_FRAGMENT = `#graphql
 }
 ` as const;
 
-const HOMEPAGE_COLLECTION_QUERY = `#graphql
-  query HomePageCollection(
-    $handle: String!
+const HOMEPAGE_PRODUCTS_QUERY = `#graphql
+  query HomePageProducts(
     $country: CountryCode
     $language: LanguageCode
+    $first: Int
+    $query: String
   ) @inContext(country: $country, language: $language) {
-    collection(handle: $handle) {
-      id
-      handle
-      title
-      description
-      products(first: 12) {
-        nodes {
-          ...ProductItem
-        }
+    products(
+      first: $first
+      query: $query
+      sortKey: UPDATED_AT
+      reverse: true
+    ) {
+      nodes {
+        ...ProductItem
       }
     }
   }
@@ -103,34 +118,19 @@ export async function loader(args: LoaderFunctionArgs) {
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
 async function loadCriticalData({ context }: LoaderFunctionArgs) {
-  const HOMEPAGE_COLLECTION_HANDLE = 'vacation-package';
-
-  const [featuredResponse, homepageResponse] = await Promise.all([
+  const [featuredResponse, homepageProductsResponse] = await Promise.all([
     context.storefront.query(FEATURED_COLLECTION_QUERY),
-    context.storefront.query(HOMEPAGE_COLLECTION_QUERY, {
-      variables: { handle: HOMEPAGE_COLLECTION_HANDLE },
+    context.storefront.query(HOMEPAGE_PRODUCTS_QUERY, {
+      variables: {first: 250, query: 'tag:Popular OR tag:Orlando OR tag:Poconos OR tag:Exclusive'},
     }),
   ]);
 
   const featuredCollection = featuredResponse.collections.nodes[0];
-  const homepageCollection = homepageResponse.collection; // this is your collection or null
-
-  if (!homepageCollection) {
-    console.error(
-      'No collection found for handle:',
-      HOMEPAGE_COLLECTION_HANDLE,
-    );
-  } else {
-    console.log(
-      'Products in homepage collection:',
-      homepageCollection.products?.nodes,
-    );
-  }
+  const homepageProducts = homepageProductsResponse?.products?.nodes || [];
 
   return {
     featuredCollection,
-    homepageCollection,
-    homepageProducts: homepageCollection?.products?.nodes || [],
+    homepageProducts,
   };
 }
 
@@ -467,10 +467,13 @@ function Tabs({
     3: 'Exclusive',
   };
 
-  // Filter products for the active tab
+  // Filter products for the active tab (case-insensitive substring match
+  // so tags like "Orlando, FL" or "orlando" still match "Orlando")
+  const activeTag = tabTagMap[active].toLowerCase();
   const filteredProducts = products.filter(
     (product) =>
-      Array.isArray(product.tags) && product.tags.includes(tabTagMap[active]),
+      Array.isArray(product.tags) &&
+      product.tags.some((t) => t.toLowerCase().includes(activeTag)),
   );
 
   // Responsive tab logic: show only two tabs at a time on mobile
@@ -524,7 +527,7 @@ function Tabs({
               </div>
             ))
           ) : (
-            <div className="col-span-2 text-center text-red-600 font-bold py-12">
+            <div className="col-span-3 text-center text-red-600 font-bold py-12">
               No products found for this tab.
             </div>
           )}
@@ -532,7 +535,7 @@ function Tabs({
         {/* Hide sidebar card on mobile */}
         {/* {tabs[active] === 'Popular' && (
           <div
-            className="hidden md:block max-h-[698px] relative bg-[#0E424E] rounded-lg shadow p-6 text-white bg-cover min-h-[400px]"
+            className="hidden md:block relative bg-[#0E424E] rounded-lg shadow p-6 text-white bg-cover min-h-[400px]"
             style={{ backgroundImage: 'url(/assets/PlanImage.png)' }}
           >
             <h4 className="font-[500] text-[24px] md:text-[47px]">

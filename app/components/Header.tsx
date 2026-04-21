@@ -16,6 +16,7 @@ interface HeaderProps {
   cart: Promise<CartApiQueryFragment | null>;
   isLoggedIn: Promise<boolean>;
   publicStoreDomain: string;
+  destinationLinks: Array<{label: string; href: string}>;
 }
 
 type Viewport = 'desktop' | 'mobile';
@@ -25,6 +26,7 @@ export function Header({
   isLoggedIn,
   cart,
   publicStoreDomain,
+  destinationLinks,
 }: HeaderProps) {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showDestinationsDropdown, setShowDestinationsDropdown] =
@@ -78,35 +80,16 @@ export function Header({
     };
   }, [showMobileMenu]);
 
-  // Nav items
-  const navLinks = [
-    {
-      label: 'Destinations',
-      dropdown: true,
-      button: true,
-      items: [
-        { label: 'Orlando, FL', href: '/destinations/orlando' },
-        { label: 'Poconos, PA', href: '/destinations/poconos' },
-        { label: '3 Destinations (1 Decision made later)', href: '/destinations/3-destinations' },
-      ],
-    },
-    { label: 'How it Works', href: '/how-it-works' },
-    {
-      label: 'Help',
-      dropdown: true,
-      items: [
-        { label: 'FAQ', href: '/faq' },
-        { label: 'Contact Us', href: '/contact-us' },
-      ],
-    },
-    { label: 'Log in', href: '/account' },
+  const helpLinks = [
+    {label: 'FAQ', href: '/faq'},
+    {label: 'Contact Us', href: '/contact-us'},
   ];
 
   return (
     <header
       className={` ${isScrolled
-          ? 'bg-[rgba(255,255,255,0.70)] shadow-lg backdrop-blur-[4px] fixed top-4 left-8 right-8 h-[68px] rounded-[10px]'
-          : 'bg-white shadow-sm w-full sticky top-0 h-[100px]'
+        ? 'bg-[rgba(255,255,255,0.70)] shadow-lg backdrop-blur-[4px] fixed top-4 left-8 right-8 h-[68px] rounded-[10px]'
+        : 'bg-white shadow-sm w-full sticky top-0 h-[100px]'
         }  z-50 transition-all duration-300`}
     >
       <div className="max-w-8xl mx-auto md:px-12 px-3 flex items-center justify-between h-full">
@@ -137,7 +120,7 @@ export function Header({
             </button>
             {showDestinationsDropdown && (
               <div className="absolute left-0 bg-white rounded shadow-lg py-2 min-w-[180px] z-30">
-                {navLinks[0]?.items?.map((item) => (
+                {destinationLinks.map((item) => (
                   <NavLink
                     key={item.href}
                     to={item.href}
@@ -179,7 +162,7 @@ export function Header({
             </button>
             {showHelpDropdown && (
               <div className="absolute left-0 bg-white rounded shadow-lg py-2 min-w-[150px] z-30">
-                {navLinks[2]?.items?.map((item) => (
+                {helpLinks.map((item) => (
                   <NavLink
                     key={item.href}
                     to={item.href}
@@ -247,7 +230,7 @@ export function Header({
                 </button>
                 {showDestinationsDropdown && (
                   <div className="mt-2 bg-white rounded shadow-lg py-2 min-w-[180px] z-30">
-                    {navLinks[0]?.items?.map((item) => (
+                    {destinationLinks.map((item) => (
                       <NavLink
                         key={item.href}
                         to={item.href}
@@ -288,7 +271,7 @@ export function Header({
                 </button>
                 {showHelpDropdown && (
                   <div className="mt-2 bg-white rounded shadow-lg py-2 min-w-[150px] z-30">
-                    {navLinks[2]?.items?.map((item) => (
+                    {helpLinks.map((item) => (
                       <NavLink
                         key={item.href}
                         to={item.href}

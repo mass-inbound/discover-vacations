@@ -16,15 +16,67 @@ import {
 import { CartMain } from '~/components/CartMain';
 import { useMemo, useState, useEffect, useRef } from 'react';
 import { MdOutlineShoppingCart } from 'react-icons/md';
-import { format, startOfMonth, endOfMonth, getDay, addMonths } from 'date-fns';
+import {
+  format,
+  startOfMonth,
+  endOfMonth,
+  getDay,
+  addMonths,
+  differenceInCalendarDays,
+} from 'date-fns';
 import { addDays } from 'date-fns';
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 import { BsCreditCard2BackFill, BsPlusCircleFill } from 'react-icons/bs';
 import { FaGift } from 'react-icons/fa6';
 import { useCartForm } from '~/components/CartFormContext';
 
+function normalizeMetafieldText(value?: string | null) {
+  if (!value) return '';
+  return value.replace(/\\n/g, '\n').trim();
+}
+
+async function fetchProductsByHandles(storefront: any, handles: string[]) {
+  const uniqueHandles = Array.from(new Set(handles.filter(Boolean)));
+  if (uniqueHandles.length === 0) return [];
+
+  const responses = await Promise.all(
+    uniqueHandles.map((handle) =>
+      storefront.query(BONUS_PRODUCT_BY_HANDLE_QUERY, {
+        variables: { handle },
+      }),
+    ),
+  );
+  const byHandle = new Map(
+    responses
+      .map((response: any) => response?.product)
+      .filter(Boolean)
+      .map((product: { handle: string }) => [product.handle, product]),
+  );
+
+  return uniqueHandles
+    .map((handle) => byHandle.get(handle))
+    .filter((product): product is NonNullable<typeof product> => Boolean(product));
+}
+
+async function fetchBonusProductsForMainProduct(storefront: any, productHandle?: string) {
+  if (!productHandle) return [];
+
+  const productResponse = await storefront.query(PRODUCT_BONUS_HANDLES_QUERY, {
+    variables: { handle: productHandle },
+  });
+  const bonusHandles = [
+    productResponse?.product?.bonusProduct1?.value,
+    productResponse?.product?.bonusProduct2?.value,
+    productResponse?.product?.bonusProduct3?.value,
+  ]
+    .map((value: string | null | undefined) => String(value || '').trim())
+    .filter(Boolean);
+
+  return fetchProductsByHandles(storefront, bonusHandles);
+}
+
 export const meta: MetaFunction = () => {
-  return [{ title: `Hydrogen | Cart` }];
+  return [{ title: `Cart` }];
 };
 
 export const headers: HeadersFunction = ({ actionHeaders }) => actionHeaders;
@@ -75,6 +127,8 @@ export async function action({ request, context }: ActionFunctionArgs) {
     const selectedUpsellDays = formData.get('selectedUpsellDays');
     const selectedUpsellDescription = formData.get('selectedUpsellDescription');
     const selectedUpsellLocation = formData.get('selectedUpsellLocation');
+    const bonusIntroText = formData.get('bonusIntroText');
+    const offerTcpaPolicyUrl = formData.get('offerTcpaPolicyUrl');
 
     // Set offer expiration 30 minutes from now
     const expiresAt = new Date(Date.now() + 30 * 60 * 1000).toISOString();
@@ -139,6 +193,14 @@ export async function action({ request, context }: ActionFunctionArgs) {
             { key: 'offerNights', value: String(offerNights || '') },
             { key: 'offerDays', value: String(offerDays || '') },
             { key: 'offerDescription', value: String(offerDescription || '') },
+            {
+              key: 'offerTcpaPolicyUrl',
+              value: String(offerTcpaPolicyUrl || ''),
+            },
+            {
+              key: 'Bonus Intro Text',
+              value: String(bonusIntroText || ''),
+            },
             // {key: 'Offer Expires At', value: expiresAt},
             { key: 'Product Type', value: 'Main Vacation Package' },
             // {key: 'Price', value: String(offerPrice || '')},
@@ -230,6 +292,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
     // Check if this is a bonus product
     const isBonusProduct = formData.get('Bonus Vacation') === 'true';
     const productType = formData.get('Product Type') || 'Main Vacation Package';
+    const bonusIntroText = String(formData.get('bonusIntroText') || '');
 
     // Check if this is a direct add-to-cart (from OfferCard or product detail page)
     const isDirectAddToCart =
@@ -328,6 +391,11 @@ export async function action({ request, context }: ActionFunctionArgs) {
               key: 'offerDescription',
               value: String(formData.get('offerDescription') || ''),
             },
+            {
+              key: 'offerTcpaPolicyUrl',
+              value: String(formData.get('offerTcpaPolicyUrl') || ''),
+            },
+            { key: 'Bonus Intro Text', value: bonusIntroText },
             // {key: 'Offer Expires At', value: expiresAt},
             { key: 'Product Type', value: 'Main Vacation Package' },
             // {key: 'Price', value: String(formData.get('offerPrice') || '')},
@@ -375,6 +443,11 @@ export async function action({ request, context }: ActionFunctionArgs) {
               key: 'offerDescription',
               value: String(formData.get('offerDescription') || ''),
             },
+            {
+              key: 'offerTcpaPolicyUrl',
+              value: String(formData.get('offerTcpaPolicyUrl') || ''),
+            },
+            { key: 'Bonus Intro Text', value: bonusIntroText },
             // {key: 'Offer Expires At', value: expiresAt},
             { key: 'Product Type', value: 'Main Vacation Package' },
             // {key: 'Price', value: String(formData.get('offerPrice') || '')},
@@ -465,6 +538,11 @@ export async function action({ request, context }: ActionFunctionArgs) {
               key: 'offerDescription',
               value: String(formData.get('offerDescription') || ''),
             },
+            {
+              key: 'offerTcpaPolicyUrl',
+              value: String(formData.get('offerTcpaPolicyUrl') || ''),
+            },
+            { key: 'Bonus Intro Text', value: bonusIntroText },
             // {key: 'Offer Expires At', value: expiresAt},
             { key: 'Product Type', value: 'Main Vacation Package' },
             // {key: 'Price', value: String(formData.get('offerPrice') || '')},
@@ -512,6 +590,11 @@ export async function action({ request, context }: ActionFunctionArgs) {
               key: 'offerDescription',
               value: String(formData.get('offerDescription') || ''),
             },
+            {
+              key: 'offerTcpaPolicyUrl',
+              value: String(formData.get('offerTcpaPolicyUrl') || ''),
+            },
+            { key: 'Bonus Intro Text', value: bonusIntroText },
             // {key: 'Offer Expires At', value: expiresAt},
             { key: 'Product Type', value: 'Main Vacation Package' },
             // {key: 'Price', value: String(formData.get('offerPrice') || '')},
@@ -582,59 +665,88 @@ export async function action({ request, context }: ActionFunctionArgs) {
   return redirect('/cart');
 }
 
+const PRODUCT_BONUS_HANDLES_QUERY = `#graphql
+  query ProductBonusHandles($handle: String!) {
+    product(handle: $handle) {
+      bonusProduct1: metafield(namespace: "custom", key: "bonus_product_1") {
+        value
+      }
+      bonusProduct2: metafield(namespace: "custom", key: "bonus_product_2") {
+        value
+      }
+      bonusProduct3: metafield(namespace: "custom", key: "bonus_product_3") {
+        value
+      }
+    }
+  }
+` as const;
+
+const BONUS_PRODUCT_BY_HANDLE_QUERY = `#graphql
+  fragment MoneyProductItem on MoneyV2 {
+    amount
+    currencyCode
+  }
+  fragment ProductItem on Product {
+    id
+    handle
+    title
+    description
+    featuredImage {
+      id
+      altText
+      url
+      width
+      height
+    }
+    priceRange {
+      minVariantPrice {
+        ...MoneyProductItem
+      }
+      maxVariantPrice {
+        ...MoneyProductItem
+      }
+    }
+    tags
+    variants(first: 1) {
+      nodes {
+        id
+      }
+    }
+  }
+  query BonusProductByHandle($handle: String!) {
+    product(handle: $handle) {
+      ...ProductItem
+    }
+  }
+` as const;
+
 export async function loader({ context }: LoaderFunctionArgs) {
   const { cart, storefront } = context;
-  // Fetch upsell products (tag: 'upsell')
-  const UPSELL_PRODUCTS_QUERY = `#graphql
-    fragment MoneyProductItem on MoneyV2 {
-      amount
-      currencyCode
-    }
-    fragment ProductItem on Product {
-      id
-      handle
-      title
-      description
-      featuredImage {
-        id
-        altText
-        url
-        width
-        height
-      }
-      priceRange {
-        minVariantPrice {
-          ...MoneyProductItem
-        }
-        maxVariantPrice {
-          ...MoneyProductItem
-        }
-      }
-      tags
-      variants(first: 1) {
-        nodes {
-          id
-        }
-      }
-    }
-    query UpsellProducts($query: String!) {
-      products(first: 6, query: $query) {
-        nodes {
-          ...ProductItem
-        }
-      }
-    }
-  `;
-  const upsellRes = await storefront.query(UPSELL_PRODUCTS_QUERY, {
-    variables: { query: 'tag:upsell' },
-  });
-  const upsellProducts = upsellRes?.products?.nodes || [];
   const cartData = await cart.get();
-  return { cart: cartData, upsellProducts };
+
+  const mainProductLine = cartData?.lines?.nodes?.find((line: any) => {
+    const attrs = Object.fromEntries(
+      (line.attributes || []).map((attr: { key: string; value: string }) => [
+        attr.key,
+        attr.value,
+      ]),
+    );
+    return (
+      attrs['Product Type'] === 'Main Vacation Package' ||
+      attrs['Bonus Vacation'] === 'false'
+    );
+  });
+  const mainProductHandle = mainProductLine?.merchandise?.product?.handle;
+  const bonusProducts = await fetchBonusProductsForMainProduct(
+    storefront,
+    mainProductHandle,
+  );
+
+  return { cart: cartData, bonusProducts };
 }
 
 export default function Cart() {
-  const { cart, upsellProducts } = useLoaderData<typeof loader>();
+  const { cart, bonusProducts } = useLoaderData<typeof loader>();
   // console.log('cart==>', cart);
   const location = useLocation();
 
@@ -672,11 +784,24 @@ export default function Cart() {
       nights: attrs['offerNights'] || 'N/A',
       days: attrs['offerDays'] || 'N/A',
       description: attrs['offerDescription'] || '',
+      tcpaPolicyUrl: attrs['offerTcpaPolicyUrl'] || '',
+      bonusIntroText: normalizeMetafieldText(attrs['Bonus Intro Text'] || ''),
       expiresAt: attrs['Offer Expires At'] || null,
     };
   }
 
   const cartOffer = getOfferFromCart(cart);
+  const parsedOfferDays = Number.parseInt(String(cartOffer?.days ?? ''), 10);
+  const parsedOfferNights = Number.parseInt(String(cartOffer?.nights ?? ''), 10);
+  const offerDurationDays = Math.max(
+    Number.isFinite(parsedOfferDays) && parsedOfferDays > 0
+      ? parsedOfferDays
+      : Number.isFinite(parsedOfferNights) && parsedOfferNights > 0
+        ? parsedOfferNights + 1
+        : 4,
+    1,
+  );
+  const maxSelectableNights = Math.max(offerDurationDays - 1, 0);
 
   // Form state via Context (sessionStorage-backed)
   const { form, setForm, showDatePicker, setShowDatePicker } = useCartForm();
@@ -757,6 +882,19 @@ export default function Cart() {
   useEffect(() => {
     updateFormWithDates();
   }, [checkIn, checkOut]);
+
+  // Keep selected range aligned with the chosen offer duration.
+  useEffect(() => {
+    if (!checkIn) return;
+
+    const expectedCheckOut = addDays(checkIn, maxSelectableNights);
+    if (
+      !checkOut ||
+      differenceInCalendarDays(checkOut, checkIn) !== maxSelectableNights
+    ) {
+      setCheckOut(expectedCheckOut);
+    }
+  }, [checkIn, checkOut, maxSelectableNights]);
   // Calendar restriction: only allow selection 9 days after today
   const today = new Date();
   const minSelectableDate = addDays(today, 8);
@@ -792,8 +930,8 @@ export default function Cart() {
     if (!checkIn || (checkIn && checkOut)) {
       // Always set checkIn to the selected day
       setCheckIn(day);
-      // Try to set checkOut to 3 days later
-      const autoCheckOut = addDays(day, 3);
+      // Auto-select checkout from selected offer duration
+      const autoCheckOut = addDays(day, maxSelectableNights);
       // Only set checkOut if autoCheckOut is not before minSelectableDate
       if (autoCheckOut >= minSelectableDate) {
         setCheckOut(autoCheckOut);
@@ -804,16 +942,16 @@ export default function Cart() {
       const diffInDays = Math.ceil(
         (day.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24),
       );
-      if (diffInDays <= 3) {
+      if (diffInDays <= maxSelectableNights) {
         setCheckOut(day);
       } else {
-        alert('You cannot select more than 4 days.');
+        alert(`You cannot select more than ${offerDurationDays} days.`);
       }
     } else {
       // clicked before existing checkIn
       setCheckIn(day);
-      // Try to set checkOut to 3 days later
-      const autoCheckOut = addDays(day, 3);
+      // Auto-select checkout from selected offer duration
+      const autoCheckOut = addDays(day, maxSelectableNights);
       if (autoCheckOut >= minSelectableDate) {
         setCheckOut(autoCheckOut);
       } else {
@@ -885,7 +1023,7 @@ export default function Cart() {
   const allLineIds = cart?.lines?.nodes?.map((line: any) => line.id) || [];
 
   // Helper: get all choice products in cart
-  function getUpsellProductsInCart(cart: any, upsellProducts: any[]) {
+  function getUpsellProductsInCart(cart: any) {
     if (!cart?.lines?.nodes?.length) return [];
     return cart.lines.nodes.filter((line: any) => {
       const attrs = Object.fromEntries(
@@ -902,7 +1040,7 @@ export default function Cart() {
     });
   }
 
-  const upsellProductsInCart = getUpsellProductsInCart(cart, upsellProducts);
+  const upsellProductsInCart = getUpsellProductsInCart(cart);
 
   // If an upsell is present, auto-open date picker
   useEffect(() => {
@@ -927,18 +1065,6 @@ export default function Cart() {
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
   };
-
-  // Add this helper inside or above the Cart component
-  function getLocationSlug(location: string | undefined) {
-    if (!location) return '';
-    return location
-      .split(',')[0]
-      .trim()
-      .toLowerCase()
-      .replace(/['’]/g, '')
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-+|-+$/g, '');
-  }
 
   // Set offer expiration in localStorage when cart is populated and not expired
   useEffect(() => {
@@ -1106,19 +1232,15 @@ export default function Cart() {
                     Discover Vacations, LLC, may need to contact you to assist
                     in booking your vacation, and follow up on any questions. By
                     clicking this checkbox, you agree to the{' '}
-                    <Link
-                      to={
-                        cartOffer?.title
-                          ? `/policies/terms-conditions-${getLocationSlug(
-                            cartOffer.title,
-                          )}`
-                          : '/cart'
-                      }
+                    <a
+                      href={cartOffer?.tcpaPolicyUrl || '/cart'}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="underline"
                       tabIndex={-1}
                     >
                       Terms & Conditions
-                    </Link>{' '}
+                    </a>{' '}
                     &
                     <Link
                       to={'/policies/privacy-policy'}
@@ -1194,6 +1316,16 @@ export default function Cart() {
                   type="hidden"
                   name="offerDescription"
                   value={cartOffer?.description || ''}
+                />
+                <input
+                  type="hidden"
+                  name="offerTcpaPolicyUrl"
+                  value={cartOffer?.tcpaPolicyUrl || ''}
+                />
+                <input
+                  type="hidden"
+                  name="bonusIntroText"
+                  value={cartOffer?.bonusIntroText || ''}
                 />
                 <input
                   type="hidden"
@@ -1503,7 +1635,7 @@ export default function Cart() {
                   className="bg-[#2AB7B7] text-white px-8 py-3 rounded-lg text-lg font-semibold shadow hover:bg-[#229a9a] transition"
                   onClick={() => (window.location.href = '/discover-offers')}
                 >
-                  Find Destination
+                  Continue Shopping
                 </button>
               </div>
             ) : (
@@ -1578,8 +1710,8 @@ export default function Cart() {
                 <div className="relative bg-gradient-to-r from-[#f2b233] to-[#FFE7B8] rounded-[8px] px-3 py-1 mx-6 mt-4 flex gap-2 items-start justify-center">
                   <FaGift className="min-w-4 mt-1" />
                   <span className="text-[16px] font-[400] text-[#08252C] tracking-wide">
-                    Includes a Bonus Vacation: Your Choice Vacation Bonus
-                    (valued at $300+)
+                    {cartOffer?.bonusIntroText ||
+                      'Includes a Bonus Vacation: Your Choice Vacation Bonus (valued at $300+)'}
                   </span>
                   {/* {upsellProductsInCart.length == 0 && (
                     <img
@@ -1674,13 +1806,13 @@ export default function Cart() {
         <div className="h-[1px] bg-gray-300"></div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 my-10 gap-6">
-          {upsellProducts.length > 0 ? (
-            upsellProducts.map((product: any, idx: number) => (
+          {bonusProducts.length > 0 ? (
+            bonusProducts.map((product: any, idx: number) => (
               <div
                 key={product.id}
                 className="rounded-[10px] bg-white shadow flex flex-col"
               >
-                <div className="bg-[#F2B233] py-1 text-[#071F24] font-[500] text-[21px] flex justify-center items-center gap-3 rounded-t-[10px]">
+                <div className="h-[75px] bg-[#F2B233] py-1 text-[#071F24] font-[500] text-[21px] flex justify-center items-center gap-3 rounded-t-[10px]">
                   <span>
                     <FaGift />
                   </span>

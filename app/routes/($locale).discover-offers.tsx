@@ -39,6 +39,21 @@ const PRODUCT_FRAGMENT = `#graphql
       }
     }
     tags
+    heroBadge: metafield(namespace: "custom", key: "hero_badge") {
+      value
+    }
+    duration: metafield(namespace: "custom", key: "duration") {
+      value
+    }
+    shortDescription: metafield(namespace: "custom", key: "short_description") {
+      value
+    }
+    tcpaPolicyUrl: metafield(namespace: "custom", key: "tcpa_policy_url") {
+    value
+  }
+  priceLabel: metafield(namespace: "custom", key: "price_label") {
+      value
+    }
     variants(first: 1) {
       nodes {
         id
@@ -49,20 +64,19 @@ const PRODUCT_FRAGMENT = `#graphql
 
 const DISCOVER_OFFERS_QUERY = `#graphql
   query DiscoverOffers(
-    $handle: String!
     $country: CountryCode
     $language: LanguageCode
     $first: Int
+    $query: String
   ) @inContext(country: $country, language: $language) {
-    collection(handle: $handle) {
-      id
-      handle
-      title
-      description
-      products(first: $first) {
-        nodes {
-          ...ProductItem
-        }
+    products(
+      first: $first
+      query: $query
+      sortKey: UPDATED_AT
+      reverse: true
+    ) {
+      nodes {
+        ...ProductItem
       }
     }
   }
@@ -86,15 +100,15 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   const sort = url.searchParams.get('sort') || 'Price';
 
   // Fetch all products in the collection
-  const { collection } = await context.storefront.query(DISCOVER_OFFERS_QUERY, {
+  const data = await context.storefront.query(DISCOVER_OFFERS_QUERY, {
     variables: {
-      handle: 'vacation-package',
-      first: 50, // adjust as needed
+      first: 250,
+      query: 'tag:Popular',
     },
   });
 
-  // Handle missing collection gracefully
-  if (!collection || !collection.products || !collection.products.nodes) {
+  // Handle missing products gracefully
+  if (!data?.products?.nodes) {
     return {
       products: [],
       destinations: [],
@@ -110,7 +124,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     };
   }
 
-  let allProducts = collection.products.nodes;
+  let allProducts = data.products.nodes;
 
   // --- Extract filter options BEFORE filtering ---
   const allTags = allProducts.flatMap((p: any) => p.tags);
