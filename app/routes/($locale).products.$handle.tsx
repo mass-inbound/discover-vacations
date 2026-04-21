@@ -190,15 +190,20 @@ export default function Product() {
     getAdjacentAndFirstAvailableVariants(product),
   );
 
-  // Sets the search param to the selected variant without navigation
-  // only when no search params are set in the url
-  useSelectedOptionInUrlParam(selectedVariant.selectedOptions);
-
   // Get the product options array
   const productOptions = getProductOptions({
     ...product,
     selectedOrFirstAvailableVariant: selectedVariant,
   });
+
+  // Sets the search param to the selected variant without navigation
+  // only when no search params are set in the url
+  useSelectedOptionInUrlParam(
+    (selectedVariant.selectedOptions ?? []).filter(
+      (o: {name: string; value: string}) =>
+        !(o.name === 'Title' && o.value === 'Default Title'),
+    ),
+  );
 
   const { title, descriptionHtml } = product;
 

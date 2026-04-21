@@ -121,7 +121,7 @@ async function loadCriticalData({ context }: LoaderFunctionArgs) {
   const [featuredResponse, homepageProductsResponse] = await Promise.all([
     context.storefront.query(FEATURED_COLLECTION_QUERY),
     context.storefront.query(HOMEPAGE_PRODUCTS_QUERY, {
-      variables: {first: 250, query: 'tag:Popular'},
+      variables: {first: 250, query: 'tag:Popular OR tag:Orlando OR tag:Poconos OR tag:Exclusive'},
     }),
   ]);
 
@@ -467,10 +467,13 @@ function Tabs({
     3: 'Exclusive',
   };
 
-  // Filter products for the active tab
+  // Filter products for the active tab (case-insensitive substring match
+  // so tags like "Orlando, FL" or "orlando" still match "Orlando")
+  const activeTag = tabTagMap[active].toLowerCase();
   const filteredProducts = products.filter(
     (product) =>
-      Array.isArray(product.tags) && product.tags.includes(tabTagMap[active]),
+      Array.isArray(product.tags) &&
+      product.tags.some((t) => t.toLowerCase().includes(activeTag)),
   );
 
   // Responsive tab logic: show only two tabs at a time on mobile
