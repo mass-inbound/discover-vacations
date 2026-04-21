@@ -111,7 +111,7 @@ async function loadCriticalData({context}: LoaderFunctionArgs) {
       },
     }),
     storefront.query<DestinationCollectionsQuery>(DESTINATION_COLLECTIONS_QUERY, {
-      cache: storefront.CacheLong(),
+      cache: storefront.CacheShort(),
       variables: {
         first: 20,
       },
