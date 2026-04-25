@@ -28,6 +28,7 @@ import { addDays } from 'date-fns';
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 import { BsCreditCard2BackFill, BsPlusCircleFill } from 'react-icons/bs';
 import { FaGift } from 'react-icons/fa6';
+import { toInternalPolicyUrl } from '~/lib/policies';
 import { useCartForm } from '~/components/CartFormContext';
 
 function normalizeMetafieldText(value?: string | null) {
@@ -1233,7 +1234,10 @@ export default function Cart() {
                     in booking your vacation, and follow up on any questions. By
                     clicking this checkbox, you agree to the{' '}
                     <a
-                      href={cartOffer?.tcpaPolicyUrl || '/cart'}
+                      href={
+                        toInternalPolicyUrl(cartOffer?.tcpaPolicyUrl) ||
+                        '/policies/terms-of-service'
+                      }
                       target="_blank"
                       rel="noopener noreferrer"
                       className="underline"
