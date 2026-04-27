@@ -83,6 +83,7 @@ const DISCOVER_OFFERS_QUERY = `#graphql
   ${PRODUCT_FRAGMENT}
 ` as const;
 
+// Hero section content is stored in a metaobject with handle "discover-offers-hero"
 const DISCOVER_OFFERS_HERO_QUERY = `#graphql
   query DiscoverOffersHero($country: CountryCode, $language: LanguageCode)
   @inContext(country: $country, language: $language) {
