@@ -1,5 +1,7 @@
 name: Storefront 1000037793
-on: [push]
+on:
+  push:
+    branches: [staging-mydiscovery]
 
 permissions:
   contents: read
