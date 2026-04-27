@@ -83,6 +83,28 @@ const DISCOVER_OFFERS_QUERY = `#graphql
   ${PRODUCT_FRAGMENT}
 ` as const;
 
+const DISCOVER_OFFERS_HERO_QUERY = `#graphql
+  query DiscoverOffersHero($country: CountryCode, $language: LanguageCode)
+  @inContext(country: $country, language: $language) {
+    metaobject(handle: {type: "hero_section", handle: "discover-offers-hero"}) {
+      fields {
+        key
+        value
+        reference {
+          ... on MediaImage {
+            image {
+              url
+              altText
+              width
+              height
+            }
+          }
+        }
+      }
+    }
+  }
+` as const;
+
 // --- Loader ---
 export async function loader({ context, request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
@@ -99,13 +121,30 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   const max = Number(url.searchParams.get('max') || 10000);
   const sort = url.searchParams.get('sort') || 'Price';
 
-  // Fetch all products in the collection
-  const data = await context.storefront.query(DISCOVER_OFFERS_QUERY, {
-    variables: {
-      first: 250,
-      query: 'tag:Popular',
-    },
-  });
+  // Fetch all products and the hero metaobject in parallel
+  const [data, heroResponse] = await Promise.all([
+    context.storefront.query(DISCOVER_OFFERS_QUERY, {
+      variables: {
+        first: 250,
+        query: 'tag:Popular',
+      },
+    }),
+    context.storefront.query(DISCOVER_OFFERS_HERO_QUERY, {
+      cache: context.storefront.CacheShort(),
+    }),
+  ]);
+
+  const heroFields = heroResponse?.metaobject?.fields ?? [];
+  const heroFieldMap = Object.fromEntries(
+    heroFields.map((f: any) => [f.key, f]),
+  );
+  const hero = {
+    eyebrow: heroFieldMap.eyebrow?.value ?? '',
+    heading: heroFieldMap.heading?.value ?? '',
+    body: heroFieldMap.body?.value ?? '',
+    backgroundImageUrl:
+      heroFieldMap.background_image?.reference?.image?.url ?? '',
+  };
 
   // Handle missing products gracefully
   if (!data?.products?.nodes) {
@@ -177,6 +216,7 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
     destinations,
     vacationTypes,
     maxProductPrice,
+    hero,
     selected: {
       destination: destinationsSelected,
       vacationType: vacationTypesSelected,
@@ -189,8 +229,14 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
 
 // --- Main Component ---
 export default function DiscoverOfferPage() {
-  const { products, destinations, vacationTypes, maxProductPrice, selected } =
+  const { products, destinations, vacationTypes, maxProductPrice, selected, hero: heroData } =
     useLoaderData<typeof loader>();
+  const hero = heroData ?? {
+    eyebrow: '',
+    heading: '',
+    body: '',
+    backgroundImageUrl: '',
+  };
   const navigate = useNavigate();
   const mainDivRef = useRef<HTMLDivElement>(null);
   const rootData = useRouteLoaderData('root');
@@ -326,7 +372,7 @@ export default function DiscoverOfferPage() {
       {/* Hero */}
       <div
         style={{
-          backgroundImage: "url('/assets/discoverImage.png')",
+          backgroundImage: `url('${hero.backgroundImageUrl || '/assets/discoverImage.png'}')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           height: '400px',
@@ -339,20 +385,17 @@ export default function DiscoverOfferPage() {
         className="px-4 md:px-0"
       >
         <div className="flex flex-col items-center">
-          <p className="font-[500] text-[14px]">Plan Less, Experience More</p>
-          <h1 className="font-[800] text-[46px]">
-            {' '}
-            Discover Your Next Vacation
-          </h1>
-          <p className="max-w-3xl font-[400] text-[16px] text-center">
-            Explore our handpicked vacation offers — from theme park favorites,
-            sunny beaches to cozy mountain retreats — all designed to deliver
-            more vacation for less. Whether you were invited to view a specific
-            destination or just browsing for inspiration, every offer includes
-            real value, trusted accommodations, and an easy path to booking.
-          </p>
-          New locations are added regularly, so check back often — or catch the
-          wave with the destination that's calling you now.
+          {hero.eyebrow ? (
+            <p className="font-[500] text-[14px]">{hero.eyebrow}</p>
+          ) : null}
+          {hero.heading ? (
+            <h1 className="font-[800] text-[46px]">{hero.heading}</h1>
+          ) : null}
+          {hero.body ? (
+            <p className="max-w-3xl font-[400] text-[16px] text-center whitespace-pre-line">
+              {hero.body.replace(/\\n/g, '\n')}
+            </p>
+          ) : null}
         </div>
       </div>
 
@@ -376,149 +419,8 @@ export default function DiscoverOfferPage() {
         </div>
 
         <div className="flex flex-col md:flex-row gap-14 my-14">
-          {/* Filters */}
-          <div className="hidden md:block max-h-[600px] w-[400px] p-6 border border-[#E5E5E5] rounded-[10px] shadow-md">
-            {/* Destination Filter */}
-            <div className="mb-6">
-              <h2 className="text-[#0E424E] text-[18px] font-[500] mb-4">
-                Destination
-              </h2>
-              <div className="flex flex-col gap-2">
-                {((destinations ?? []).filter(Boolean) as string[]).map((d) => (
-                  <label
-                    key={d}
-                    className="flex items-center gap-2 text-[#1A202C] text-[16px] font-[400]"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={selectedDestinations.includes(d)}
-                      onChange={() => handleDestinationChange(d)}
-                      className="w-4 h-4"
-                    />
-                    {d}
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* Vacation Type Filter */}
-            <div className="mb-6">
-              <h2 className="text-[#0E424E] text-[18px] font-[500] mb-4">
-                Vacation Type
-              </h2>
-              <div className="flex flex-col gap-2">
-                {((vacationTypes ?? []).filter(Boolean) as string[]).map(
-                  (v) => (
-                    <label
-                      key={v}
-                      className="flex items-center gap-2 text-[#1A202C] text-[16px] font-[400]"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={selectedVacationTypes.includes(v)}
-                        onChange={() => handleVacationTypeChange(v)}
-                        className="w-4 h-4"
-                      />
-                      {v}
-                    </label>
-                  ),
-                )}
-              </div>
-            </div>
-
-            {/* Price Range Filter */}
-            <div className="mb-6">
-              <button
-                className="text-lg mb-2 flex justify-between items-center w-full text-left"
-                // Accordion logic can be added if needed
-                aria-expanded={true}
-                aria-controls="price-panel"
-              >
-                PRICE RANGE
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  className="bi bi-chevron-down transition-transform"
-                  viewBox="0 0 16 16"
-                  aria-hidden="true"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
-                  />
-                </svg>
-              </button>
-              <div
-                id="price-panel"
-                className="space-y-4 overflow-hidden transition-all max-h-60"
-              >
-                {/* Inputs */}
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={inputValues.min}
-                    onChange={(e) =>
-                      handlePriceInputChange('min', e.target.value)
-                    }
-                    className="border border-gray-300 px-2 py-1 w-20 text-center"
-                    aria-label="Minimum price"
-                  />
-                  <input
-                    type="text"
-                    value={inputValues.max}
-                    onChange={(e) =>
-                      handlePriceInputChange('max', e.target.value)
-                    }
-                    className="border border-gray-300 px-2 py-1 w-20 text-center"
-                    aria-label="Maximum price"
-                  />
-                </div>
-                {/* Slider */}
-                <div
-                  className="relative h-1 bg-gray-200 rounded mt-6 mb-8 mx-2"
-                  ref={rangeRef}
-                >
-                  <div
-                    className="absolute h-1 bg-gray-500 rounded"
-                    ref={rangeTrackRef}
-                  />
-                  <div
-                    className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-4 h-4 bg-black rounded-full cursor-pointer"
-                    ref={minThumbRef}
-                    style={{
-                      left: `${(priceRange.min / maxProductPrice) * 100}%`,
-                    }}
-                    onMouseDown={() => handleThumbDrag('min')}
-                    role="slider"
-                    aria-valuemin={0}
-                    aria-valuemax={maxProductPrice}
-                    aria-valuenow={priceRange.min}
-                    aria-label="Minimum price slider"
-                    tabIndex={0}
-                  />
-                  <div
-                    className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-4 h-4 bg-black rounded-full cursor-pointer"
-                    ref={maxThumbRef}
-                    style={{
-                      left: `${(priceRange.max / maxProductPrice) * 100}%`,
-                    }}
-                    onMouseDown={() => handleThumbDrag('max')}
-                    role="slider"
-                    aria-valuemin={0}
-                    aria-valuemax={maxProductPrice}
-                    aria-valuenow={priceRange.max}
-                    aria-label="Maximum price slider"
-                    tabIndex={0}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
           {/* Product Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full px-1 sm:px-0">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full px-1 sm:px-0">
             <Suspense fallback={<div>Loading cart...</div>}>
               <Await resolve={rootData.cart}>
                 {(originalCart) => {
